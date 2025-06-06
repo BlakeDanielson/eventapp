@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { 
   ArrowLeft, 
@@ -117,7 +117,7 @@ export default function EditOrganizerProfilePage() {
       } else {
         setSubmitError('Failed to save profile. Please try again.');
       }
-    } catch (err) {
+    } catch {
       setSubmitError('An unexpected error occurred. Please try again.');
     } finally {
       setIsSubmitting(false);

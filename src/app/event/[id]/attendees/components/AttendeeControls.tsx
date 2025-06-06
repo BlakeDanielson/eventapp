@@ -7,6 +7,28 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Search, Filter, Mail, Download, Send, Loader2 } from 'lucide-react';
 
+// Define proper types for attendees and invitees
+interface Attendee {
+  id: string;
+  name: string;
+  email: string;
+  status: string;
+  createdAt: string;
+  referral?: {
+    name: string;
+  };
+}
+
+interface Invitee {
+  id: string;
+  email: string;
+  hasAccessed: boolean;
+  inviteToken: string;
+  accessedAt?: string;
+  referredCount: number;
+  inviteLink: string;
+}
+
 interface AttendeeControlsProps {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
@@ -15,8 +37,8 @@ interface AttendeeControlsProps {
   activeTab: string;
   selectedAttendees: string[];
   selectedInvitees: string[];
-  filteredAttendees: any[];
-  filteredInvitees: any[];
+  filteredAttendees: Attendee[];
+  filteredInvitees: Invitee[];
   eventId: string;
   onEmailSuccess: () => void;
 }
@@ -98,18 +120,18 @@ export function AttendeeControls({
       ...dataToExport.map(item => 
         activeTab === 'attendees' 
           ? [
-              (item as any).name,
-              (item as any).email,
-              (item as any).status,
-              new Date((item as any).createdAt).toLocaleDateString(),
-              (item as any).referral?.name || 'None'
+              (item as Attendee).name,
+              (item as Attendee).email,
+              (item as Attendee).status,
+              new Date((item as Attendee).createdAt).toLocaleDateString(),
+              (item as Attendee).referral?.name || 'None'
             ]
           : [
-              (item as any).email,
-              (item as any).hasAccessed ? 'Accessed' : 'Pending',
-              (item as any).inviteToken,
-              (item as any).accessedAt ? new Date((item as any).accessedAt!).toLocaleDateString() : 'N/A',
-              (item as any).referredCount.toString()
+              (item as Invitee).email,
+              (item as Invitee).hasAccessed ? 'Accessed' : 'Pending',
+              (item as Invitee).inviteToken,
+              (item as Invitee).accessedAt ? new Date((item as Invitee).accessedAt!).toLocaleDateString() : 'N/A',
+              (item as Invitee).referredCount.toString()
             ]
       )
     ].map(row => row.map(field => `"${field}"`).join(',')).join('\n');

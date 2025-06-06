@@ -3,12 +3,12 @@
 import React, { memo } from 'react';
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { MoreHorizontal, Calendar, MapPin, Users, UserPlus, ExternalLink, Edit3, Copy, Trash2, Mail, ArrowUpRight } from 'lucide-react';
+import { MoreHorizontal, Calendar, MapPin, Users, ExternalLink, Edit3, Copy, Trash2 } from 'lucide-react';
 import { EventWithDetails } from '@/types/event';
-import { getEventStatusColor, formatEventDate } from '@/lib/event-operations';
+import { formatEventDate } from '@/lib/event-operations';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 

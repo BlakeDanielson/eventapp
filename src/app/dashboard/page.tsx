@@ -1,9 +1,7 @@
 'use client';
 
 import { UserButton, useUser } from '@clerk/nextjs';
-import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardContent } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+
 import Link from 'next/link';
 import { useState, useEffect, useMemo, useCallback, Suspense } from 'react';
 import { 
@@ -17,10 +15,7 @@ import {
   TrendingUp,
   Users,
   Share2,
-  ArrowUpRight,
-  BarChart3,
-  Eye,
-  Settings
+
 } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useEventOperations } from '@/hooks/useEventOperations';

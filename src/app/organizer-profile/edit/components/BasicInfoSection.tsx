@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { User, Building, Mail, Phone, Globe, MapPin } from 'lucide-react';
+import { User, Mail, Phone, Globe, MapPin } from 'lucide-react';
 
 interface BasicInfoSectionProps {
   formData: {

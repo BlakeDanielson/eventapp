@@ -52,7 +52,7 @@ export function QuestionItem({
       setAnswerContent("");
       setIsAnswering(false);
       toast.success("Answer posted successfully!");
-    } catch (error) {
+    } catch {
       toast.error("Failed to post answer");
     } finally {
       setIsSubmittingAnswer(false);
@@ -65,7 +65,7 @@ export function QuestionItem({
     setIsUpvoting(true);
     try {
       await onUpvote(question.id);
-    } catch (error) {
+    } catch {
       toast.error("Failed to upvote question");
     } finally {
       setIsUpvoting(false);
@@ -78,7 +78,7 @@ export function QuestionItem({
     try {
       await onHide(question.id);
       toast.success("Question hidden successfully");
-    } catch (error) {
+    } catch {
       toast.error("Failed to hide question");
     }
   };

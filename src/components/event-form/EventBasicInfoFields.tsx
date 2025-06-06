@@ -1,4 +1,4 @@
-import { useState } from 'react';
+
 import { Control, useWatch } from 'react-hook-form';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -40,7 +40,7 @@ export function EventBasicInfoFields({ control }: EventBasicInfoFieldsProps) {
               Essential Details
             </CardTitle>
             <CardDescription className="text-zinc-400 mt-1">
-              Let's start with the key information about your event
+              Let&apos;s start with the key information about your event
             </CardDescription>
           </div>
         </div>
@@ -166,7 +166,7 @@ export function EventBasicInfoFields({ control }: EventBasicInfoFieldsProps) {
               <FormField
                 control={control}
                 name="streetAddress"
-                render={({ field, fieldState }) => (
+                render={({ field }) => (
                   <FormItem className="space-y-3">
                     <FormLabel className="text-sm font-medium text-white">
                       Street Address

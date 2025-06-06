@@ -6,7 +6,7 @@ import { EventForm } from '@/components/event-form';
 import { Event } from '@/types/event';
 import { eventToFormData } from '@/types/forms';
 import { Loader2, ArrowLeft, Edit3, Calendar, AlertCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import Link from 'next/link';
 import { UserButton, useUser } from '@clerk/nextjs';
@@ -71,7 +71,6 @@ export default function EditEventPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [updateSuccess, setUpdateSuccess] = useState(false);
-  const [isUpdating, setIsUpdating] = useState(false);
 
   const fetchEvent = async () => {
     try {
@@ -110,7 +109,6 @@ export default function EditEventPage() {
 
   const handleFormSubmit = async (values: Record<string, unknown>) => {
     try {
-      setIsUpdating(true);
       setError(null);
       setUpdateSuccess(false);
       
@@ -143,8 +141,6 @@ export default function EditEventPage() {
     } catch (error) {
       console.error('Error updating event:', error);
       setError(error instanceof Error ? error.message : 'Failed to update event');
-    } finally {
-      setIsUpdating(false);
     }
   };
 

@@ -235,7 +235,7 @@ export function EventMap({
       `;
 
       // Set up close functionality
-      (window as any).closeInfoWindow = () => {
+      (window as unknown as { closeInfoWindow: () => void }).closeInfoWindow = () => {
         if (infoWindow.current) {
           infoWindow.current.close();
         }
@@ -365,14 +365,14 @@ export function EventMap({
           text: `Check out this location: ${location}`,
           url: url,
         });
-      } catch (error) {
+      } catch {
         // User cancelled sharing
       }
     } else {
       // Modern clipboard API fallback
       try {
         await navigator.clipboard.writeText(url);
-      } catch (error) {
+      } catch {
         console.warn('Could not copy to clipboard');
       }
     }

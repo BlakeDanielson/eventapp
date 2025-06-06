@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+
 import {
   MessageSquare,
   ThumbsUp,
@@ -16,12 +16,10 @@ import {
   Send,
   EyeOff,
   Crown,
-  Calendar,
-  Users,
   MessageCircle
 } from "lucide-react";
 import { QuestionWithAnswers, CreateAnswerRequest } from "@/types/event";
-import { cn } from "@/lib/utils";
+
 import { toast } from "sonner";
 
 interface OrganizerQAManagementProps {
@@ -32,16 +30,12 @@ interface OrganizerQAManagementProps {
 
 interface QuestionItemProps {
   question: QuestionWithAnswers;
-  organizerEmail: string;
-  organizerName: string;
   onAnswer: (questionId: string, content: string) => Promise<void>;
   onHide: (questionId: string) => Promise<void>;
 }
 
 function QuestionManagementItem({
   question,
-  organizerEmail,
-  organizerName,
   onAnswer,
   onHide
 }: QuestionItemProps) {
@@ -58,7 +52,7 @@ function QuestionManagementItem({
       setAnswerContent("");
       setIsAnswering(false);
       toast.success("Answer posted successfully!");
-    } catch (error) {
+    } catch {
       toast.error("Failed to post answer");
     } finally {
       setIsSubmittingAnswer(false);
@@ -69,7 +63,7 @@ function QuestionManagementItem({
     try {
       await onHide(question.id);
       toast.success("Question hidden successfully");
-    } catch (error) {
+    } catch {
       toast.error("Failed to hide question");
     }
   };
@@ -221,7 +215,7 @@ export function OrganizerQAManagement({
   const [filter, setFilter] = useState<'all' | 'unanswered' | 'answered'>('all');
 
   // Fetch questions
-  const fetchQuestions = async () => {
+  const fetchQuestions = useCallback(async () => {
     try {
       setIsLoading(true);
       const response = await fetch(`/api/events/${eventId}/questions`);
@@ -235,11 +229,11 @@ export function OrganizerQAManagement({
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [eventId]);
 
   useEffect(() => {
     fetchQuestions();
-  }, [eventId]);
+  }, [fetchQuestions]);
 
   // Handle answering
   const handleAnswer = async (questionId: string, content: string) => {
@@ -439,8 +433,6 @@ export function OrganizerQAManagement({
             <QuestionManagementItem
               key={question.id}
               question={question}
-              organizerEmail={organizerEmail}
-              organizerName={organizerName}
               onAnswer={handleAnswer}
               onHide={handleHide}
             />

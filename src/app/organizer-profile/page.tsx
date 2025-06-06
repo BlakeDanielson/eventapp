@@ -5,7 +5,7 @@ import { useUser } from '@clerk/nextjs';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Skeleton } from '@/components/ui/skeleton';
+
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { 
@@ -24,9 +24,7 @@ import {
   EyeOff,
   ExternalLink,
   Loader2,
-  Building,
-  Users,
-  Settings
+  Users
 } from 'lucide-react';
 import Link from 'next/link';
 import { useOrganizerProfile } from '@/hooks/useOrganizerProfile';

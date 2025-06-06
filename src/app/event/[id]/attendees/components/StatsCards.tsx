@@ -3,6 +3,17 @@ import { motion } from 'framer-motion';
 import { Users, Mail } from 'lucide-react';
 import { EventWithDetails } from '@/types/event';
 
+interface Attendee {
+  id: string;
+  name: string;
+  email: string;
+  status: string;
+  createdAt: string;
+  referral?: {
+    name: string;
+  };
+}
+
 interface Invitee {
   id: string;
   email: string;
@@ -16,7 +27,7 @@ interface Invitee {
 
 interface StatsCardsProps {
   event: EventWithDetails;
-  filteredAttendees: any[];
+  filteredAttendees: Attendee[];
   invitees: Invitee[];
 }
 

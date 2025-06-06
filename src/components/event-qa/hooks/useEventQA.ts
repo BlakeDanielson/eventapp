@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { QuestionWithAnswers } from "@/types/event";
 import { toast } from "sonner";
 
@@ -7,7 +7,7 @@ export function useEventQA(eventId: string, userEmail?: string, userName?: strin
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const fetchQuestions = async () => {
+  const fetchQuestions = useCallback(async () => {
     if (!eventId) return;
     
     setIsLoading(true);
@@ -31,7 +31,7 @@ export function useEventQA(eventId: string, userEmail?: string, userName?: strin
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [eventId]);
 
   const handleSubmitQuestion = async (questionContent: string): Promise<boolean> => {
     if (!questionContent.trim() || !userEmail || !userName) return false;
@@ -60,9 +60,9 @@ export function useEventQA(eventId: string, userEmail?: string, userName?: strin
       toast.success("Question submitted successfully!");
       
       return true;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error submitting question:', error);
-      toast.error(error.message || "Failed to submit question");
+      toast.error(error instanceof Error ? error.message : "Failed to submit question");
       return false;
     } finally {
       setIsSubmitting(false);
@@ -165,7 +165,7 @@ export function useEventQA(eventId: string, userEmail?: string, userName?: strin
 
   useEffect(() => {
     fetchQuestions();
-  }, [eventId]);
+  }, [fetchQuestions]);
 
   return {
     questions,

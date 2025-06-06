@@ -9,7 +9,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/components/ui/badge";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
 import { RegistrationForm } from '@/components/registration-form';
 import { TicketPurchase } from '@/components/ticket-purchase';
 import { EventQA } from '@/components/event-qa';

@@ -36,7 +36,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const { name, email, eventId, customQuestions, referralId, inviteToken, accessReason } = validationResult.data;
+    const { name, email, eventId, customQuestions, referralId, inviteToken } = validationResult.data;
 
     // Check if event exists and get full event details
     const event = await prisma.event.findUnique({

@@ -7,11 +7,33 @@ import { Loader2, Copy, CheckCircle, ExternalLink } from 'lucide-react';
 import { EventWithDetails } from '@/types/event';
 import { StatusBadge } from './StatusBadge';
 
+// Define proper types for attendees and invitees
+interface Attendee {
+  id: string;
+  name: string;
+  email: string;
+  status: string;
+  createdAt: string;
+  referral?: {
+    name: string;
+  };
+}
+
+interface Invitee {
+  id: string;
+  email: string;
+  hasAccessed: boolean;
+  inviteToken: string;
+  accessedAt?: string;
+  referredCount: number;
+  inviteLink: string;
+}
+
 interface AttendeesTabsProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
-  filteredAttendees: any[];
-  filteredInvitees: any[];
+  filteredAttendees: Attendee[];
+  filteredInvitees: Invitee[];
   inviteesLoading: boolean;
   selectedAttendees: string[];
   setSelectedAttendees: React.Dispatch<React.SetStateAction<string[]>>;

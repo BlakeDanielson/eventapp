@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Control, useWatch } from 'react-hook-form';
-import { Settings, Users, Plus, X, Shield } from 'lucide-react';
+import { Users, Plus, X, Shield } from 'lucide-react';
 import {
   Card,
   CardContent,

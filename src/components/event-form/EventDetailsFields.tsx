@@ -9,7 +9,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
-import { FileText, Calendar, HelpCircle, Image } from 'lucide-react';
+import { FileText, Calendar, HelpCircle, Image as ImageIcon } from 'lucide-react';
 import { ImageUpload } from '../image-upload';
 import { EventFormData } from '@/types/forms';
 
@@ -66,7 +66,7 @@ export function EventDetailsFields({ control }: EventDetailsFieldsProps) {
             <FormItem className="space-y-3">
               <FormLabel className="flex items-center gap-2 text-base font-medium text-white">
                 <div className="w-8 h-8 bg-zinc-800 rounded-lg flex items-center justify-center">
-                  <Image className="h-4 w-4 text-zinc-400" />
+                  <ImageIcon className="h-4 w-4 text-zinc-400" />
                 </div>
                 Event Image
               </FormLabel>
