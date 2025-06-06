@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import Link from 'next/link';
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback, Suspense } from 'react';
 import { 
   Calendar, 
   Plus, 
@@ -109,7 +109,8 @@ function GradientButton({ children, className, ...props }: GradientButtonProps) 
   );
 }
 
-export default function DashboardPage() {
+// Component that uses useSearchParams and needs to be wrapped in Suspense
+function DashboardContent() {
   const { isLoaded, isSignedIn, user } = useUser();
   const searchParams = useSearchParams();
   const {
@@ -466,5 +467,21 @@ export default function DashboardPage() {
         )}
       </main>
     </div>
+  );
+}
+
+// Main component with Suspense boundary
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading dashboard...</p>
+        </div>
+      </div>
+    }>
+      <DashboardContent />
+    </Suspense>
   );
 }
