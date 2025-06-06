@@ -13,8 +13,20 @@ import { Separator } from "@/components/ui/separator";
 import { RegistrationForm } from '@/components/registration-form';
 import { TicketPurchase } from '@/components/ticket-purchase';
 import { EventWithOrganizer } from '@/types/event';
-import { EventMap } from '@/components/event-map';
 import { EnhancedLocationCard } from '@/components/enhanced-location-card';
+import dynamic from 'next/dynamic';
+
+const EventMap = dynamic(() => import('@/components/event-map').then(mod => ({ default: mod.EventMap })), {
+  ssr: false,
+  loading: () => (
+    <div className="h-96 bg-gray-100 rounded-lg flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
+        <p className="text-gray-600">Loading interactive map...</p>
+      </div>
+    </div>
+  )
+});
 
 const EventGallery = ({ imageUrl, title }: { imageUrl?: string; title: string }) => {
   const defaultImage = "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80";

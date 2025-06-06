@@ -45,24 +45,26 @@ interface ResendStatCardProps {
 function ResendStatCard({ title, value, icon, trend }: ResendStatCardProps) {
   return (
     <motion.div
-      whileHover={{ y: -1 }}
-      transition={{ duration: 0.2 }}
-      className="group relative overflow-hidden rounded-xl border border-white/[0.08] bg-black/40 backdrop-blur-sm p-6 hover:border-white/[0.12] transition-all duration-300"
+      whileHover={{ y: -3, scale: 1.01 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      className="group relative overflow-hidden rounded-xl border border-white/[0.08] bg-black/40 backdrop-blur-sm p-6 hover:border-white/20 hover:shadow-lg hover:shadow-white/[0.03] transition-all duration-300"
     >
       {/* Subtle gradient overlay on hover */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] via-transparent to-white/[0.01] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
       
       <div className="relative z-10">
         <div className="flex items-center justify-between mb-4">
-          <div className="p-2 rounded-lg bg-white/[0.05] border border-white/[0.08] group-hover:bg-white/[0.08] transition-colors duration-300">
-            {icon}
+          <div className="p-2 rounded-lg bg-white/[0.05] border border-white/[0.08] group-hover:bg-black/[0.05] group-hover:border-black/[0.08] transition-all duration-300">
+            <div className="text-white/70 group-hover:text-black/70 transition-colors duration-300">
+              {icon}
+            </div>
           </div>
           {trend && (
             <div className={cn(
-              "flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium",
+              "flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium transition-all duration-300",
               trend.isPositive 
-                ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" 
-                : "bg-red-500/10 text-red-400 border border-red-500/20"
+                ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 group-hover:bg-emerald-500/20 group-hover:text-emerald-600 group-hover:border-emerald-500/30" 
+                : "bg-red-500/10 text-red-400 border border-red-500/20 group-hover:bg-red-500/20 group-hover:text-red-600 group-hover:border-red-500/30"
             )}>
               <TrendingUp className={cn("h-3 w-3", !trend.isPositive && "rotate-180")} />
               {Math.abs(trend.value)}%
@@ -70,8 +72,8 @@ function ResendStatCard({ title, value, icon, trend }: ResendStatCardProps) {
           )}
         </div>
         <div className="space-y-1">
-          <p className="text-sm font-medium text-white/60">{title}</p>
-          <p className="text-2xl font-semibold text-white">{value.toLocaleString()}</p>
+          <p className="text-sm font-medium text-white/60 group-hover:text-black/60 transition-colors duration-300">{title}</p>
+          <p className="text-2xl font-semibold text-white group-hover:text-black transition-colors duration-300">{value.toLocaleString()}</p>
         </div>
       </div>
     </motion.div>

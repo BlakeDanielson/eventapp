@@ -27,54 +27,57 @@ function EventCardComponent({ event, onDelete, onClone }: EventCardProps) {
     
     // Check database status first
     if (event.status === 'draft') {
-      return { label: 'Draft', color: 'text-yellow-400 bg-yellow-400/10 border-yellow-400/20' };
+      return { label: 'Draft', color: 'text-yellow-400 bg-yellow-400/10 border-yellow-400/20', hoverColor: 'group-hover:text-yellow-600 group-hover:bg-yellow-400/20 group-hover:border-yellow-400/30' };
     }
     if (event.status === 'private') {
-      return { label: 'Private', color: 'text-purple-400 bg-purple-400/10 border-purple-400/20' };
+      return { label: 'Private', color: 'text-purple-400 bg-purple-400/10 border-purple-400/20', hoverColor: 'group-hover:text-purple-600 group-hover:bg-purple-400/20 group-hover:border-purple-400/30' };
     }
     if (event.status === 'cancelled') {
-      return { label: 'Cancelled', color: 'text-red-400 bg-red-400/10 border-red-400/20' };
+      return { label: 'Cancelled', color: 'text-red-400 bg-red-400/10 border-red-400/20', hoverColor: 'group-hover:text-red-600 group-hover:bg-red-400/20 group-hover:border-red-400/30' };
     }
     
     // Then check date-based status for public events (including legacy 'published')
     if (event.status === 'public' || event.status === 'published') {
       if (eventDay.getTime() === today.getTime()) {
-        return { label: 'Today', color: 'text-orange-400 bg-orange-400/10 border-orange-400/20' };
+        return { label: 'Today', color: 'text-orange-400 bg-orange-400/10 border-orange-400/20', hoverColor: 'group-hover:text-orange-600 group-hover:bg-orange-400/20 group-hover:border-orange-400/30' };
       } else if (eventDate < now) {
-        return { label: 'Past', color: 'text-white/40 bg-white/[0.05] border-white/[0.08]' };
+        return { label: 'Past', color: 'text-white/40 bg-white/[0.05] border-white/[0.08]', hoverColor: 'group-hover:text-gray-600 group-hover:bg-gray-200/20 group-hover:border-gray-300/30' };
       } else {
-        return { label: 'Upcoming', color: 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20' };
+        return { label: 'Upcoming', color: 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20', hoverColor: 'group-hover:text-emerald-600 group-hover:bg-emerald-400/20 group-hover:border-emerald-400/30' };
       }
     }
     
     // Default case
-    return { label: 'Unknown', color: 'text-white/40 bg-white/[0.05] border-white/[0.08]' };
+    return { label: 'Unknown', color: 'text-white/40 bg-white/[0.05] border-white/[0.08]', hoverColor: 'group-hover:text-gray-600 group-hover:bg-gray-200/20 group-hover:border-gray-300/30' };
   };
 
   const status = getEventStatus(event);
 
   return (
     <motion.div
-      whileHover={{ y: -2 }}
-      transition={{ duration: 0.2 }}
-      className="group"
+      whileHover={{ y: -4, scale: 1.02 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      className="group relative"
     >
-      <Card className="bg-black/40 border-white/[0.08] hover:border-white/[0.12] transition-all duration-300 overflow-hidden">
-        <CardHeader className="pb-4">
+      <Card className="relative overflow-hidden bg-black/40 border-white/[0.08] hover:border-white/20 hover:shadow-xl hover:shadow-white/[0.05] transition-all duration-300">
+        {/* Subtle glow overlay on hover */}
+        <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] via-transparent to-white/[0.01] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+        
+        <CardHeader className="pb-4 relative z-10">
           <div className="flex items-start justify-between">
             <div className="flex-1 min-w-0">
-              <CardTitle className="text-lg leading-tight text-white mb-3 line-clamp-2" title={event.title}>
+              <CardTitle className="text-lg leading-tight text-white group-hover:text-white mb-3 line-clamp-2 transition-colors duration-300" title={event.title}>
                 {event.title}
               </CardTitle>
               <div className="flex items-center gap-2">
                 <div className={cn(
-                  "px-2 py-1 text-xs font-medium rounded-md border",
+                  "px-2 py-1 text-xs font-medium rounded-md border transition-all duration-300",
                   status.color
                 )}>
                   {status.label}
                 </div>
                 {status.label === 'Today' && (
-                  <div className="px-2 py-1 text-xs font-medium rounded-md bg-orange-400/10 text-orange-400 border border-orange-400/20">
+                  <div className="px-2 py-1 text-xs font-medium rounded-md bg-orange-400/10 text-orange-400 border border-orange-400/20 transition-all duration-300">
                     🔥 Live
                   </div>
                 )}
@@ -82,7 +85,7 @@ function EventCardComponent({ event, onDelete, onClone }: EventCardProps) {
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-white/50 hover:text-white hover:bg-white/[0.05]">
+                <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-white/50 hover:text-white hover:bg-white/[0.05] transition-all duration-300 relative z-20">
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -124,16 +127,16 @@ function EventCardComponent({ event, onDelete, onClone }: EventCardProps) {
           </div>
         </CardHeader>
         
-        <CardContent className="pb-4">
+        <CardContent className="pb-4 relative z-10">
           <div className="space-y-3 text-sm">
-            <div className="flex items-center gap-3 text-white/70">
-              <div className="p-1.5 rounded-md bg-white/[0.05] border border-white/[0.08]">
+            <div className="flex items-center gap-3 text-white/70 group-hover:text-white/90 transition-colors duration-300">
+              <div className="p-1.5 rounded-md bg-white/[0.05] border border-white/[0.08] group-hover:bg-white/[0.08] group-hover:border-white/[0.12] transition-all duration-300">
                 <Calendar className="h-3.5 w-3.5" />
               </div>
               <span>{formatEventDate(event.date.toString())} at {event.time}</span>
             </div>
-            <div className="flex items-center gap-3 text-white/70">
-              <div className="p-1.5 rounded-md bg-white/[0.05] border border-white/[0.08]">
+            <div className="flex items-center gap-3 text-white/70 group-hover:text-white/90 transition-colors duration-300">
+              <div className="p-1.5 rounded-md bg-white/[0.05] border border-white/[0.08] group-hover:bg-white/[0.08] group-hover:border-white/[0.12] transition-all duration-300">
                 <MapPin className="h-3.5 w-3.5" />
               </div>
               <span className="truncate" title={event.location}>{event.location}</span>
@@ -141,32 +144,32 @@ function EventCardComponent({ event, onDelete, onClone }: EventCardProps) {
           </div>
           
           {event.bio && (
-            <p className="text-sm text-white/60 mt-4 line-clamp-2 leading-relaxed" title={event.bio}>
+            <p className="text-sm text-white/60 group-hover:text-white/80 mt-4 line-clamp-2 leading-relaxed transition-colors duration-300" title={event.bio}>
               {event.bio}
             </p>
           )}
         </CardContent>
         
-        <CardFooter className="pt-4 border-t border-white/[0.08] bg-white/[0.02]">
+        <CardFooter className="pt-4 border-t border-white/[0.08] group-hover:border-white/[0.12] bg-white/[0.02] group-hover:bg-white/[0.04] relative z-10 transition-all duration-300">
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-4 text-sm">
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-blue-400"></div>
-                <span className="font-medium text-white">{event._count.registrations}</span>
-                <span className="text-white/50">registered</span>
+                <div className="w-2 h-2 rounded-full bg-blue-400 group-hover:bg-blue-300 transition-colors duration-300"></div>
+                <span className="font-medium text-white group-hover:text-white transition-colors duration-300">{event._count.registrations}</span>
+                <span className="text-white/50 group-hover:text-white/70 transition-colors duration-300">registered</span>
               </div>
               {(event._count.invitees || 0) > 0 && (
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-emerald-400"></div>
-                  <span className="font-medium text-white">{event._count.invitees || 0}</span>
-                  <span className="text-white/50">invited</span>
+                  <div className="w-2 h-2 rounded-full bg-emerald-400 group-hover:bg-emerald-300 transition-colors duration-300"></div>
+                  <span className="font-medium text-white group-hover:text-white transition-colors duration-300">{event._count.invitees || 0}</span>
+                  <span className="text-white/50 group-hover:text-white/70 transition-colors duration-300">invited</span>
                 </div>
               )}
               {event._count.referrals > 0 && (
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-purple-400"></div>
-                  <span className="font-medium text-white">{event._count.referrals}</span>
-                  <span className="text-white/50">referrals</span>
+                  <div className="w-2 h-2 rounded-full bg-purple-400 group-hover:bg-purple-300 transition-colors duration-300"></div>
+                  <span className="font-medium text-white group-hover:text-white transition-colors duration-300">{event._count.referrals}</span>
+                  <span className="text-white/50 group-hover:text-white/70 transition-colors duration-300">referrals</span>
                 </div>
               )}
             </div>
@@ -174,7 +177,7 @@ function EventCardComponent({ event, onDelete, onClone }: EventCardProps) {
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="h-auto p-2 text-white/70 hover:text-white hover:bg-white/[0.05] group/btn"
+                className="h-auto p-2 text-white/70 hover:text-white hover:bg-white/[0.05] group/btn relative z-20 transition-all duration-300"
               >
                 <ArrowUpRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
               </Button>
