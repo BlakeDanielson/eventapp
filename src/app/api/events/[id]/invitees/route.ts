@@ -316,7 +316,7 @@ export async function PATCH(
     }
 
     // Build where clause for invitees to resend to
-    let whereClause: any = { eventId: eventId };
+    const whereClause: { eventId: string; id?: { in: string[] }; email?: { in: string[] } } = { eventId: eventId };
     
     if (inviteeIds && inviteeIds.length > 0) {
       whereClause.id = { in: inviteeIds };

@@ -7,7 +7,7 @@ export default function NotFound() {
       <div className="text-center space-y-4">
         <h1 className="text-4xl font-bold">Event Not Found</h1>
         <p className="text-lg text-gray-600">
-          The event you're looking for doesn't exist or may have been removed.
+          The event you&apos;re looking for doesn&apos;t exist or may have been removed.
         </p>
         <Link href="/">
           <Button>Go Home</Button>

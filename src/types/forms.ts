@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { EventStatus, OrganizationType } from './event';
+import { OrganizationType } from './event';
 
 // Form validation schema
 export const eventFormSchema = z.object({
@@ -52,11 +52,11 @@ export interface EventFormDefaults {
   agenda: string;
   qa: string;
   status: 'draft' | 'public' | 'private' | 'cancelled';
-  image: any;
+  image: File | null;
 }
 
 // Utility function to convert database event to form data
-export function eventToFormData(event: any): Partial<EventFormData> {
+export function eventToFormData(event: Record<string, unknown>): Partial<EventFormData> {
   if (!event) return {};
   
   // Handle legacy 'published' status by converting to 'public'
@@ -66,13 +66,13 @@ export function eventToFormData(event: any): Partial<EventFormData> {
   }
   
   return {
-    title: event.title || '',
-    date: event.date ? new Date(event.date).toISOString().split('T')[0] : '',
-    time: event.time || '',
-    location: event.location || '',
-    bio: event.bio || '',
-    agenda: event.agenda || '',
-    qa: event.qa || '',
+    title: typeof event.title === 'string' ? event.title : '',
+    date: event.date ? new Date(event.date as string | Date).toISOString().split('T')[0] : '',
+    time: typeof event.time === 'string' ? event.time : '',
+    location: typeof event.location === 'string' ? event.location : '',
+    bio: typeof event.bio === 'string' ? event.bio : '',
+    agenda: typeof event.agenda === 'string' ? event.agenda : '',
+    qa: typeof event.qa === 'string' ? event.qa : '',
     status: status as 'draft' | 'public' | 'private' | 'cancelled',
     image: null, // Always reset image for forms
   };
@@ -126,8 +126,8 @@ export const organizerProfileFormSchema = z.object({
   showSocialLinks: z.boolean(),
   
   // File uploads
-  profileImage: z.any().optional(),
-  defaultEventImage: z.any().optional(),
+  profileImage: z.instanceof(File).nullable().optional(),
+  defaultEventImage: z.instanceof(File).nullable().optional(),
 });
 
 // Infer the form data type from the schema
@@ -167,32 +167,32 @@ export interface OrganizerProfileFormDefaults {
   eventDisclaimer: string;
   showContactInfo: boolean;
   showSocialLinks: boolean;
-  profileImage: any;
-  defaultEventImage: any;
+  profileImage: File | null;
+  defaultEventImage: File | null;
 }
 
 // Utility function to convert database organizer profile to form data
-export function organizerProfileToFormData(profile: any): Partial<OrganizerProfileFormData> {
+export function organizerProfileToFormData(profile: Record<string, unknown>): Partial<OrganizerProfileFormData> {
   if (!profile) return {};
   
   return {
-    displayName: profile.displayName || '',
-    organizationType: profile.organizationType || 'individual',
-    bio: profile.bio || '',
-    email: profile.email || '',
-    phone: profile.phone || '',
-    website: profile.website || '',
-    location: profile.location || '',
-    linkedinUrl: profile.linkedinUrl || '',
-    twitterUrl: profile.twitterUrl || '',
-    facebookUrl: profile.facebookUrl || '',
-    instagramUrl: profile.instagramUrl || '',
-    brandColor: profile.brandColor || '',
-    defaultLocation: profile.defaultLocation || '',
-    defaultAgenda: profile.defaultAgenda || '',
-    eventDisclaimer: profile.eventDisclaimer || '',
-    showContactInfo: profile.showContactInfo ?? true,
-    showSocialLinks: profile.showSocialLinks ?? true,
+    displayName: typeof profile.displayName === 'string' ? profile.displayName : '',
+    organizationType: (profile.organizationType as OrganizationType) || 'individual',
+    bio: typeof profile.bio === 'string' ? profile.bio : '',
+    email: typeof profile.email === 'string' ? profile.email : '',
+    phone: typeof profile.phone === 'string' ? profile.phone : '',
+    website: typeof profile.website === 'string' ? profile.website : '',
+    location: typeof profile.location === 'string' ? profile.location : '',
+    linkedinUrl: typeof profile.linkedinUrl === 'string' ? profile.linkedinUrl : '',
+    twitterUrl: typeof profile.twitterUrl === 'string' ? profile.twitterUrl : '',
+    facebookUrl: typeof profile.facebookUrl === 'string' ? profile.facebookUrl : '',
+    instagramUrl: typeof profile.instagramUrl === 'string' ? profile.instagramUrl : '',
+    brandColor: typeof profile.brandColor === 'string' ? profile.brandColor : '',
+    defaultLocation: typeof profile.defaultLocation === 'string' ? profile.defaultLocation : '',
+    defaultAgenda: typeof profile.defaultAgenda === 'string' ? profile.defaultAgenda : '',
+    eventDisclaimer: typeof profile.eventDisclaimer === 'string' ? profile.eventDisclaimer : '',
+    showContactInfo: typeof profile.showContactInfo === 'boolean' ? profile.showContactInfo : true,
+    showSocialLinks: typeof profile.showSocialLinks === 'boolean' ? profile.showSocialLinks : true,
     profileImage: null, // Always reset images for forms
     defaultEventImage: null,
   };
@@ -271,19 +271,19 @@ export interface TicketFormDefaults {
 }
 
 // Utility function to convert database ticket to form data
-export function ticketToFormData(ticket: any): Partial<TicketFormData> {
+export function ticketToFormData(ticket: Record<string, unknown>): Partial<TicketFormData> {
   if (!ticket) return {};
   
   return {
-    name: ticket.name || '',
-    description: ticket.description || '',
-    price: ticket.price || 0,
-    currency: ticket.currency || 'USD',
-    maxQuantity: ticket.maxQuantity || undefined,
-    saleStartDate: ticket.saleStartDate ? new Date(ticket.saleStartDate).toISOString().split('T')[0] : '',
-    saleEndDate: ticket.saleEndDate ? new Date(ticket.saleEndDate).toISOString().split('T')[0] : '',
-    isActive: ticket.isActive ?? true,
-    allowMultiple: ticket.allowMultiple ?? true,
+    name: typeof ticket.name === 'string' ? ticket.name : '',
+    description: typeof ticket.description === 'string' ? ticket.description : '',
+    price: typeof ticket.price === 'number' ? ticket.price : 0,
+    currency: typeof ticket.currency === 'string' ? ticket.currency : 'USD',
+    maxQuantity: typeof ticket.maxQuantity === 'number' ? ticket.maxQuantity : undefined,
+    saleStartDate: ticket.saleStartDate ? new Date(ticket.saleStartDate as string | Date).toISOString().split('T')[0] : '',
+    saleEndDate: ticket.saleEndDate ? new Date(ticket.saleEndDate as string | Date).toISOString().split('T')[0] : '',
+    isActive: typeof ticket.isActive === 'boolean' ? ticket.isActive : true,
+    allowMultiple: typeof ticket.allowMultiple === 'boolean' ? ticket.allowMultiple : true,
   };
 }
 

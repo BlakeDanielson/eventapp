@@ -2,7 +2,7 @@
 
 import { UserButton, useUser } from '@clerk/nextjs';
 import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import Link from 'next/link';
 import { useState, useEffect, useMemo, useCallback } from 'react';

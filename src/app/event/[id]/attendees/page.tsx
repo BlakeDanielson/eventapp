@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { EventWithDetails } from '@/types/event';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -22,11 +22,9 @@ import {
   Filter, 
   Send,
   Loader2,
-  AlertCircle,
   Calendar,
   MapPin,
-  UserPlus,
-  CheckCircle
+  UserPlus
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -43,7 +41,7 @@ interface Invitee {
 
 export default function AttendeeManagementPage() {
   const params = useParams();
-  const router = useRouter();
+
   const [event, setEvent] = useState<EventWithDetails | null>(null);
   const [invitees, setInvitees] = useState<Invitee[]>([]);
   const [loading, setLoading] = useState(true);
@@ -64,6 +62,7 @@ export default function AttendeeManagementPage() {
       fetchEventWithAttendees();
       fetchInvitees();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.id]);
 
   const fetchEventWithAttendees = async () => {
@@ -315,7 +314,7 @@ export default function AttendeeManagementPage() {
                 Attendee Management
               </h1>
               <p className="text-gray-600 mt-2">
-                Manage registrations for "{event.title}"
+                Manage registrations for &quot;{event.title}&quot;
               </p>
             </div>
           </div>

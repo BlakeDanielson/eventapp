@@ -1,9 +1,7 @@
-import { Event, EventWithDetails } from '@/types/event';
+import { EventWithDetails } from '@/types/event';
 import { EventFormData } from '@/types/forms';
 import { 
-  CreateEventRequest, 
   CreateEventResponse, 
-  UpdateEventRequest,
   UpdateEventResponse,
   DeleteEventResponse,
   GetEventResponse,

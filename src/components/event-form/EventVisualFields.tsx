@@ -9,7 +9,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { ImageUpload } from '../image-upload';
-import { CustomizationPanel } from '../customization-panel';
 import { EventFormData } from '@/types/forms';
 
 interface EventVisualFieldsProps {
@@ -20,12 +19,12 @@ export function EventVisualFields({ control }: EventVisualFieldsProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Visual & Customization</CardTitle>
+        <CardTitle>Visual Customization</CardTitle>
         <CardDescription>
-          Make your event page stand out with images and customization
+          Add an image to make your event page more attractive
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent>
         <FormField
           control={control}
           name="image"
@@ -36,13 +35,12 @@ export function EventVisualFields({ control }: EventVisualFieldsProps) {
                 <ImageUpload />
               </FormControl>
               <FormDescription>
-                Add a compelling image to make your event page more attractive
+                Upload a compelling image to make your event page stand out
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <CustomizationPanel />
       </CardContent>
     </Card>
   );

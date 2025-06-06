@@ -300,7 +300,7 @@ export function logError(error: AppError, context?: string): void {
 // ===== FETCH ERROR HANDLER =====
 
 export async function handleFetchError(response: Response): Promise<never> {
-  let errorData: any;
+  let errorData: unknown;
   
   try {
     errorData = await response.json();
@@ -319,9 +319,10 @@ export async function handleFetchError(response: Response): Promise<never> {
 
   // Create error based on status code
   const errorType = getErrorTypeFromStatus(response.status);
+  const errorMessage = (errorData as { message?: string })?.message || `HTTP ${response.status}: ${response.statusText}`;
   throw createAppError(
     errorType,
-    errorData.message || `HTTP ${response.status}: ${response.statusText}`,
+    errorMessage,
     { details: JSON.stringify(errorData) }
   );
 }

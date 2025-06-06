@@ -2,19 +2,17 @@
 
 import { useEffect, useState } from 'react';
 import { useUser } from '@clerk/nextjs';
-import { useRouter } from 'next/navigation';
+
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ArrowLeft, User, Edit, Trash2, AlertCircle, CheckCircle } from 'lucide-react';
+import { ArrowLeft, User, Edit, Trash2, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useOrganizerProfile } from '@/hooks/useOrganizerProfile';
-import { OrganizerProfile } from '@/types/event';
 
 export default function OrganizerProfilePage() {
-  const { isLoaded, isSignedIn, user } = useUser();
-  const router = useRouter();
+  const { isLoaded, isSignedIn } = useUser();
   const { profile, loading, error, fetchProfile, deleteProfile } = useOrganizerProfile();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);

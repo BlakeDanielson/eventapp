@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { Event, EventWithDetails } from '@/types/event';
+import { EventWithDetails } from '@/types/event';
 import { EventFormData } from '@/types/forms';
 import { 
   AppError, 

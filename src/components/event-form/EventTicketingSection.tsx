@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Control, useWatch } from 'react-hook-form';
+import { Control } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
@@ -28,7 +28,7 @@ export interface EventTicketingSectionProps {
   onTicketsChange?: (tickets: TicketData[]) => void;
 }
 
-export function EventTicketingSection({ control, onTicketsChange }: EventTicketingSectionProps) {
+export function EventTicketingSection({ onTicketsChange }: EventTicketingSectionProps) {
   const [tickets, setTickets] = useState<TicketData[]>([]);
   const [hasTickets, setHasTickets] = useState(false);
 
@@ -132,7 +132,7 @@ export function EventTicketingSection({ control, onTicketsChange }: EventTicketi
                 <div className="text-center py-8 text-muted-foreground">
                   <DollarSign className="h-12 w-12 mx-auto mb-4 opacity-50" />
                   <p>No tickets configured yet.</p>
-                  <p className="text-sm">Click "Add Ticket" to create your first ticket type.</p>
+                  <p className="text-sm">Click &quot;Add Ticket&quot; to create your first ticket type.</p>
                 </div>
               )}
 

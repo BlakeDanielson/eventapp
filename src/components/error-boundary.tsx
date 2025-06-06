@@ -184,7 +184,7 @@ export function withErrorBoundary<P extends object>(
 
 // Hook for error boundary context (for functional components)
 export function useErrorHandler() {
-  return (error: Error, _errorInfo?: ErrorInfo) => {
+  return (error: Error) => {
     // Convert to AppError and log
     const appError = createAppError(
       ErrorType.SERVER_ERROR,

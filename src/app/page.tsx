@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Calendar, Users, Share2, Mail, BarChart3, Shield } from 'lucide-react';
 
 export default function Home() {
@@ -13,7 +13,7 @@ export default function Home() {
             Create Unforgettable Events
           </h1>
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            The easiest way to create, manage, and share your events. From intimate gatherings to large conferences, we've got you covered.
+            The easiest way to create, manage, and share your events. From intimate gatherings to large conferences, we&apos;ve got you covered.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/dashboard">
@@ -76,7 +76,7 @@ export default function Home() {
               <BarChart3 className="h-12 w-12 text-orange-600 mx-auto mb-4" />
               <CardTitle>Real-time Analytics</CardTitle>
               <CardDescription>
-                Monitor registrations and track your event's success
+                Monitor registrations and track your event&apos;s success
               </CardDescription>
             </CardHeader>
           </Card>

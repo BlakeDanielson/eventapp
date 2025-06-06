@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { EventForm } from '@/components/event-form';
 import { Event } from '@/types/event';
 import { eventToFormData } from '@/types/forms';
@@ -13,18 +13,10 @@ import { UserButton, useUser } from '@clerk/nextjs';
 
 export default function EditEventPage() {
   const params = useParams();
-  const router = useRouter();
   const { isLoaded, isSignedIn, user } = useUser();
   const [event, setEvent] = useState<Event | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    // Only fetch event if user is authenticated
-    if (params.id && isLoaded && isSignedIn) {
-      fetchEvent();
-    }
-  }, [params.id, isLoaded, isSignedIn]);
 
   const fetchEvent = async () => {
     try {
@@ -53,7 +45,15 @@ export default function EditEventPage() {
     }
   };
 
-  const handleFormSubmit = async (values: any) => {
+  useEffect(() => {
+    // Only fetch event if user is authenticated
+    if (params.id && isLoaded && isSignedIn) {
+      fetchEvent();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params.id, isLoaded, isSignedIn]);
+
+  const handleFormSubmit = async (values: Record<string, unknown>) => {
     // Implementation for updating the event
     console.log('Update event:', values);
   };
@@ -177,7 +177,7 @@ export default function EditEventPage() {
         <main className="container mx-auto px-4 py-8">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Event Not Found</h2>
-            <p className="text-gray-600 mb-6">The event you're looking for doesn't exist or you don't have permission to edit it.</p>
+            <p className="text-gray-600 mb-6">The event you&apos;re looking for doesn&apos;t exist or you don&apos;t have permission to edit it.</p>
             <Link href="/dashboard">
               <Button>Back to Dashboard</Button>
             </Link>
@@ -215,7 +215,7 @@ export default function EditEventPage() {
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Edit "{event.title}"</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">Edit &quot;{event.title}&quot;</h2>
             <p className="text-gray-600">
               Update your event details and save your changes.
             </p>

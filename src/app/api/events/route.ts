@@ -8,6 +8,7 @@ import {
   createApiResponse,
   createErrorResponse,
 } from '@/types/api';
+import { NextResponse } from 'next/server';
 
 const prisma = new PrismaClient();
 
@@ -79,7 +80,7 @@ export async function POST(request: Request): Promise<Response> {
             console.log('✅ Created invitee:', invitee.email, 'with token:', invitee.inviteToken);
           } catch (error: unknown) {
             // Skip if duplicate (P2002 is Prisma's unique constraint violation error)
-            if ((error as any)?.code !== 'P2002') {
+            if ((error as { code?: string })?.code !== 'P2002') {
               throw error;
             }
             console.log('⚠️ Duplicate invitee skipped:', email);
@@ -153,13 +154,16 @@ export async function POST(request: Request): Promise<Response> {
     };
 
     return createApiResponse(response, 201);
-  } catch (error) {
-    console.error('Event creation error:', error);
-    return createErrorResponse('Failed to create event', 500);
+  } catch (error: unknown) {
+    console.error('Error creating event:', error);
+    return NextResponse.json(
+      { error: 'Failed to create event' }, 
+      { status: 500 }
+    );
   }
 }
 
-export async function GET(request: Request): Promise<Response> {
+export async function GET(): Promise<Response> {
   try {
     const { userId } = await auth();
     

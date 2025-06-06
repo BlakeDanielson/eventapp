@@ -10,14 +10,10 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Separator } from '@/components/ui/separator';
 import { 
   User, 
-  Building, 
   Mail, 
-  Phone, 
   Globe, 
-  MapPin, 
   Linkedin, 
   Twitter, 
   Facebook, 
@@ -97,7 +93,7 @@ export function OrganizerProfileForm({
               <Label htmlFor="organizationType">Organization Type</Label>
               <Select
                 value={organizationType}
-                onValueChange={(value) => setValue('organizationType', value as any)}
+                onValueChange={(value) => setValue('organizationType', value as 'individual' | 'company' | 'nonprofit' | 'government' | 'education' | 'other')}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select type" />

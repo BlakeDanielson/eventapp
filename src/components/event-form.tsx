@@ -28,7 +28,7 @@ export function EventForm({
   submitButtonText = 'Create Event',
   mode = 'create' 
 }: EventFormProps) {
-  const [eventId, setEventId] = useState<string | null>(null);
+  const [eventId] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [invitees, setInvitees] = useState<string[]>([]);
   const [tickets, setTickets] = useState<TicketData[]>([]);

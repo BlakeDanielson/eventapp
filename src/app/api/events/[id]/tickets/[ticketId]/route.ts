@@ -84,7 +84,7 @@ export async function PUT(
     }
 
     // Convert date strings to Date objects if provided
-    const updateData: any = { ...validatedData };
+    const updateData: Record<string, unknown> = { ...validatedData };
     if (validatedData.saleStartDate !== undefined) {
       updateData.saleStartDate = validatedData.saleStartDate ? new Date(validatedData.saleStartDate) : null;
     }

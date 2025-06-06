@@ -208,7 +208,7 @@ export default function EventPage({ params }: EventPageProps) {
     day: 'numeric',
   });
 
-  const registrationCount = (event as any)?._count?.registrations || 0;
+  const registrationCount = (event as { _count?: { registrations?: number } })?._count?.registrations || 0;
 
   return (
     <div className="bg-background text-foreground min-h-screen">

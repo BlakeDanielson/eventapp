@@ -72,7 +72,7 @@ export interface Purchase {
   status: PurchaseStatus;
   paymentMethod: string;
   transactionId?: string;
-  paymentData?: any;
+  paymentData?: Record<string, unknown>;
   createdAt: Date;
   updatedAt: Date;
   ticket?: Ticket;
@@ -102,7 +102,7 @@ export interface Registration {
   name: string;
   email: string;
   eventId: string;
-  customQuestions?: any;
+  customQuestions?: Record<string, unknown>;
   status: string;
   referralId?: string;
   // New ticket purchase tracking

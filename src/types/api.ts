@@ -1,12 +1,12 @@
 import { z } from 'zod';
-import { Event, EventStatus, Registration, Referral } from './event';
-import { EventFormData } from './forms';
+import { EventStatus } from './event';
+
 
 // ============================================================================
 // COMMON API TYPES
 // ============================================================================
 
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   data?: T;
   error?: string;
   message?: string;
@@ -55,7 +55,7 @@ export interface CreateEventResponse {
 }
 
 // GET /api/events - List User Events
-export interface ListEventsResponse {
+export type ListEventsResponse = Array<{
   id: string;
   title: string;
   date: Date;
@@ -73,7 +73,7 @@ export interface ListEventsResponse {
     registrations: number;
     referrals: number;
   };
-}[]
+}>
 
 // GET /api/events/[id] - Get Event Details
 export interface GetEventResponse {
@@ -96,7 +96,7 @@ export interface GetEventResponse {
     email: string;
     status: string;
     createdAt: Date;
-    customQuestions?: any;
+    customQuestions?: Record<string, unknown>;
     referralId?: string;
     referral?: {
       id: string;
@@ -182,7 +182,7 @@ export interface RegisterRequest {
   eventId: string;
   name: string;
   email: string;
-  customQuestions?: Record<string, any>;
+  customQuestions?: Record<string, unknown>;
   referralId?: string;
 }
 
@@ -191,7 +191,7 @@ export interface RegisterResponse {
   name: string;
   email: string;
   eventId: string;
-  customQuestions?: any;
+  customQuestions?: Record<string, unknown>;
   status: string;
   referralId?: string;
   createdAt: Date;
@@ -217,7 +217,7 @@ export interface CreateReferralResponse {
 }
 
 // GET /api/referrals?eventId=... - List Referrals
-export interface ListReferralsResponse {
+export type ListReferralsResponse = Array<{
   id: string;
   name: string;
   eventId: string;
@@ -226,7 +226,7 @@ export interface ListReferralsResponse {
   _count: {
     registrations: number;
   };
-}[]
+}>
 
 // ============================================================================
 // BULK EMAIL API TYPES
@@ -285,7 +285,7 @@ export const registerSchema = z.object({
   eventId: z.string().min(1, 'Event ID is required'),
   name: z.string().min(2, 'Name must be at least 2 characters'),
   email: z.string().email('Valid email is required'),
-  customQuestions: z.record(z.any()).optional(),
+  customQuestions: z.record(z.unknown()).optional(),
   referralId: z.string().optional(),
 });
 
@@ -307,9 +307,9 @@ export const bulkEmailSchema = z.object({
 // ============================================================================
 
 // Helper type for API route handlers
-export type ApiHandler<TRequest = any, TResponse = any> = (
+export type ApiHandler = (
   request: Request,
-  context?: any
+  context?: unknown
 ) => Promise<Response>;
 
 // Helper type for typed API responses

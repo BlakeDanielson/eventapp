@@ -90,7 +90,7 @@ export default function EditOrganizerProfilePage() {
       } else {
         setSaveError('Failed to save profile. Please try again.');
       }
-    } catch (err) {
+    } catch {
       setSaveError('An unexpected error occurred.');
     } finally {
       setSaving(false);

@@ -69,17 +69,17 @@ interface RegistrationFormProps {
 
 interface RegistrationResponse {
   success: boolean;
-  registration?: any;
+  registration?: Record<string, unknown>;
   message?: string;
   error?: string;
-  details?: any[];
+  details?: { message: string }[];
 }
 
 export function RegistrationForm({ eventId, event, accessInfo }: RegistrationFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [submitMessage, setSubmitMessage] = useState('');
-  const [registration, setRegistration] = useState<any>(null);
+  const [registration, setRegistration] = useState<Record<string, unknown> | null>(null);
 
   // Determine if this is a private event registration
   const isPrivateEvent = event.status === 'private' && 
@@ -143,7 +143,7 @@ export function RegistrationForm({ eventId, event, accessInfo }: RegistrationFor
       if (data.success) {
         setSubmitStatus('success');
         setSubmitMessage(data.message || 'Registration successful!');
-        setRegistration(data.registration);
+        setRegistration(data.registration || null);
         if (isPrivateEvent) {
           privateForm.reset();
         } else {
@@ -153,7 +153,7 @@ export function RegistrationForm({ eventId, event, accessInfo }: RegistrationFor
         setSubmitStatus('error');
         if (data.details) {
           // Handle validation errors
-          setSubmitMessage(data.details.map((detail: any) => detail.message).join(', '));
+          setSubmitMessage(data.details.map((detail) => detail.message).join(', '));
         } else {
           setSubmitMessage(data.error || 'Registration failed. Please try again.');
         }
@@ -179,9 +179,9 @@ export function RegistrationForm({ eventId, event, accessInfo }: RegistrationFor
         </Alert>
         
         <div className="text-center space-y-4">
-          <h3 className="text-lg font-semibold">You're all set!</h3>
+          <h3 className="text-lg font-semibold">You&apos;re all set!</h3>
           <p className="text-sm text-gray-600">
-            We've sent a confirmation email to {registration.email}
+            We&apos;ve sent a confirmation email to {String(registration.email)}
           </p>
           
           <AddToCalendar 
@@ -221,7 +221,7 @@ export function RegistrationForm({ eventId, event, accessInfo }: RegistrationFor
       }
       return {
         title: "Complete Your Registration",
-        description: "You're invited! Please provide your name to confirm your attendance."
+        description: "You&apos;re invited! Please provide your name to confirm your attendance."
       };
     }
     return {
