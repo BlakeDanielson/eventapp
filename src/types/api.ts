@@ -30,6 +30,7 @@ export interface CreateEventRequest {
   bio: string;
   agenda: string;
   qa?: string;
+  qaEnabled?: boolean;
   status: EventStatus;
   imageUrl?: string;
   hasTickets?: boolean;
@@ -45,6 +46,7 @@ export interface CreateEventResponse {
   bio: string;
   agenda: string;
   qa?: string;
+  qaEnabled: boolean;
   imageUrl?: string;
   userId: string;
   status: EventStatus;
@@ -274,6 +276,7 @@ export const createEventSchema = z.object({
   bio: z.string().min(10, 'Bio must be at least 10 characters'),
   agenda: z.string().min(10, 'Agenda must be at least 10 characters'),
   qa: z.string().optional(),
+  qaEnabled: z.boolean().default(true),
   status: z.enum(['draft', 'public', 'private', 'cancelled']),
   imageUrl: z.string().url().optional(),
 });

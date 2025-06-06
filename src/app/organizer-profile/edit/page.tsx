@@ -4,27 +4,52 @@ import { useEffect, useState } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { ArrowLeft, Save, AlertCircle, Loader2 } from 'lucide-react';
+import { 
+  ArrowLeft, 
+  Save, 
+  AlertCircle, 
+  Loader2, 
+  User
+} from 'lucide-react';
 import Link from 'next/link';
 import { useOrganizerProfile } from '@/hooks/useOrganizerProfile';
-import { OrganizationType } from '@/types/event';
+import { 
+  BasicInfoSection, 
+  SocialLinksSection, 
+  EventDefaultsSection, 
+  PrivacySettingsSection 
+} from './components';
+
+interface FormData {
+  displayName: string;
+  bio: string;
+  organizationType: 'company' | 'individual' | 'nonprofit' | 'government' | 'education' | 'other';
+  email: string;
+  phone: string;
+  website: string;
+  location: string;
+  linkedinUrl: string;
+  twitterUrl: string;
+  facebookUrl: string;
+  instagramUrl: string;
+  defaultLocation: string;
+  defaultAgenda: string;
+  eventDisclaimer: string;
+  showContactInfo: boolean;
+  showSocialLinks: boolean;
+}
 
 export default function EditOrganizerProfilePage() {
   const { isLoaded, isSignedIn } = useUser();
   const router = useRouter();
   const { profile, loading, error, fetchProfile, saveProfile } = useOrganizerProfile();
   
-  // Form state
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     displayName: '',
-    organizationType: 'individual' as OrganizationType,
     bio: '',
+    organizationType: 'company',
     email: '',
     phone: '',
     website: '',
@@ -33,16 +58,15 @@ export default function EditOrganizerProfilePage() {
     twitterUrl: '',
     facebookUrl: '',
     instagramUrl: '',
-    brandColor: '',
     defaultLocation: '',
     defaultAgenda: '',
     eventDisclaimer: '',
     showContactInfo: true,
     showSocialLinks: true,
   });
-  
-  const [saving, setSaving] = useState(false);
-  const [saveError, setSaveError] = useState<string | null>(null);
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   useEffect(() => {
     if (isLoaded && isSignedIn) {
@@ -54,8 +78,8 @@ export default function EditOrganizerProfilePage() {
     if (profile) {
       setFormData({
         displayName: profile.displayName || '',
-        organizationType: profile.organizationType || 'individual',
         bio: profile.bio || '',
+        organizationType: profile.organizationType || 'company',
         email: profile.email || '',
         phone: profile.phone || '',
         website: profile.website || '',
@@ -64,7 +88,6 @@ export default function EditOrganizerProfilePage() {
         twitterUrl: profile.twitterUrl || '',
         facebookUrl: profile.facebookUrl || '',
         instagramUrl: profile.instagramUrl || '',
-        brandColor: profile.brandColor || '',
         defaultLocation: profile.defaultLocation || '',
         defaultAgenda: profile.defaultAgenda || '',
         eventDisclaimer: profile.eventDisclaimer || '',
@@ -75,35 +98,39 @@ export default function EditOrganizerProfilePage() {
   }, [profile]);
 
   const handleInputChange = (field: string, value: string | boolean) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSaving(true);
-    setSaveError(null);
+    setIsSubmitting(true);
+    setSubmitError(null);
 
     try {
       const success = await saveProfile(formData);
+
       if (success) {
         router.push('/organizer-profile');
       } else {
-        setSaveError('Failed to save profile. Please try again.');
+        setSubmitError('Failed to save profile. Please try again.');
       }
-    } catch {
-      setSaveError('An unexpected error occurred.');
+    } catch (err) {
+      setSubmitError('An unexpected error occurred. Please try again.');
     } finally {
-      setSaving(false);
+      setIsSubmitting(false);
     }
   };
 
   // Authentication Loading State
   if (!isLoaded) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+          <Loader2 className="h-12 w-12 animate-spin text-white/70 mx-auto mb-4" />
+          <p className="text-white/50">Loading...</p>
         </div>
       </div>
     );
@@ -112,12 +139,19 @@ export default function EditOrganizerProfilePage() {
   // Not authenticated
   if (!isSignedIn) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Authentication Required</h1>
-          <p className="text-gray-600 mb-6">Please sign in to edit your organizer profile.</p>
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto px-4">
+          <div className="mb-8">
+            <div className="w-16 h-16 bg-white/[0.05] border border-white/[0.08] rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <User className="h-8 w-8 text-white/70" />
+            </div>
+            <h1 className="text-3xl font-semibold text-white mb-4">Authentication Required</h1>
+            <p className="text-white/50 mb-6">Please sign in to edit your organizer profile.</p>
+          </div>
           <Link href="/sign-in">
-            <Button>Sign In</Button>
+            <Button className="bg-white text-black hover:bg-white/90 px-8 py-3">
+              Sign In
+            </Button>
           </Link>
         </div>
       </div>
@@ -125,204 +159,122 @@ export default function EditOrganizerProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b shadow-sm">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center gap-4">
-            <Link href="/organizer-profile">
-              <Button variant="ghost" size="sm">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Profile
-              </Button>
-            </Link>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                {profile ? 'Edit Profile' : 'Create Profile'}
-              </h1>
-              <p className="text-sm text-gray-600 mt-1">
-                Update your organizer information and event defaults
-              </p>
+    <div className="min-h-screen bg-black">
+      {/* Header */}
+      <div className="border-b border-white/[0.08] bg-black/40 backdrop-blur-xl">
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Link href="/organizer-profile">
+                <Button variant="ghost" size="sm" className="text-white/50 hover:text-white hover:bg-white/[0.05]">
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Back to Profile
+                </Button>
+              </Link>
+              <div>
+                <h1 className="text-3xl font-semibold text-white">
+                  {profile ? 'Edit Profile' : 'Create Profile'}
+                </h1>
+                <p className="text-white/50 mt-1">
+                  {profile 
+                    ? 'Update your organizer profile and settings'
+                    : 'Set up your organizer profile to get started'
+                  }
+                </p>
+              </div>
             </div>
           </div>
         </div>
-      </header>
+      </div>
 
       <main className="container mx-auto px-4 py-8">
-        {/* Error State */}
-        {(error || saveError) && (
-          <Alert variant="destructive" className="mb-6">
+        {/* Error Messages */}
+        {(error || submitError) && (
+          <Alert variant="destructive" className="mb-6 bg-red-400/10 border-red-400/20 text-red-400">
             <AlertCircle className="h-4 w-4" />
-            <AlertDescription>{error || saveError}</AlertDescription>
+            <AlertDescription>{error || submitError}</AlertDescription>
           </Alert>
         )}
 
         {/* Loading State */}
-        {loading && !profile && (
-          <Card>
-            <CardContent className="py-8">
-              <div className="text-center">
-                <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
-                <p className="text-gray-600">Loading profile...</p>
-              </div>
-            </CardContent>
-          </Card>
+        {loading && (
+          <div className="max-w-4xl mx-auto">
+            <Card className="bg-black/40 border-white/[0.08]">
+              <CardContent className="p-8">
+                <div className="flex items-center justify-center">
+                  <Loader2 className="h-8 w-8 animate-spin text-white/70 mr-3" />
+                  <span className="text-white/60">Loading profile...</span>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         )}
 
         {/* Form */}
-        {(!loading || profile) && (
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Basic Information */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Basic Information</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="displayName">Display Name *</Label>
-                    <Input
-                      id="displayName"
-                      value={formData.displayName}
-                      onChange={(e) => handleInputChange('displayName', e.target.value)}
-                      placeholder="Your name or organization name"
-                      required
-                    />
+        {!loading && (
+          <div className="max-w-4xl mx-auto">
+            <form onSubmit={handleSubmit} className="space-y-8">
+              <BasicInfoSection 
+                formData={formData}
+                onInputChange={handleInputChange}
+              />
+              
+              <SocialLinksSection 
+                formData={formData}
+                onInputChange={handleInputChange}
+              />
+              
+              <EventDefaultsSection 
+                formData={formData}
+                onInputChange={handleInputChange}
+              />
+              
+              <PrivacySettingsSection 
+                formData={formData}
+                onInputChange={handleInputChange}
+              />
+
+              {/* Submit Button */}
+              <Card className="bg-black/40 border-white/[0.08]">
+                <CardFooter className="flex justify-between items-center">
+                  <div>
+                    <p className="text-white/50 text-sm">
+                      All changes will be automatically applied to future events
+                    </p>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="organizationType">Organization Type</Label>
-                    <Select
-                      value={formData.organizationType}
-                      onValueChange={(value) => handleInputChange('organizationType', value)}
+                  <div className="flex items-center gap-3">
+                    <Link href="/organizer-profile">
+                      <Button 
+                        type="button" 
+                        variant="ghost"
+                        className="text-white/70 hover:text-white hover:bg-white/[0.05] border border-white/[0.08] hover:border-white/20"
+                        disabled={isSubmitting}
+                      >
+                        Cancel
+                      </Button>
+                    </Link>
+                    <Button 
+                      type="submit" 
+                      disabled={isSubmitting || !formData.displayName.trim()}
+                      className="bg-white text-black hover:bg-white/90 px-8"
                     >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="individual">Individual</SelectItem>
-                        <SelectItem value="company">Company</SelectItem>
-                        <SelectItem value="nonprofit">Non-profit</SelectItem>
-                        <SelectItem value="government">Government</SelectItem>
-                        <SelectItem value="education">Education</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          Saving...
+                        </>
+                      ) : (
+                        <>
+                          <Save className="h-4 w-4 mr-2" />
+                          {profile ? 'Update Profile' : 'Create Profile'}
+                        </>
+                      )}
+                    </Button>
                   </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="bio">About</Label>
-                  <Textarea
-                    id="bio"
-                    value={formData.bio}
-                    onChange={(e) => handleInputChange('bio', e.target.value)}
-                    placeholder="Tell people about yourself or your organization..."
-                    rows={4}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Contact Information */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Contact Information</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Public Email</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => handleInputChange('email', e.target.value)}
-                      placeholder="contact@example.com"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">Phone Number</Label>
-                    <Input
-                      id="phone"
-                      type="tel"
-                      value={formData.phone}
-                      onChange={(e) => handleInputChange('phone', e.target.value)}
-                      placeholder="+1 (555) 123-4567"
-                    />
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="website">Website</Label>
-                    <Input
-                      id="website"
-                      type="url"
-                      value={formData.website}
-                      onChange={(e) => handleInputChange('website', e.target.value)}
-                      placeholder="https://example.com"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="location">Location</Label>
-                    <Input
-                      id="location"
-                      value={formData.location}
-                      onChange={(e) => handleInputChange('location', e.target.value)}
-                      placeholder="City, State or Full Address"
-                    />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Event Defaults */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Event Defaults</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="defaultLocation">Default Event Location</Label>
-                  <Input
-                    id="defaultLocation"
-                    value={formData.defaultLocation}
-                    onChange={(e) => handleInputChange('defaultLocation', e.target.value)}
-                    placeholder="Your usual event location"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="defaultAgenda">Default Event Agenda Template</Label>
-                  <Textarea
-                    id="defaultAgenda"
-                    value={formData.defaultAgenda}
-                    onChange={(e) => handleInputChange('defaultAgenda', e.target.value)}
-                    placeholder="Your standard agenda template..."
-                    rows={3}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Submit Button */}
-            <div className="flex justify-end gap-4">
-              <Link href="/organizer-profile">
-                <Button variant="outline" disabled={saving}>
-                  Cancel
-                </Button>
-              </Link>
-              <Button type="submit" disabled={saving}>
-                {saving ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Saving...
-                  </>
-                ) : (
-                  <>
-                    <Save className="mr-2 h-4 w-4" />
-                    {profile ? 'Update Profile' : 'Create Profile'}
-                  </>
-                )}
-              </Button>
-            </div>
-          </form>
+                </CardFooter>
+              </Card>
+            </form>
+          </div>
         )}
       </main>
     </div>

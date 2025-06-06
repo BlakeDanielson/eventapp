@@ -202,17 +202,17 @@ export function TicketPurchase({ event, eventId }: TicketPurchaseProps) {
 
   if (loading) {
     return (
-      <Card>
+      <Card className="bg-black/40 border-white/[0.08]">
         <CardHeader>
-          <CardTitle className="flex items-center">
+          <CardTitle className="flex items-center text-white">
             <Ticket className="h-5 w-5 mr-2" />
             Event Tickets
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-center py-4">
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary mx-auto"></div>
-            <p className="text-sm text-muted-foreground mt-2">Loading tickets...</p>
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white mx-auto"></div>
+            <p className="text-sm text-white/50 mt-2">Loading tickets...</p>
           </div>
         </CardContent>
       </Card>
@@ -221,17 +221,17 @@ export function TicketPurchase({ event, eventId }: TicketPurchaseProps) {
 
   if (error && tickets.length === 0) {
     return (
-      <Card>
+      <Card className="bg-black/40 border-white/[0.08]">
         <CardHeader>
-          <CardTitle className="flex items-center">
+          <CardTitle className="flex items-center text-white">
             <Ticket className="h-5 w-5 mr-2" />
             Event Tickets
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <Alert variant="destructive">
+          <Alert variant="destructive" className="bg-red-500/10 border-red-500/20">
             <AlertCircle className="h-4 w-4" />
-            <AlertDescription>{error}</AlertDescription>
+            <AlertDescription className="text-red-400">{error}</AlertDescription>
           </Alert>
         </CardContent>
       </Card>
@@ -240,17 +240,17 @@ export function TicketPurchase({ event, eventId }: TicketPurchaseProps) {
 
   if (success) {
     return (
-      <Card>
+      <Card className="bg-black/40 border-white/[0.08]">
         <CardHeader>
-          <CardTitle className="flex items-center">
-            <CheckCircle className="h-5 w-5 mr-2 text-green-600" />
+          <CardTitle className="flex items-center text-white">
+            <CheckCircle className="h-5 w-5 mr-2 text-green-400" />
             Purchase Successful!
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <Alert className="border-green-200 bg-green-50">
-            <CheckCircle className="h-4 w-4 text-green-600" />
-            <AlertDescription className="text-green-800">
+          <Alert className="border-green-500/20 bg-green-500/10">
+            <CheckCircle className="h-4 w-4 text-green-400" />
+            <AlertDescription className="text-green-400">
               Your tickets have been purchased successfully! Check your email for confirmation and ticket details.
             </AlertDescription>
           </Alert>
@@ -260,13 +260,13 @@ export function TicketPurchase({ event, eventId }: TicketPurchaseProps) {
   }
 
   return (
-    <Card>
+    <Card className="bg-black/40 border-white/[0.08]">
       <CardHeader>
-        <CardTitle className="flex items-center">
+        <CardTitle className="flex items-center text-white">
           <Ticket className="h-5 w-5 mr-2" />
           Event Tickets
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-white/50">
           {event.requiresTickets 
             ? 'A ticket is required to attend this event' 
             : 'Purchase tickets to secure your spot'}
@@ -276,9 +276,9 @@ export function TicketPurchase({ event, eventId }: TicketPurchaseProps) {
         {/* Available Tickets */}
         <div className="space-y-3">
           {tickets.length === 0 ? (
-            <Alert>
+            <Alert className="bg-white/[0.02] border-white/[0.08]">
               <AlertCircle className="h-4 w-4" />
-              <AlertDescription>
+              <AlertDescription className="text-white/70">
                 No tickets are currently available for this event.
               </AlertDescription>
             </Alert>
@@ -290,19 +290,19 @@ export function TicketPurchase({ event, eventId }: TicketPurchaseProps) {
               return (
                 <div
                   key={ticket.id}
-                  className={`border rounded-lg p-4 ${isUnavailable ? 'opacity-50' : ''}`}
+                  className={`border border-white/[0.08] bg-white/[0.02] rounded-lg p-4 ${isUnavailable ? 'opacity-50' : ''}`}
                 >
                   <div className="flex justify-between items-start mb-2">
                     <div className="flex-1">
-                      <h4 className="font-medium">{ticket.name}</h4>
+                      <h4 className="font-medium text-white">{ticket.name}</h4>
                       {ticket.description && (
-                        <p className="text-sm text-muted-foreground">{ticket.description}</p>
+                        <p className="text-sm text-white/50">{ticket.description}</p>
                       )}
                       <div className="flex items-center gap-2 mt-1">
-                        <span className="font-semibold">
+                        <span className="font-semibold text-white">
                           ${ticket.price === 0 ? 'Free' : ticket.price.toFixed(2)}
                         </span>
-                        <Badge variant="secondary" className="text-xs">
+                        <Badge variant="secondary" className="text-xs bg-white/[0.08] text-white/70 border-white/[0.08]">
                           {ticket.availableQuantity} available
                         </Badge>
                       </div>
@@ -314,7 +314,7 @@ export function TicketPurchase({ event, eventId }: TicketPurchaseProps) {
                       <Button
                         variant="outline"
                         size="icon"
-                        className="h-8 w-8"
+                        className="h-8 w-8 border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.05] text-white"
                         onClick={() => removeFromCart(ticket.id)}
                         disabled={!cartItem}
                       >
@@ -327,29 +327,29 @@ export function TicketPurchase({ event, eventId }: TicketPurchaseProps) {
                         max={Math.min(ticket.maxQuantity, ticket.availableQuantity)}
                         value={cartItem?.quantity || 0}
                         onChange={(e) => updateQuantity(ticket.id, parseInt(e.target.value) || 0)}
-                        className="w-16 text-center"
+                        className="w-16 text-center bg-white/[0.02] border-white/[0.08] text-white"
                       />
                       
                       <Button
                         variant="outline"
                         size="icon"
-                        className="h-8 w-8"
+                        className="h-8 w-8 border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.05] text-white"
                         onClick={() => addToCart(ticket)}
-                                                 disabled={
-                           (cartItem?.quantity || 0) >= Math.min(ticket.maxQuantity, ticket.availableQuantity)
-                         }
+                        disabled={
+                          (cartItem?.quantity || 0) >= Math.min(ticket.maxQuantity, ticket.availableQuantity)
+                        }
                       >
                         <Plus className="h-4 w-4" />
                       </Button>
                       
-                      <span className="text-sm text-muted-foreground ml-2">
+                      <span className="text-sm text-white/50 ml-2">
                         Max {ticket.maxQuantity}
                       </span>
                     </div>
                   )}
                   
                   {isUnavailable && (
-                    <Badge variant="destructive" className="mt-2">
+                    <Badge variant="destructive" className="mt-2 bg-red-500/10 text-red-400 border-red-500/20">
                       Sold Out
                     </Badge>
                   )}
@@ -362,13 +362,13 @@ export function TicketPurchase({ event, eventId }: TicketPurchaseProps) {
         {/* Cart Summary */}
         {cart.length > 0 && (
           <>
-            <Separator />
+            <Separator className="bg-white/[0.08]" />
             
             {/* Buyer Information */}
             <div className="space-y-3">
-              <h4 className="font-medium">Your Information</h4>
+              <h4 className="font-medium text-white">Your Information</h4>
               <div>
-                <label htmlFor="buyerName" className="block text-sm font-medium mb-2">
+                <label htmlFor="buyerName" className="block text-sm font-medium mb-2 text-white/70">
                   Full Name *
                 </label>
                 <Input
@@ -378,27 +378,28 @@ export function TicketPurchase({ event, eventId }: TicketPurchaseProps) {
                   value={buyerName}
                   onChange={(e) => setBuyerName(e.target.value)}
                   required
+                  className="bg-white/[0.02] border-white/[0.08] text-white placeholder:text-white/40"
                 />
               </div>
             </div>
             
-            <Separator />
+            <Separator className="bg-white/[0.08]" />
             
             <div className="space-y-3">
-              <h4 className="font-medium flex items-center">
+              <h4 className="font-medium flex items-center text-white">
                 <Users className="h-4 w-4 mr-2" />
                 Your Order ({totalTickets} ticket{totalTickets !== 1 ? 's' : ''})
               </h4>
               
               {cart.map((item) => (
-                <div key={item.id} className="flex justify-between items-center text-sm">
+                <div key={item.id} className="flex justify-between items-center text-sm text-white/70">
                   <span>{item.name} × {item.quantity}</span>
                   <span>${(item.price * item.quantity).toFixed(2)}</span>
                 </div>
               ))}
               
-              <Separator />
-              <div className="flex justify-between items-center font-medium">
+              <Separator className="bg-white/[0.08]" />
+              <div className="flex justify-between items-center font-medium text-white">
                 <span>Total</span>
                 <span>${totalAmount.toFixed(2)}</span>
               </div>
@@ -408,17 +409,17 @@ export function TicketPurchase({ event, eventId }: TicketPurchaseProps) {
 
         {/* Error Display */}
         {error && (
-          <Alert variant="destructive">
+          <Alert variant="destructive" className="bg-red-500/10 border-red-500/20">
             <AlertCircle className="h-4 w-4" />
-            <AlertDescription>{error}</AlertDescription>
+            <AlertDescription className="text-red-400">{error}</AlertDescription>
           </Alert>
         )}
 
         {/* Purchase Button */}
-        {!isSignedIn ? (
-          <Alert>
+        {!user ? (
+          <Alert className="bg-white/[0.02] border-white/[0.08]">
             <AlertCircle className="h-4 w-4" />
-            <AlertDescription>
+            <AlertDescription className="text-white/70">
               Please sign in to purchase tickets for this event.
             </AlertDescription>
           </Alert>
@@ -426,12 +427,12 @@ export function TicketPurchase({ event, eventId }: TicketPurchaseProps) {
           <Button
             onClick={handlePurchase}
             disabled={cart.length === 0 || purchasing}
-            className="w-full"
+            className="w-full bg-white text-black hover:bg-white/90"
             size="lg"
           >
             {purchasing ? (
               <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-black mr-2"></div>
                 Processing...
               </>
             ) : (

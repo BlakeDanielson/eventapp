@@ -1,16 +1,9 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
-import mapboxgl from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
-import { MapPin, Navigation, Share2, Globe } from 'lucide-react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { MapPin, Navigation, Share2, Layers, Mountain } from 'lucide-react';
+import { getGoogleMapsLoader } from '@/lib/google-maps-loader';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-
-// Set Mapbox access token
-if (typeof window !== 'undefined') {
-  mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || '';
-}
 
 interface EventMapProps {
   location: string;
@@ -30,521 +23,443 @@ export function EventMap({
   className = '' 
 }: EventMapProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<mapboxgl.Map | null>(null);
+  const map = useRef<google.maps.Map | null>(null);
+  const marker = useRef<google.maps.Marker | null>(null);
+  const infoWindow = useRef<google.maps.InfoWindow | null>(null);
   const [loading, setLoading] = useState(true);
-  const [coordinates, setCoordinates] = useState<[number, number] | null>(null);
-  const [mapStyle, setMapStyle] = useState<'streets' | 'satellite' | 'dark'>('streets');
-  const [is3D, setIs3D] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [mapType, setMapType] = useState<'roadmap' | 'satellite' | 'terrain'>('roadmap');
 
-  // Geocode location to coordinates
-  useEffect(() => {
-    const geocodeLocation = async () => {
-      if (!location || !mapboxgl.accessToken) return;
-      
-      try {
-        const response = await fetch(
-          `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(location)}.json?access_token=${mapboxgl.accessToken}&limit=1`
-        );
-        const data = await response.json();
-        
-        if (data.features && data.features.length > 0) {
-          const [lng, lat] = data.features[0].center;
-          setCoordinates([lng, lat]);
-        }
-      } catch (error) {
-        console.error('Geocoding error:', error);
-      }
-    };
+  // Modern container ref callback pattern (avoids timing issues)
+  const mapContainerCallback = useCallback((node: HTMLDivElement | null) => {
+    if (node) {
+      mapContainer.current = node;
+    }
+  }, []);
 
-    geocodeLocation();
-  }, [location]);
-
-  // Initialize map
-  useEffect(() => {
-    if (!mapContainer.current || !coordinates || map.current) return;
-
-    const mapStyles = {
-      streets: 'mapbox://styles/mapbox/streets-v12',
-      satellite: 'mapbox://styles/mapbox/satellite-streets-v12',
-      dark: 'mapbox://styles/mapbox/dark-v11'
-    };
-
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current,
-      style: mapStyles[mapStyle],
-      center: coordinates,
-      zoom: 15,
-      pitch: is3D ? 60 : 0,
-      bearing: is3D ? -17.6 : 0,
-      antialias: true,
-      projection: 'mercator' as const
-    });
-
-    // Custom event marker HTML
-    const markerElement = document.createElement('div');
-    markerElement.className = 'custom-event-marker';
-    markerElement.innerHTML = `
-      <div class="marker-pulse"></div>
-      <div class="marker-pin">
-        <div class="marker-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M21 10C21 17 12 23 12 23S3 17 3 10C3 5.03 7.03 1 12 1S21 5.03 21 10Z" stroke="white" stroke-width="2" fill="currentColor"/>
-            <circle cx="12" cy="10" r="3" fill="white"/>
-          </svg>
-        </div>
-      </div>
-    `;
-
-    // Add custom marker styles
-    if (!document.getElementById('custom-marker-styles')) {
-      const style = document.createElement('style');
-      style.id = 'custom-marker-styles';
-      style.textContent = `
-        .custom-event-marker {
-          position: relative;
-          cursor: pointer;
-        }
-        
-        .marker-pin {
-          width: 40px;
-          height: 40px;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          border-radius: 50% 50% 50% 0;
-          transform: rotate(-45deg);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
-          border: 3px solid white;
-          position: relative;
-          z-index: 2;
-          animation: markerBounce 2s infinite;
-        }
-        
-        .marker-icon {
-          transform: rotate(45deg);
-          color: white;
-        }
-        
-        .marker-pulse {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          width: 60px;
-          height: 60px;
-          background: rgba(102, 126, 234, 0.2);
-          border-radius: 50%;
-          transform: translate(-50%, -50%);
-          animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-          0% {
-            transform: translate(-50%, -50%) scale(0.8);
-            opacity: 1;
-          }
-          100% {
-            transform: translate(-50%, -50%) scale(2);
-            opacity: 0;
-          }
-        }
-        
-        @keyframes markerBounce {
-          0%, 20%, 50%, 80%, 100% {
-            transform: rotate(-45deg) translateY(0);
-          }
-          40% {
-            transform: rotate(-45deg) translateY(-10px);
-          }
-          60% {
-            transform: rotate(-45deg) translateY(-5px);
-          }
-        }
-      `;
-      document.head.appendChild(style);
+  // Modern Google Maps initialization with proper error handling
+  const initializeMap = useCallback(async () => {
+    if (!location || !process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY) {
+      setError(!location ? 'No location provided' : 'Google Maps API key not configured');
+      setLoading(false);
+      return;
     }
 
-    // Create popup content
-    const popupContent = `
-      <div class="event-popup">
-        <div class="popup-header">
-          <h3 class="popup-title">${eventTitle}</h3>
-          <div class="popup-badges">
-            <span class="popup-badge">Event Location</span>
-          </div>
+    try {
+      // Wait for container to be ready with retry mechanism
+      let retries = 0;
+      while (!mapContainer.current && retries < 10) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        retries++;
+      }
+
+      if (!mapContainer.current) {
+        throw new Error('Map container not found after retries');
+      }
+
+      // Use shared Google Maps loader to avoid conflicts
+      await getGoogleMapsLoader();
+      
+      // Modern geocoding with proper error handling
+      const geocoder = new google.maps.Geocoder();
+      const geocodeResult = await geocoder.geocode({ address: location });
+      
+      if (geocodeResult.results.length === 0) {
+        throw new Error('Location not found');
+      }
+
+      const coordinates = geocodeResult.results[0].geometry.location;
+
+             // Modern map creation with readable dark theme
+       const mapInstance = new google.maps.Map(mapContainer.current, {
+         center: coordinates,
+         zoom: 15,
+         mapTypeId: mapType,
+         gestureHandling: 'cooperative',
+         zoomControl: true,
+         streetViewControl: false,
+         fullscreenControl: false,
+         mapTypeControl: false,
+         clickableIcons: false,
+         styles: [
+           // Base map background
+           {
+             featureType: 'all',
+             elementType: 'geometry',
+             stylers: [{ color: '#2d3748' }]
+           },
+           // Roads - lighter for visibility
+           {
+             featureType: 'road',
+             elementType: 'geometry',
+             stylers: [{ color: '#4a5568' }]
+           },
+           {
+             featureType: 'road.highway',
+             elementType: 'geometry',
+             stylers: [{ color: '#553c9a' }]
+           },
+           {
+             featureType: 'road.arterial',
+             elementType: 'geometry',
+             stylers: [{ color: '#4a5568' }]
+           },
+           // Text labels - white for contrast
+           {
+             featureType: 'all',
+             elementType: 'labels.text.fill',
+             stylers: [{ color: '#ffffff' }]
+           },
+           {
+             featureType: 'all',
+             elementType: 'labels.text.stroke',
+             stylers: [{ color: '#000000' }, { weight: 2 }]
+           },
+           // Water - dark blue
+           {
+             featureType: 'water',
+             elementType: 'geometry',
+             stylers: [{ color: '#1a365d' }]
+           },
+           {
+             featureType: 'water',
+             elementType: 'labels.text.fill',
+             stylers: [{ color: '#93c5fd' }]
+           },
+           // Buildings - subtle gray
+           {
+             featureType: 'landscape.man_made',
+             elementType: 'geometry',
+             stylers: [{ color: '#374151' }]
+           },
+           // Parks and green areas
+           {
+             featureType: 'landscape.natural',
+             elementType: 'geometry',
+             stylers: [{ color: '#065f46' }]
+           },
+           {
+             featureType: 'poi.park',
+             elementType: 'geometry',
+             stylers: [{ color: '#065f46' }]
+           },
+           // Hide clutter but keep important POIs
+           {
+             featureType: 'poi.business',
+             elementType: 'labels',
+             stylers: [{ visibility: 'off' }]
+           },
+           {
+             featureType: 'poi.medical',
+             elementType: 'labels.icon',
+             stylers: [{ visibility: 'off' }]
+           },
+           // Transit lines
+           {
+             featureType: 'transit.line',
+             elementType: 'geometry',
+             stylers: [{ color: '#553c9a' }, { weight: 1 }]
+           }
+         ]
+       });
+
+      map.current = mapInstance;
+
+      // Modern marker creation
+      const markerInstance = new google.maps.Marker({
+        position: coordinates,
+        map: mapInstance,
+        title: eventTitle,
+        animation: google.maps.Animation.DROP,
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 12,
+          fillColor: '#3b82f6',
+          fillOpacity: 1,
+          strokeColor: '#ffffff',
+          strokeWeight: 3
+        }
+      });
+
+      marker.current = markerInstance;
+
+      // Create info window content using modern DOM creation
+      const infoContent = document.createElement('div');
+      infoContent.className = 'max-w-sm bg-gray-900 rounded-lg shadow-lg overflow-hidden border border-gray-700';
+      infoContent.innerHTML = `
+        <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 relative">
+          <button onclick="arguments[0].stopPropagation(); window.closeInfoWindow && window.closeInfoWindow();" 
+                  class="absolute top-3 right-3 w-6 h-6 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+          <h3 class="font-bold text-lg mb-1 pr-8">${eventTitle}</h3>
+          <span class="inline-block bg-white/20 px-2 py-1 rounded-full text-xs font-medium">Event Location</span>
         </div>
-        <div class="popup-content">
-          <div class="popup-info">
-            <div class="info-row">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                <circle cx="12" cy="10" r="3"/>
-              </svg>
-              <span>${location}</span>
-            </div>
-            ${eventDate ? `
-              <div class="info-row">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                  <line x1="16" y1="2" x2="16" y2="6"/>
-                  <line x1="8" y1="2" x2="8" y2="6"/>
-                  <line x1="3" y1="10" x2="21" y2="10"/>
-                </svg>
-                <span>${eventDate}${eventTime ? ` at ${eventTime}` : ''}</span>
-              </div>
-            ` : ''}
-            ${organizerName ? `
-              <div class="info-row">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                  <circle cx="12" cy="7" r="4"/>
-                </svg>
-                <span>Organized by ${organizerName}</span>
-              </div>
-            ` : ''}
+        <div class="p-4 space-y-3">
+          <div class="flex items-center gap-2 text-sm text-gray-300">
+            <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+            <span>${location}</span>
           </div>
-          <div class="popup-actions">
-            <button class="popup-button primary" onclick="window.open('https://maps.google.com/search/?api=1&query=${encodeURIComponent(location)}', '_blank')">
+          ${eventDate ? `
+            <div class="flex items-center gap-2 text-sm text-gray-300">
+              <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              </svg>
+              <span>${eventDate}${eventTime ? ` at ${eventTime}` : ''}</span>
+            </div>
+          ` : ''}
+          ${organizerName ? `
+            <div class="flex items-center gap-2 text-sm text-gray-300">
+              <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+              </svg>
+              <span>Organized by ${organizerName}</span>
+            </div>
+          ` : ''}
+          <div class="flex gap-2 pt-2">
+            <button onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(location)}', '_blank', 'noopener,noreferrer')" 
+                    class="flex-1 bg-blue-500 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors">
               Get Directions
             </button>
-            <button class="popup-button secondary" onclick="navigator.share ? navigator.share({title: '${eventTitle}', text: 'Join me at ${eventTitle}', url: window.location.href}) : navigator.clipboard.writeText(window.location.href)">
-              Share Event
+            <button onclick="navigator.share ? navigator.share({title: '${eventTitle}', text: 'Check out this event location', url: window.location.href}) : navigator.clipboard.writeText(window.location.href)"
+                    class="flex-1 bg-gray-700 text-gray-200 py-2 px-3 rounded-lg text-sm font-medium hover:bg-gray-600 transition-colors">
+              Share
             </button>
           </div>
         </div>
-      </div>
-    `;
-
-    // Add popup styles
-    if (!document.getElementById('popup-styles')) {
-      const popupStyle = document.createElement('style');
-      popupStyle.id = 'popup-styles';
-      popupStyle.textContent = `
-        .mapboxgl-popup-content {
-          padding: 0;
-          border-radius: 12px;
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          backdrop-filter: blur(10px);
-          max-width: 320px;
-        }
-        
-        .event-popup {
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        }
-        
-        .popup-header {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          padding: 16px;
-          border-radius: 12px 12px 0 0;
-        }
-        
-        .popup-title {
-          margin: 0 0 8px 0;
-          font-size: 16px;
-          font-weight: 600;
-          line-height: 1.3;
-        }
-        
-        .popup-badges {
-          display: flex;
-          gap: 6px;
-        }
-        
-        .popup-badge {
-          background: rgba(255, 255, 255, 0.2);
-          padding: 4px 8px;
-          border-radius: 12px;
-          font-size: 11px;
-          font-weight: 500;
-        }
-        
-        .popup-content {
-          padding: 16px;
-          background: white;
-          border-radius: 0 0 12px 12px;
-        }
-        
-        .popup-info {
-          margin-bottom: 16px;
-        }
-        
-        .info-row {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          margin-bottom: 8px;
-          font-size: 14px;
-          color: #374151;
-        }
-        
-        .info-row:last-child {
-          margin-bottom: 0;
-        }
-        
-        .info-row svg {
-          color: #667eea;
-          flex-shrink: 0;
-        }
-        
-        .popup-actions {
-          display: flex;
-          gap: 8px;
-        }
-        
-        .popup-button {
-          flex: 1;
-          padding: 8px 12px;
-          border: none;
-          border-radius: 8px;
-          font-size: 13px;
-          font-weight: 500;
-          cursor: pointer;
-          transition: all 0.2s;
-        }
-        
-        .popup-button.primary {
-          background: #667eea;
-          color: white;
-        }
-        
-        .popup-button.primary:hover {
-          background: #5a67d8;
-          transform: translateY(-1px);
-        }
-        
-        .popup-button.secondary {
-          background: #f3f4f6;
-          color: #374151;
-        }
-        
-        .popup-button.secondary:hover {
-          background: #e5e7eb;
-          transform: translateY(-1px);
-        }
       `;
-      document.head.appendChild(popupStyle);
-    }
 
-    // Create marker with popup
-    const popup = new mapboxgl.Popup({
-      offset: [0, -40],
-      closeButton: false,
-      className: 'custom-event-popup'
-    }).setHTML(popupContent);
+      // Set up close functionality
+      (window as any).closeInfoWindow = () => {
+        if (infoWindow.current) {
+          infoWindow.current.close();
+        }
+      };
 
-    const marker = new mapboxgl.Marker({
-      element: markerElement,
-      anchor: 'bottom'
-    })
-      .setLngLat(coordinates)
-      .setPopup(popup)
-      .addTo(map.current);
+      // Modern InfoWindow with proper positioning and no default styling
+      const infoWindowInstance = new google.maps.InfoWindow({
+        content: infoContent,
+        maxWidth: 350,
+        pixelOffset: new google.maps.Size(0, -10),
+        disableAutoPan: false
+      });
 
-    // Show popup initially
-    marker.togglePopup();
+      infoWindow.current = infoWindowInstance;
+      infoWindowInstance.open(mapInstance, markerInstance);
 
-    // Add navigation controls
-    map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
+      // Remove default InfoWindow styling to eliminate white outer section
+      google.maps.event.addListener(infoWindowInstance, 'domready', () => {
+        const iwOuter = document.querySelector('.gm-style-iw');
+        const iwBackground = document.querySelector('.gm-style-iw-d');
+        const iwCloseBtn = document.querySelector('.gm-style-iw-chr');
+        const iwContainer = document.querySelector('.gm-style-iw-c');
+        const iwTail = document.querySelector('.gm-style-iw-tc');
+        
+        if (iwOuter) {
+          (iwOuter as HTMLElement).style.padding = '0px';
+          (iwOuter as HTMLElement).style.background = 'transparent';
+          (iwOuter as HTMLElement).style.border = 'none';
+          (iwOuter as HTMLElement).style.borderRadius = '8px';
+          (iwOuter as HTMLElement).style.boxShadow = 'none';
+          (iwOuter as HTMLElement).style.overflow = 'visible';
+        }
+        
+        if (iwBackground) {
+          (iwBackground as HTMLElement).style.background = 'transparent';
+          (iwBackground as HTMLElement).style.border = 'none';
+          (iwBackground as HTMLElement).style.borderRadius = '8px';
+          (iwBackground as HTMLElement).style.boxShadow = 'none';
+          (iwBackground as HTMLElement).style.overflow = 'visible';
+        }
+        
+        if (iwContainer) {
+          (iwContainer as HTMLElement).style.background = 'transparent';
+          (iwContainer as HTMLElement).style.border = 'none';
+          (iwContainer as HTMLElement).style.borderRadius = '8px';
+          (iwContainer as HTMLElement).style.boxShadow = 'none';
+          (iwContainer as HTMLElement).style.padding = '0px';
+          (iwContainer as HTMLElement).style.overflow = 'visible';
+        }
+        
+        // Hide the tail/pointer and make it transparent
+        if (iwTail) {
+          (iwTail as HTMLElement).style.background = 'transparent';
+          (iwTail as HTMLElement).style.border = 'none';
+          (iwTail as HTMLElement).style.boxShadow = 'none';
+        }
+        
+        // Hide default close button since we have our own
+        if (iwCloseBtn) {
+          (iwCloseBtn as HTMLElement).style.display = 'none';
+        }
+        
+        // Target any remaining white elements that might be showing
+        const allGmStyleElements = document.querySelectorAll('[class*="gm-style-iw"]');
+        allGmStyleElements.forEach((element) => {
+          const htmlElement = element as HTMLElement;
+          if (htmlElement.style.background === 'white' || htmlElement.style.backgroundColor === 'white') {
+            htmlElement.style.background = 'transparent';
+            htmlElement.style.backgroundColor = 'transparent';
+          }
+          if (htmlElement.style.border && htmlElement.style.border.includes('white')) {
+            htmlElement.style.border = 'none';
+          }
+        });
+      });
 
-    // Add map style loaded event
-    map.current.on('load', () => {
       setLoading(false);
-      
-      if (is3D) {
-        // Add 3D buildings
-        map.current?.addLayer({
-          'id': '3d-buildings',
-          'source': 'composite',
-          'source-layer': 'building',
-          'filter': ['==', 'extrude', 'true'],
-          'type': 'fill-extrusion',
-          'minzoom': 15,
-          'paint': {
-            'fill-extrusion-color': [
-              'interpolate',
-              ['linear'],
-              ['get', 'height'],
-              0, '#e0e7ff',
-              50, '#c7d2fe',
-              100, '#a5b4fc',
-              200, '#8b5cf6'
-            ],
-            'fill-extrusion-height': [
-              'interpolate',
-              ['linear'],
-              ['zoom'],
-              15, 0,
-              15.05, ['get', 'height']
-            ],
-            'fill-extrusion-base': [
-              'interpolate',
-              ['linear'],
-              ['zoom'],
-              15, 0,
-              15.05, ['get', 'min_height']
-            ],
-            'fill-extrusion-opacity': 0.8
-          }
-        });
 
-        // Add sky layer for atmosphere
-        map.current?.addLayer({
-          'id': 'sky',
-          'type': 'sky',
-          'paint': {
-            'sky-type': 'atmosphere',
-            'sky-atmosphere-sun': [0.0, 90.0],
-            'sky-atmosphere-sun-intensity': 15
-          }
-        });
-      }
-    });
+    } catch (error) {
+      console.error('Modern map initialization failed:', error);
+      setError(error instanceof Error ? error.message : 'Failed to load map');
+      setLoading(false);
+    }
+  }, [location, eventTitle, eventDate, eventTime, organizerName, mapType]);
+
+  // Effect with proper cleanup using modern patterns
+  useEffect(() => {
+    initializeMap();
 
     return () => {
+      // Modern cleanup approach
+      if (marker.current) {
+        marker.current.setMap(null);
+      }
+      if (infoWindow.current) {
+        infoWindow.current.close();
+      }
       if (map.current) {
-        map.current.remove();
-        map.current = null;
+        google.maps.event.clearInstanceListeners(map.current);
       }
     };
-  }, [coordinates, mapStyle, is3D, eventTitle, eventDate, eventTime, organizerName, location]);
+  }, [initializeMap]);
 
-  // Handle style changes
-  const handleStyleChange = (newStyle: 'streets' | 'satellite' | 'dark') => {
-    if (map.current && newStyle !== mapStyle) {
-      const mapStyles = {
-        streets: 'mapbox://styles/mapbox/streets-v12',
-        satellite: 'mapbox://styles/mapbox/satellite-streets-v12',
-        dark: 'mapbox://styles/mapbox/dark-v11'
-      };
-      
-      map.current.setStyle(mapStyles[newStyle]);
-      setMapStyle(newStyle);
-    }
-  };
-
-  // Toggle 3D view
-  const toggle3D = () => {
+  const handleMapTypeChange = useCallback((type: 'roadmap' | 'satellite' | 'terrain') => {
+    setMapType(type);
     if (map.current) {
-      const newIs3D = !is3D;
-      setIs3D(newIs3D);
-      
-      map.current.easeTo({
-        pitch: newIs3D ? 60 : 0,
-        bearing: newIs3D ? -17.6 : 0,
-        duration: 2000
-      });
+      map.current.setMapTypeId(type);
     }
-  };
+  }, []);
 
-  if (!mapboxgl.accessToken) {
+  const handleDirections = useCallback(() => {
+    if (location) {
+      const url = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(location)}`;
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+  }, [location]);
+
+  const handleShare = useCallback(async () => {
+    if (!location) return;
+    
+    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`;
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: eventTitle,
+          text: `Check out this location: ${location}`,
+          url: url,
+        });
+      } catch (error) {
+        // User cancelled sharing
+      }
+    } else {
+      // Modern clipboard API fallback
+      try {
+        await navigator.clipboard.writeText(url);
+      } catch (error) {
+        console.warn('Could not copy to clipboard');
+      }
+    }
+  }, [location, eventTitle]);
+
+  if (error) {
     return (
-      <Card className={className}>
-        <CardContent className="p-6 text-center">
-          <MapPin className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-          <h3 className="font-semibold mb-2">Map Configuration Needed</h3>
-          <p className="text-sm text-muted-foreground mb-4">
-            Please add your Mapbox API key to display the interactive map.
-          </p>
-          <div className="text-sm bg-muted p-3 rounded">
-            <strong>Location:</strong> {location}
-          </div>
-        </CardContent>
-      </Card>
+      <div className={`bg-zinc-900 rounded-lg border border-zinc-800 p-8 text-center ${className}`}>
+        <MapPin className="mx-auto mb-4 h-12 w-12 text-zinc-600" />
+        <h3 className="text-lg font-semibold text-white mb-2">Map Unavailable</h3>
+        <p className="text-zinc-400 mb-4">{error}</p>
+        <p className="text-sm text-zinc-500">{location}</p>
+      </div>
     );
   }
 
   return (
-    <div className={`relative overflow-hidden rounded-lg border ${className}`}>
-      {loading && (
-        <div className="absolute inset-0 bg-muted/50 flex items-center justify-center z-10">
-          <div className="flex items-center gap-2 text-muted-foreground">
-            <div className="animate-spin">
-              <Globe className="h-5 w-5" />
-            </div>
-            <span>Loading interactive map...</span>
-          </div>
-        </div>
-      )}
-      
-      {/* Map Controls */}
-      <div className="absolute top-4 left-4 z-10 flex gap-2">
-        <Card className="p-2">
-          <div className="flex gap-1">
-            <Button
-              size="sm"
-              variant={mapStyle === 'streets' ? 'default' : 'ghost'}
-              onClick={() => handleStyleChange('streets')}
-              className="text-xs h-7"
-            >
-              Streets
-            </Button>
-            <Button
-              size="sm"
-              variant={mapStyle === 'satellite' ? 'default' : 'ghost'}
-              onClick={() => handleStyleChange('satellite')}
-              className="text-xs h-7"
-            >
-              Satellite
-            </Button>
-            <Button
-              size="sm"
-              variant={mapStyle === 'dark' ? 'default' : 'ghost'}
-              onClick={() => handleStyleChange('dark')}
-              className="text-xs h-7"
-            >
-              Dark
-            </Button>
-          </div>
-        </Card>
-        
-        <Card className="p-2">
+    <div className={`relative bg-zinc-900 rounded-lg border border-zinc-800 overflow-hidden ${className}`}>
+      {/* Modern Map Controls with proper z-index */}
+      <div className="absolute top-4 left-4 z-[100] flex gap-2">
+        <div className="bg-black/70 backdrop-blur-sm rounded-lg p-1 flex gap-1">
           <Button
+            variant={mapType === 'roadmap' ? 'default' : 'ghost'}
             size="sm"
-            variant={is3D ? 'default' : 'ghost'}
-            onClick={toggle3D}
-            className="text-xs h-7"
+            onClick={() => handleMapTypeChange('roadmap')}
+            className="h-8 px-3 text-xs"
           >
-            {is3D ? '2D' : '3D'}
+            <Navigation className="w-3 h-3 mr-1" />
+            Streets
           </Button>
-        </Card>
+          <Button
+            variant={mapType === 'satellite' ? 'default' : 'ghost'}
+            size="sm"
+            onClick={() => handleMapTypeChange('satellite')}
+            className="h-8 px-3 text-xs"
+          >
+            <Layers className="w-3 h-3 mr-1" />
+            Satellite
+          </Button>
+          <Button
+            variant={mapType === 'terrain' ? 'default' : 'ghost'}
+            size="sm"
+            onClick={() => handleMapTypeChange('terrain')}
+            className="h-8 px-3 text-xs"
+          >
+            <Mountain className="w-3 h-3 mr-1" />
+            Terrain
+          </Button>
+        </div>
       </div>
 
-      {/* Quick Actions */}
-      <div className="absolute bottom-4 right-4 z-10 flex gap-2">
+      {/* Action Buttons */}
+      <div className="absolute top-4 right-4 z-[100] flex gap-2">
         <Button
+          variant="secondary"
           size="sm"
-          onClick={() => window.open(`https://maps.google.com/search/?api=1&query=${encodeURIComponent(location)}`, '_blank')}
-          className="bg-green-600 hover:bg-green-700"
+          onClick={handleDirections}
+          className="bg-black/70 backdrop-blur-sm hover:bg-black/80"
         >
-          <Navigation className="h-4 w-4 mr-1" />
+          <Navigation className="w-4 h-4 mr-2" />
           Directions
         </Button>
         <Button
-          size="sm"
           variant="secondary"
-          onClick={() => {
-            if (navigator.share) {
-              navigator.share({
-                title: eventTitle,
-                text: `Join me at ${eventTitle}`,
-                url: window.location.href
-              });
-            } else {
-              navigator.clipboard.writeText(window.location.href);
-            }
-          }}
+          size="sm"
+          onClick={handleShare}
+          className="bg-black/70 backdrop-blur-sm hover:bg-black/80"
         >
-          <Share2 className="h-4 w-4" />
+          <Share2 className="w-4 h-4" />
         </Button>
       </div>
 
-      {/* Map Container */}
+      {/* Modern Loading State */}
+      {loading && (
+        <div className="absolute inset-0 bg-zinc-900 flex items-center justify-center z-[50]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-4"></div>
+            <p className="text-zinc-400">Loading map...</p>
+          </div>
+        </div>
+      )}
+
+      {/* Map Container with modern ref callback pattern */}
       <div 
-        ref={mapContainer} 
-        className="w-full h-[400px]"
-        style={{ minHeight: '400px' }}
+        ref={mapContainerCallback}
+        className="w-full h-[600px]"
+        style={{ minHeight: '600px' }}
       />
     </div>
   );

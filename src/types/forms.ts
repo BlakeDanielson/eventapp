@@ -5,6 +5,8 @@ import { OrganizationType } from './event';
 export const eventFormSchema = z.object({
   title: z.string().min(2, {
     message: 'Title must be at least 2 characters.',
+  }).max(200, {
+    message: 'Title must be less than 200 characters.',
   }),
   date: z.string().min(1, {
     message: 'Date is required.',
@@ -12,16 +14,33 @@ export const eventFormSchema = z.object({
   time: z.string().min(1, {
     message: 'Time is required.',
   }),
+  // Enhanced location fields
+  locationType: z.enum(['address', 'virtual']).default('address'),
   location: z.string().min(1, {
     message: 'Location is required.',
   }),
+  // Address fields (when locationType is 'address')
+  streetAddress: z.string().optional(),
+  city: z.string().optional(),
+  state: z.string().optional(),
+  zipCode: z.string().optional(),
+  country: z.string().optional(),
+  // Virtual fields (when locationType is 'virtual')
+  virtualLink: z.string().url().optional().or(z.literal('')),
+  virtualPlatform: z.string().optional(),
   bio: z.string().min(10, {
     message: 'Bio must be at least 10 characters.',
+  }).max(2000, {
+    message: 'Bio must be less than 2000 characters.',
   }),
   agenda: z.string().min(10, {
     message: 'Agenda must be at least 10 characters.',
+  }).max(5000, {
+    message: 'Agenda must be less than 5000 characters.',
   }),
   qa: z.string().optional(),
+  // Q&A settings
+  qaEnabled: z.boolean().default(true),
   status: z.enum(['draft', 'public', 'private', 'cancelled']),
   image: z.any().optional(),
 });
@@ -47,10 +66,19 @@ export interface EventFormDefaults {
   title: string;
   date: string;
   time: string;
+  locationType: 'address' | 'virtual';
   location: string;
+  streetAddress: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
+  virtualLink: string;
+  virtualPlatform: string;
   bio: string;
   agenda: string;
   qa: string;
+  qaEnabled: boolean;
   status: 'draft' | 'public' | 'private' | 'cancelled';
   image: File | null;
 }
@@ -69,10 +97,19 @@ export function eventToFormData(event: Record<string, unknown>): Partial<EventFo
     title: typeof event.title === 'string' ? event.title : '',
     date: event.date ? new Date(event.date as string | Date).toISOString().split('T')[0] : '',
     time: typeof event.time === 'string' ? event.time : '',
+    locationType: (event.locationType === 'virtual' ? 'virtual' : 'address') as 'address' | 'virtual',
     location: typeof event.location === 'string' ? event.location : '',
+    streetAddress: typeof event.streetAddress === 'string' ? event.streetAddress : '',
+    city: typeof event.city === 'string' ? event.city : '',
+    state: typeof event.state === 'string' ? event.state : '',
+    zipCode: typeof event.zipCode === 'string' ? event.zipCode : '',
+    country: typeof event.country === 'string' ? event.country : '',
+    virtualLink: typeof event.virtualLink === 'string' ? event.virtualLink : '',
+    virtualPlatform: typeof event.virtualPlatform === 'string' ? event.virtualPlatform : '',
     bio: typeof event.bio === 'string' ? event.bio : '',
     agenda: typeof event.agenda === 'string' ? event.agenda : '',
     qa: typeof event.qa === 'string' ? event.qa : '',
+    qaEnabled: typeof event.qaEnabled === 'boolean' ? event.qaEnabled : true,
     status: status as 'draft' | 'public' | 'private' | 'cancelled',
     image: null, // Always reset image for forms
   };
@@ -84,10 +121,19 @@ export function getFormDefaults(): EventFormDefaults {
     title: '',
     date: '',
     time: '',
+    locationType: 'address',
     location: '',
+    streetAddress: '',
+    city: '',
+    state: '',
+    zipCode: '',
+    country: '',
+    virtualLink: '',
+    virtualPlatform: '',
     bio: '',
     agenda: '',
     qa: '',
+    qaEnabled: true,
     status: 'public',
     image: null,
   };
@@ -118,6 +164,14 @@ export const organizerProfileFormSchema = z.object({
   
   // Default Event Settings
   defaultLocation: z.string().optional(),
+  defaultLocationType: z.enum(['address', 'virtual']).optional(),
+  defaultStreetAddress: z.string().optional(),
+  defaultCity: z.string().optional(),
+  defaultState: z.string().optional(),
+  defaultZipCode: z.string().optional(),
+  defaultCountry: z.string().optional(),
+  defaultVirtualLink: z.string().url().optional().or(z.literal('')),
+  defaultVirtualPlatform: z.string().optional(),
   defaultAgenda: z.string().optional(),
   eventDisclaimer: z.string().optional(),
   
@@ -163,6 +217,14 @@ export interface OrganizerProfileFormDefaults {
   instagramUrl: string;
   brandColor: string;
   defaultLocation: string;
+  defaultLocationType: 'address' | 'virtual';
+  defaultStreetAddress: string;
+  defaultCity: string;
+  defaultState: string;
+  defaultZipCode: string;
+  defaultCountry: string;
+  defaultVirtualLink: string;
+  defaultVirtualPlatform: string;
   defaultAgenda: string;
   eventDisclaimer: string;
   showContactInfo: boolean;
@@ -189,6 +251,14 @@ export function organizerProfileToFormData(profile: Record<string, unknown>): Pa
     instagramUrl: typeof profile.instagramUrl === 'string' ? profile.instagramUrl : '',
     brandColor: typeof profile.brandColor === 'string' ? profile.brandColor : '',
     defaultLocation: typeof profile.defaultLocation === 'string' ? profile.defaultLocation : '',
+    defaultLocationType: (profile.defaultLocationType === 'virtual' ? 'virtual' : 'address') as 'address' | 'virtual',
+    defaultStreetAddress: typeof profile.defaultStreetAddress === 'string' ? profile.defaultStreetAddress : '',
+    defaultCity: typeof profile.defaultCity === 'string' ? profile.defaultCity : '',
+    defaultState: typeof profile.defaultState === 'string' ? profile.defaultState : '',
+    defaultZipCode: typeof profile.defaultZipCode === 'string' ? profile.defaultZipCode : '',
+    defaultCountry: typeof profile.defaultCountry === 'string' ? profile.defaultCountry : '',
+    defaultVirtualLink: typeof profile.defaultVirtualLink === 'string' ? profile.defaultVirtualLink : '',
+    defaultVirtualPlatform: typeof profile.defaultVirtualPlatform === 'string' ? profile.defaultVirtualPlatform : '',
     defaultAgenda: typeof profile.defaultAgenda === 'string' ? profile.defaultAgenda : '',
     eventDisclaimer: typeof profile.eventDisclaimer === 'string' ? profile.eventDisclaimer : '',
     showContactInfo: typeof profile.showContactInfo === 'boolean' ? profile.showContactInfo : true,
@@ -214,6 +284,14 @@ export function getOrganizerProfileFormDefaults(): OrganizerProfileFormDefaults 
     instagramUrl: '',
     brandColor: '',
     defaultLocation: '',
+    defaultLocationType: 'address',
+    defaultStreetAddress: '',
+    defaultCity: '',
+    defaultState: '',
+    defaultZipCode: '',
+    defaultCountry: '',
+    defaultVirtualLink: '',
+    defaultVirtualPlatform: '',
     defaultAgenda: '',
     eventDisclaimer: '',
     showContactInfo: true,

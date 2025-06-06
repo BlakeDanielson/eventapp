@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@clerk/nextjs/server';
 import { PrismaClient } from '@prisma/client';
 import { z } from 'zod';
 import { nanoid } from 'nanoid';
@@ -52,8 +53,22 @@ export async function POST(
       );
     }
 
-    // TODO: Add authentication check to ensure user owns the event
-    // For now, we'll skip this check
+    // Authentication check to ensure user owns the event
+    const { userId } = await auth();
+    
+    if (!userId) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+
+    if (event.userId !== userId) {
+      return NextResponse.json(
+        { error: 'You can only manage invitees for your own events' },
+        { status: 403 }
+      );
+    }
 
     const invitees = [];
     const errors = [];
@@ -175,7 +190,22 @@ export async function GET(
       );
     }
 
-    // TODO: Add authentication check to ensure user owns the event
+    // Authentication check to ensure user owns the event
+    const { userId } = await auth();
+    
+    if (!userId) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+
+    if (event.userId !== userId) {
+      return NextResponse.json(
+        { error: 'You can only view invitees for your own events' },
+        { status: 403 }
+      );
+    }
 
     // Get all invitees with registration counts
     const invitees = await prisma.invitee.findMany({
@@ -245,7 +275,22 @@ export async function DELETE(
       );
     }
 
-    // TODO: Add authentication check to ensure user owns the event
+    // Authentication check to ensure user owns the event
+    const { userId } = await auth();
+    
+    if (!userId) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+
+    if (event.userId !== userId) {
+      return NextResponse.json(
+        { error: 'You can only remove invitees from your own events' },
+        { status: 403 }
+      );
+    }
 
     // Remove invitees
     const deletedInvitees = await prisma.invitee.deleteMany({
@@ -312,6 +357,23 @@ export async function PATCH(
       return NextResponse.json(
         { error: 'Only private events can have invitees' },
         { status: 400 }
+      );
+    }
+
+    // Authentication check to ensure user owns the event
+    const { userId } = await auth();
+    
+    if (!userId) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+
+    if (event.userId !== userId) {
+      return NextResponse.json(
+        { error: 'You can only resend invitations for your own events' },
+        { status: 403 }
       );
     }
 

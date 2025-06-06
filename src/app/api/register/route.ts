@@ -15,6 +15,9 @@ const registrationSchema = z.object({
     answer: z.string(),
   })).optional(),
   referralId: z.string().optional(),
+  // 🆕 CRITICAL: Add missing invite token fields for referral tracking
+  inviteToken: z.string().optional(),
+  accessReason: z.string().optional(),
 });
 
 export async function POST(request: Request) {
@@ -33,7 +36,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const { name, email, eventId, customQuestions, referralId } = validationResult.data;
+    const { name, email, eventId, customQuestions, referralId, inviteToken, accessReason } = validationResult.data;
 
     // Check if event exists and get full event details
     const event = await prisma.event.findUnique({
@@ -76,6 +79,24 @@ export async function POST(request: Request) {
       }
     }
 
+    // 🆕 CRITICAL: Validate invite token if provided (this enables viral referral tracking)
+    let validInviteToken = null;
+    if (inviteToken) {
+      const invitee = await prisma.invitee.findUnique({
+        where: { inviteToken: inviteToken }
+      });
+      
+      if (invitee && invitee.eventId === eventId) {
+        validInviteToken = inviteToken;
+        
+        // Optional: Mark that this invitee's link was used for registration
+        await prisma.invitee.update({
+          where: { id: invitee.id },
+          data: { hasAccessed: true, accessedAt: new Date() }
+        });
+      }
+    }
+
     // Create the registration
     const registration = await prisma.registration.create({
       data: {
@@ -84,6 +105,8 @@ export async function POST(request: Request) {
         eventId,
         customQuestions: customQuestions || [],
         referralId: validReferralId,
+        // 🆕 CRITICAL FIX: Populate viral referral tracking
+        invitedByToken: validInviteToken,
         status: 'registered',
       },
       include: {
@@ -97,6 +120,13 @@ export async function POST(request: Request) {
             bio: true,
           },
         },
+        // 🆕 ADD: Include referral data for verification
+        invitedBy: {
+          select: {
+            email: true,
+            inviteToken: true,
+          }
+        }
       },
     });
 

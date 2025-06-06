@@ -84,23 +84,29 @@ export function EventTicketingSection({ onTicketsChange }: EventTicketingSection
   };
 
   return (
-    <Card>
+    <Card className="border-zinc-800 bg-black rounded-lg shadow-none">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <DollarSign className="h-5 w-5" />
-          Ticketing & Pricing
-        </CardTitle>
-        <CardDescription>
-          Configure ticket types and pricing for your event. You can offer free or paid tickets.
-        </CardDescription>
+        <div className="flex items-center gap-3 mb-2">
+          <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
+            <DollarSign className="h-5 w-5 text-black" />
+          </div>
+          <div>
+            <CardTitle className="text-xl font-semibold text-white">
+              Ticketing & Pricing
+            </CardTitle>
+            <CardDescription className="text-zinc-400 mt-1">
+              Configure ticket types and pricing for your event. You can offer free or paid tickets.
+            </CardDescription>
+          </div>
+        </div>
       </CardHeader>
       
       <CardContent className="space-y-6">
         {/* Enable Ticketing Toggle */}
-        <div className="flex items-center justify-between p-4 border rounded-lg">
+        <div className="flex items-center justify-between p-4 border border-zinc-800 rounded-lg bg-zinc-900">
           <div className="space-y-1">
-            <div className="font-medium">Enable Ticketing</div>
-            <div className="text-sm text-muted-foreground">
+            <div className="font-medium text-white">Enable Ticketing</div>
+            <div className="text-sm text-zinc-400">
               Require attendees to get tickets (free or paid) to register for your event
             </div>
           </div>
@@ -115,13 +121,13 @@ export function EventTicketingSection({ onTicketsChange }: EventTicketingSection
             {/* Tickets List */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-medium">Ticket Types</h3>
+                <h3 className="text-lg font-medium text-white">Ticket Types</h3>
                 <Button
                   type="button"
                   variant="outline"
                   size="sm"
                   onClick={addTicket}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 bg-zinc-900 border-zinc-800 hover:bg-zinc-800 text-white"
                 >
                   <Plus className="h-4 w-4" />
                   Add Ticket
@@ -129,7 +135,7 @@ export function EventTicketingSection({ onTicketsChange }: EventTicketingSection
               </div>
 
               {tickets.length === 0 && (
-                <div className="text-center py-8 text-muted-foreground">
+                <div className="text-center py-8 text-zinc-400">
                   <DollarSign className="h-12 w-12 mx-auto mb-4 opacity-50" />
                   <p>No tickets configured yet.</p>
                   <p className="text-sm">Click &quot;Add Ticket&quot; to create your first ticket type.</p>
@@ -137,11 +143,11 @@ export function EventTicketingSection({ onTicketsChange }: EventTicketingSection
               )}
 
               {tickets.map((ticket, index) => (
-                <Card key={index} className="border-l-4 border-l-blue-500">
+                <Card key={index} className="border border-zinc-800 bg-zinc-900 border-l-4 border-l-white">
                   <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <CardTitle className="text-base">{ticket.name || `Ticket ${index + 1}`}</CardTitle>
+                        <CardTitle className="text-base text-white">{ticket.name || `Ticket ${index + 1}`}</CardTitle>
                         {ticket.price === 0 && (
                           <Badge variant="secondary">Free</Badge>
                         )}
@@ -154,7 +160,7 @@ export function EventTicketingSection({ onTicketsChange }: EventTicketingSection
                         variant="ghost"
                         size="sm"
                         onClick={() => removeTicket(index)}
-                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                        className="text-red-400 hover:text-red-300 hover:bg-zinc-800"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -165,15 +171,16 @@ export function EventTicketingSection({ onTicketsChange }: EventTicketingSection
                     {/* Basic Info */}
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <label className="text-sm font-medium">Ticket Name *</label>
+                        <label className="text-sm font-medium text-white">Ticket Name *</label>
                         <Input
                           value={ticket.name}
                           onChange={(e) => updateTicket(index, { name: e.target.value })}
                           placeholder="e.g., General Admission, VIP"
+                          className="bg-black border-zinc-700 text-white placeholder:text-zinc-500"
                         />
                       </div>
                       <div className="space-y-2">
-                        <label className="text-sm font-medium">Price</label>
+                        <label className="text-sm font-medium text-white">Price</label>
                         <div className="flex gap-2">
                           <Input
                             type="number"
@@ -182,32 +189,32 @@ export function EventTicketingSection({ onTicketsChange }: EventTicketingSection
                             value={ticket.price}
                             onChange={(e) => updateTicket(index, { price: parseFloat(e.target.value) || 0 })}
                             placeholder="0.00"
-                            className="flex-1"
+                            className="flex-1 bg-black border-zinc-700 text-white placeholder:text-zinc-500"
                           />
                           <Input
                             value={ticket.currency}
                             onChange={(e) => updateTicket(index, { currency: e.target.value })}
                             placeholder="USD"
-                            className="w-20"
+                            className="w-20 bg-black border-zinc-700 text-white placeholder:text-zinc-500"
                           />
                         </div>
                       </div>
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-sm font-medium">Description</label>
+                      <label className="text-sm font-medium text-white">Description</label>
                       <Textarea
                         value={ticket.description || ''}
                         onChange={(e) => updateTicket(index, { description: e.target.value })}
                         placeholder="Describe what's included with this ticket..."
-                        className="min-h-[60px]"
+                        className="min-h-[60px] bg-black border-zinc-700 text-white placeholder:text-zinc-500"
                       />
                     </div>
 
                     {/* Advanced Settings */}
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <label className="text-sm font-medium">Max Quantity</label>
+                        <label className="text-sm font-medium text-white">Max Quantity</label>
                         <Input
                           type="number"
                           min="1"
@@ -216,21 +223,22 @@ export function EventTicketingSection({ onTicketsChange }: EventTicketingSection
                             maxQuantity: e.target.value ? parseInt(e.target.value) : undefined 
                           })}
                           placeholder="Unlimited"
+                          className="bg-black border-zinc-700 text-white placeholder:text-zinc-500"
                         />
-                        <p className="text-xs text-muted-foreground">Leave empty for unlimited</p>
+                        <p className="text-xs text-zinc-500">Leave empty for unlimited</p>
                       </div>
                       <div className="space-y-2">
-                        <label className="text-sm font-medium">Settings</label>
+                        <label className="text-sm font-medium text-white">Settings</label>
                         <div className="space-y-2">
                           <div className="flex items-center justify-between">
-                            <span className="text-sm">Active</span>
+                            <span className="text-sm text-white">Active</span>
                             <Switch
                               checked={ticket.isActive}
                               onCheckedChange={(checked) => updateTicket(index, { isActive: checked })}
                             />
                           </div>
                           <div className="flex items-center justify-between">
-                            <span className="text-sm">Allow Multiple</span>
+                            <span className="text-sm text-white">Allow Multiple</span>
                             <Switch
                               checked={ticket.allowMultiple}
                               onCheckedChange={(checked) => updateTicket(index, { allowMultiple: checked })}
@@ -243,22 +251,24 @@ export function EventTicketingSection({ onTicketsChange }: EventTicketingSection
                     {/* Sale Dates */}
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <label className="text-sm font-medium">Sale Start Date</label>
+                        <label className="text-sm font-medium text-white">Sale Start Date</label>
                         <Input
                           type="datetime-local"
                           value={ticket.saleStartDate || ''}
                           onChange={(e) => updateTicket(index, { saleStartDate: e.target.value })}
+                          className="bg-black border-zinc-700 text-white"
                         />
-                        <p className="text-xs text-muted-foreground">Leave empty to start immediately</p>
+                        <p className="text-xs text-zinc-500">Leave empty to start immediately</p>
                       </div>
                       <div className="space-y-2">
-                        <label className="text-sm font-medium">Sale End Date</label>
+                        <label className="text-sm font-medium text-white">Sale End Date</label>
                         <Input
                           type="datetime-local"
                           value={ticket.saleEndDate || ''}
                           onChange={(e) => updateTicket(index, { saleEndDate: e.target.value })}
+                          className="bg-black border-zinc-700 text-white"
                         />
-                        <p className="text-xs text-muted-foreground">Leave empty to sell until event</p>
+                        <p className="text-xs text-zinc-500">Leave empty to sell until event</p>
                       </div>
                     </div>
                   </CardContent>
@@ -268,25 +278,25 @@ export function EventTicketingSection({ onTicketsChange }: EventTicketingSection
 
             {/* Summary */}
             {tickets.length > 0 && (
-              <div className="bg-muted/50 p-4 rounded-lg">
-                <h4 className="font-medium mb-2">Ticketing Summary</h4>
-                <div className="space-y-1 text-sm text-muted-foreground">
+              <div className="bg-zinc-900 border border-zinc-800 p-4 rounded-lg">
+                <h4 className="font-medium mb-2 text-white">Ticketing Summary</h4>
+                <div className="space-y-1 text-sm text-zinc-400">
                   <div className="flex justify-between">
                     <span>Total ticket types:</span>
-                    <span className="font-medium">{tickets.length}</span>
+                    <span className="font-medium text-white">{tickets.length}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Free tickets:</span>
-                    <span className="font-medium">{tickets.filter(t => t.price === 0).length}</span>
+                    <span className="font-medium text-white">{tickets.filter(t => t.price === 0).length}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Paid tickets:</span>
-                    <span className="font-medium">{tickets.filter(t => t.price > 0).length}</span>
+                    <span className="font-medium text-white">{tickets.filter(t => t.price > 0).length}</span>
                   </div>
                   {tickets.some(t => t.price > 0) && (
                     <div className="flex justify-between">
                       <span>Price range:</span>
-                      <span className="font-medium">
+                      <span className="font-medium text-white">
                         ${Math.min(...tickets.filter(t => t.price > 0).map(t => t.price))} - 
                         ${Math.max(...tickets.map(t => t.price))} {tickets[0]?.currency || 'USD'}
                       </span>

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@clerk/nextjs/server';
 import { PrismaClient } from '@prisma/client';
 import { z } from 'zod';
 
@@ -50,8 +51,15 @@ export async function POST(
     }
 
     // For private events, check if user is the organizer
-    // Note: We'll need to get the current user's ID from Clerk auth
-    // For now, we'll skip this check and implement it when we add auth
+    const { userId } = await auth();
+    
+    if (userId && event.userId === userId) {
+      return NextResponse.json({
+        hasAccess: true,
+        reason: 'owner',
+        inviteToken: inviteToken || null
+      });
+    }
 
     // Check if email is in the invitee list
     const invitee = await prisma.invitee.findFirst({

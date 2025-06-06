@@ -39,7 +39,7 @@ export async function POST(request: Request): Promise<Response> {
       );
     }
 
-    const { title, date, time, location, bio, agenda, qa, imageUrl, status } = validationResult.data;
+    const { title, date, time, location, bio, agenda, qa, qaEnabled, imageUrl, status } = validationResult.data;
 
     // Create event in a transaction to handle invitees
     const result = await prisma.$transaction(async (tx) => {
@@ -53,6 +53,7 @@ export async function POST(request: Request): Promise<Response> {
           bio,
           agenda,
           qa,
+          qaEnabled: qaEnabled ?? true,
           imageUrl,
           userId,
           status: status || 'public', // Default to public instead of published
@@ -144,6 +145,7 @@ export async function POST(request: Request): Promise<Response> {
       bio: result.bio,
       agenda: result.agenda,
       qa: result.qa || undefined,
+      qaEnabled: result.qaEnabled,
       imageUrl: result.imageUrl || undefined,
       userId: result.userId,
       status: result.status as 'draft' | 'public' | 'private' | 'cancelled',

@@ -63,7 +63,12 @@ function EventCardComponent({ event, onDelete, onClone }: EventCardProps) {
         {/* Subtle glow overlay on hover */}
         <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] via-transparent to-white/[0.01] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
         
-        <CardHeader className="pb-4 relative z-10">
+        {/* Clickable overlay for entire card */}
+        <Link href={`/event/${event.id}`} className="absolute inset-0 z-10" aria-label={`View ${event.title} details`}>
+          <span className="sr-only">View event details</span>
+        </Link>
+        
+        <CardHeader className="pb-4 relative z-10 pointer-events-none">
           <div className="flex items-start justify-between">
             <div className="flex-1 min-w-0">
               <CardTitle className="text-lg leading-tight text-white group-hover:text-white mb-3 line-clamp-2 transition-colors duration-300" title={event.title}>
@@ -83,12 +88,13 @@ function EventCardComponent({ event, onDelete, onClone }: EventCardProps) {
                 )}
               </div>
             </div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-white/50 hover:text-white hover:bg-white/[0.05] transition-all duration-300 relative z-20">
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
+            <div className="pointer-events-auto relative z-50" onClick={(e) => e.stopPropagation()}>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-white/50 hover:text-white hover:bg-white/[0.05] transition-all duration-300">
+                    <MoreHorizontal className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48 bg-black border-white/[0.08]">
                 <DropdownMenuItem asChild>
                   <Link href={`/event/${event.id}`} className="flex items-center gap-2 text-white hover:bg-white/[0.05]">
@@ -124,10 +130,11 @@ function EventCardComponent({ event, onDelete, onClone }: EventCardProps) {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+            </div>
           </div>
         </CardHeader>
         
-        <CardContent className="pb-4 relative z-10">
+        <CardContent className="pb-4 relative z-10 pointer-events-none">
           <div className="space-y-3 text-sm">
             <div className="flex items-center gap-3 text-white/70 group-hover:text-white/90 transition-colors duration-300">
               <div className="p-1.5 rounded-md bg-white/[0.05] border border-white/[0.08] group-hover:bg-white/[0.08] group-hover:border-white/[0.12] transition-all duration-300">
@@ -150,21 +157,14 @@ function EventCardComponent({ event, onDelete, onClone }: EventCardProps) {
           )}
         </CardContent>
         
-        <CardFooter className="pt-4 border-t border-white/[0.08] group-hover:border-white/[0.12] bg-white/[0.02] group-hover:bg-white/[0.04] relative z-10 transition-all duration-300">
-          <div className="flex items-center justify-between w-full">
-            <div className="flex items-center gap-4 text-sm">
+        <CardFooter className="pt-4 border-t border-white/[0.08] group-hover:border-white/[0.12] bg-white/[0.02] group-hover:bg-white/[0.04] relative z-10 pointer-events-none transition-all duration-300">
+          <div className="flex items-center justify-center w-full">
+            <div className="flex items-center gap-4 text-sm flex-wrap justify-center">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-blue-400 group-hover:bg-blue-300 transition-colors duration-300"></div>
                 <span className="font-medium text-white group-hover:text-white transition-colors duration-300">{event._count.registrations}</span>
                 <span className="text-white/50 group-hover:text-white/70 transition-colors duration-300">registered</span>
               </div>
-              {(event._count.invitees || 0) > 0 && (
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-emerald-400 group-hover:bg-emerald-300 transition-colors duration-300"></div>
-                  <span className="font-medium text-white group-hover:text-white transition-colors duration-300">{event._count.invitees || 0}</span>
-                  <span className="text-white/50 group-hover:text-white/70 transition-colors duration-300">invited</span>
-                </div>
-              )}
               {event._count.referrals > 0 && (
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-purple-400 group-hover:bg-purple-300 transition-colors duration-300"></div>
@@ -172,16 +172,14 @@ function EventCardComponent({ event, onDelete, onClone }: EventCardProps) {
                   <span className="text-white/50 group-hover:text-white/70 transition-colors duration-300">referrals</span>
                 </div>
               )}
+              {(event._count.invitees || 0) > 0 && (
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-emerald-400 group-hover:bg-emerald-300 transition-colors duration-300"></div>
+                  <span className="font-medium text-white group-hover:text-white transition-colors duration-300">{event._count.invitees || 0}</span>
+                  <span className="text-white/50 group-hover:text-white/70 transition-colors duration-300">invited</span>
+                </div>
+              )}
             </div>
-            <Link href={`/event/${event.id}`}>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="h-auto p-2 text-white/70 hover:text-white hover:bg-white/[0.05] group/btn relative z-20 transition-all duration-300"
-              >
-                <ArrowUpRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
-              </Button>
-            </Link>
           </div>
         </CardFooter>
       </Card>

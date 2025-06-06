@@ -14,11 +14,11 @@ import {
 import {
   EventBasicInfoFields,
   EventDetailsFields,
-  EventVisualFields,
   EventStatusSection,
   EventReferralSection,
   EventFormActions,
   EventTicketingSection,
+  EventQASection,
 } from './event-form/index';
 import { TicketData } from './event-form/EventTicketingSection';
 
@@ -71,7 +71,6 @@ export function EventForm({
       <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-12">
         <EventBasicInfoFields control={form.control} />
         <EventDetailsFields control={form.control} />
-        <EventVisualFields control={form.control} />
         <EventTicketingSection 
           control={form.control}
           onTicketsChange={setTickets}
@@ -81,6 +80,7 @@ export function EventForm({
           onInviteesChange={setInvitees}
         />
         <EventReferralSection />
+        <EventQASection control={form.control} />
         <EventFormActions 
           isSubmitting={isSubmitting}
           submitButtonText={submitButtonText}

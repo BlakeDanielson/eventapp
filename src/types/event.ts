@@ -33,6 +33,14 @@ export interface OrganizerProfile {
   
   // Default Event Settings
   defaultLocation?: string;
+  defaultLocationType?: 'address' | 'virtual';
+  defaultStreetAddress?: string;
+  defaultCity?: string;
+  defaultState?: string;
+  defaultZipCode?: string;
+  defaultCountry?: string;
+  defaultVirtualLink?: string;
+  defaultVirtualPlatform?: string;
   defaultAgenda?: string;
   eventDisclaimer?: string;
   
@@ -93,6 +101,8 @@ export interface Event {
   // New ticketing fields
   hasTickets: boolean;
   requiresTickets: boolean;
+  // New Q&A settings
+  qaEnabled: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -140,6 +150,8 @@ export interface EventWithDetails {
   // New ticketing fields
   hasTickets: boolean;
   requiresTickets: boolean;
+  // New Q&A settings
+  qaEnabled: boolean;
   createdAt: Date;
   updatedAt: Date;
   registrations: Pick<Registration, 'id' | 'name' | 'email' | 'status' | 'createdAt' | 'referral' | 'purchase'>[];
@@ -169,4 +181,65 @@ export interface EventWithOrganizer extends Event {
 // Extended type for dashboard with organizer profile and tickets
 export interface EventWithDetailsAndOrganizer extends EventWithDetails {
   organizerProfile?: OrganizerProfile;
+}
+
+// Q&A System Types
+export interface Question {
+  id: string;
+  eventId: string;
+  content: string;
+  askerName: string;
+  askerEmail: string;
+  isPublic: boolean;
+  isAnswered: boolean;
+  isApproved: boolean;
+  isHidden: boolean;
+  upvotes: number;
+  answers?: Answer[];
+  upvotedBy?: QuestionUpvote[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface Answer {
+  id: string;
+  questionId: string;
+  content: string;
+  answererName: string;
+  answererEmail: string;
+  isOfficial: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface QuestionUpvote {
+  id: string;
+  questionId: string;
+  voterEmail: string;
+  voterName?: string;
+  createdAt: Date;
+}
+
+export interface QuestionWithAnswers extends Question {
+  answers: Answer[];
+  hasUserUpvoted?: boolean;
+}
+
+// API Request/Response Types for Q&A
+export interface CreateQuestionRequest {
+  content: string;
+  askerName: string;
+  askerEmail: string;
+  isPublic?: boolean;
+}
+
+export interface CreateAnswerRequest {
+  content: string;
+  answererName: string;
+  answererEmail: string;
+}
+
+export interface UpvoteQuestionRequest {
+  voterEmail: string;
+  voterName?: string;
 } 

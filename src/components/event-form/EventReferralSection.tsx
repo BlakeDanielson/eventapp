@@ -3,10 +3,10 @@ import { ReferralForm } from '../referral-form';
 
 export function EventReferralSection() {
   return (
-    <Card>
+    <Card className="border-zinc-800 bg-black rounded-lg shadow-none">
       <CardHeader>
-        <CardTitle>Referral Settings</CardTitle>
-        <CardDescription>
+        <CardTitle className="text-white">Referral Settings</CardTitle>
+        <CardDescription className="text-zinc-400">
           Set up referral tracking to grow your event attendance
         </CardDescription>
       </CardHeader>

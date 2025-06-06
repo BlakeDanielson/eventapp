@@ -80,17 +80,17 @@ export function EventStatusSection({ control, onInviteesChange }: EventStatusSec
 
   return (
     <div className="space-y-8">
-      <Card className="border-0 shadow-none bg-gradient-to-br from-amber-50/50 to-orange-50/50 rounded-xl">
+      <Card className="border-zinc-800 bg-black rounded-lg shadow-none">
         <CardHeader className="pb-6">
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 bg-gradient-to-r from-amber-600 to-orange-600 rounded-lg flex items-center justify-center">
-              <Shield className="h-5 w-5 text-white" />
+            <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
+              <Shield className="h-5 w-5 text-black" />
             </div>
             <div>
-              <CardTitle className="text-xl font-semibold text-gray-900">
+              <CardTitle className="text-xl font-semibold text-white">
                 Event Privacy
               </CardTitle>
-              <CardDescription className="text-gray-600 mt-1">
+              <CardDescription className="text-zinc-400 mt-1">
                 Control who can discover and access your event
               </CardDescription>
             </div>
@@ -102,22 +102,22 @@ export function EventStatusSection({ control, onInviteesChange }: EventStatusSec
             name="status"
             render={({ field }) => (
               <FormItem className="space-y-3">
-                <FormLabel className="text-base font-medium text-gray-900">
+                <FormLabel className="text-base font-medium text-white">
                   Publication Status
                 </FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
-                    <SelectTrigger className="h-12 bg-white/80 backdrop-blur-sm border-gray-200/60 focus:border-amber-500 focus:ring-amber-500/20 rounded-lg">
+                    <SelectTrigger className="h-12 bg-zinc-900 border-zinc-800 focus:border-white focus:ring-white/10 rounded-lg text-white">
                       <SelectValue placeholder="Select status" />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent>
-                    <SelectItem value="public">🌍 Public - Visible to everyone with the link</SelectItem>
-                    <SelectItem value="private">🔒 Private - Only visible to invitees</SelectItem>
-                    <SelectItem value="draft">📝 Draft - Only visible to you</SelectItem>
+                  <SelectContent className="bg-zinc-900 border-zinc-800">
+                    <SelectItem value="public" className="text-white hover:bg-zinc-800">🌍 Public - Visible to everyone with the link</SelectItem>
+                    <SelectItem value="private" className="text-white hover:bg-zinc-800">🔒 Private - Only visible to invitees</SelectItem>
+                    <SelectItem value="draft" className="text-white hover:bg-zinc-800">📝 Draft - Only visible to you</SelectItem>
                   </SelectContent>
                 </Select>
-                <FormDescription className="text-sm text-gray-500 space-y-1">
+                <FormDescription className="text-sm text-zinc-500 space-y-1">
                   <span className="block"><strong>🌍 Public:</strong> Anyone with the link can view and register</span>
                   <span className="block"><strong>🔒 Private:</strong> Only people you invite can view the event</span>
                   <span className="block"><strong>📝 Draft:</strong> Event is hidden while you work on it</span>
@@ -130,17 +130,17 @@ export function EventStatusSection({ control, onInviteesChange }: EventStatusSec
       </Card>
 
       {/* Invitee Management - Now visible for all event statuses */}
-      <Card className="border-0 shadow-none bg-gradient-to-br from-rose-50/50 to-pink-50/50 rounded-xl">
+      <Card className="border-zinc-800 bg-black rounded-lg shadow-none">
         <CardHeader className="pb-6">
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 bg-gradient-to-r from-rose-600 to-pink-600 rounded-lg flex items-center justify-center">
-              <Users className="h-5 w-5 text-white" />
+            <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
+              <Users className="h-5 w-5 text-black" />
             </div>
             <div>
-              <CardTitle className="text-xl font-semibold text-gray-900">
+              <CardTitle className="text-xl font-semibold text-white">
                 Manage Invitees
               </CardTitle>
-              <CardDescription className="text-gray-600 mt-1">
+              <CardDescription className="text-zinc-400 mt-1">
                 {getInviteeDescription()}
               </CardDescription>
             </div>
@@ -154,13 +154,13 @@ export function EventStatusSection({ control, onInviteesChange }: EventStatusSec
               value={newInvitee}
               onChange={(e) => setNewInvitee(e.target.value)}
               onKeyPress={handleKeyPress}
-              className="flex-1 h-12 bg-white/80 backdrop-blur-sm border-gray-200/60 focus:border-rose-500 focus:ring-rose-500/20 rounded-lg"
+              className="flex-1 h-12 bg-zinc-900 border-zinc-800 focus:border-white focus:ring-white/10 rounded-lg text-white placeholder:text-zinc-500"
             />
             <Button
               type="button"
               onClick={addInvitee}
               disabled={!newInvitee}
-              className="h-12 px-6 bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-700 hover:to-pink-700 text-white rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl"
+              className="h-12 px-6 bg-white hover:bg-zinc-100 text-black rounded-lg font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Plus className="h-4 w-4 mr-2" />
               Add
@@ -169,7 +169,7 @@ export function EventStatusSection({ control, onInviteesChange }: EventStatusSec
           
           {invitees.length > 0 && (
             <div className="space-y-4">
-              <FormLabel className="text-base font-medium text-gray-900">
+              <FormLabel className="text-base font-medium text-white">
                 Invited People ({invitees.length})
               </FormLabel>
               <div className="flex flex-wrap gap-2">
@@ -177,7 +177,7 @@ export function EventStatusSection({ control, onInviteesChange }: EventStatusSec
                   <Badge 
                     key={email} 
                     variant="secondary" 
-                    className="flex items-center gap-2 bg-white/80 backdrop-blur-sm border border-gray-200/60 text-gray-700 px-3 py-2 rounded-lg"
+                    className="flex items-center gap-2 bg-zinc-900 border border-zinc-800 text-zinc-300 px-3 py-2 rounded-lg"
                   >
                     {email}
                     <Button
@@ -185,7 +185,7 @@ export function EventStatusSection({ control, onInviteesChange }: EventStatusSec
                       variant="ghost"
                       size="sm"
                       onClick={() => removeInvitee(email)}
-                      className="h-4 w-4 p-0 hover:bg-red-100 hover:text-red-600 rounded-full"
+                      className="h-4 w-4 p-0 hover:bg-zinc-800 hover:text-red-400 rounded-full"
                     >
                       <X className="h-3 w-3" />
                     </Button>
@@ -196,11 +196,10 @@ export function EventStatusSection({ control, onInviteesChange }: EventStatusSec
           )}
           
           {invitees.length === 0 && (
-            <div className="text-center py-8 bg-white/60 backdrop-blur-sm rounded-lg border border-gray-200/50">
-              <Users className="h-12 w-12 text-gray-400 mx-auto mb-3" />
-              <p className="text-gray-500 text-sm">
-                No invitees added yet. Start building your guest list!
-              </p>
+            <div className="text-center py-8 bg-zinc-900 rounded-lg border border-zinc-800">
+              <Users className="h-12 w-12 text-zinc-600 mx-auto mb-3" />
+              <p className="text-zinc-400 font-medium mb-2">No invitees yet</p>
+              <p className="text-sm text-zinc-500">Add email addresses above to start building your guest list</p>
             </div>
           )}
         </CardContent>

@@ -171,16 +171,16 @@ export function RegistrationForm({ eventId, event, accessInfo }: RegistrationFor
   if (submitStatus === 'success' && registration) {
     return (
       <div className="space-y-6">
-        <Alert className="border-green-200 bg-green-50">
-          <CheckCircle className="h-4 w-4 text-green-600" />
-          <AlertDescription className="text-green-800">
+        <Alert className="border-green-500/20 bg-green-500/10">
+          <CheckCircle className="h-4 w-4 text-green-400" />
+          <AlertDescription className="text-green-400">
             {submitMessage}
           </AlertDescription>
         </Alert>
         
         <div className="text-center space-y-4">
-          <h3 className="text-lg font-semibold">You&apos;re all set!</h3>
-          <p className="text-sm text-gray-600">
+          <h3 className="text-lg font-semibold text-white">You&apos;re all set!</h3>
+          <p className="text-sm text-white/50">
             We&apos;ve sent a confirmation email to {String(registration.email)}
           </p>
           
@@ -200,7 +200,7 @@ export function RegistrationForm({ eventId, event, accessInfo }: RegistrationFor
                 setRegistration(null);
                 setSubmitMessage('');
               }}
-              className="mt-4"
+              className="mt-4 border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.05] text-white"
             >
               Register Another Person
             </Button>
@@ -235,14 +235,14 @@ export function RegistrationForm({ eventId, event, accessInfo }: RegistrationFor
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold">{title}</h2>
-        <p className="text-gray-600">{description}</p>
+        <h2 className="text-2xl font-bold text-white">{title}</h2>
+        <p className="text-white/50">{description}</p>
       </div>
 
       {submitStatus === 'error' && (
-        <Alert variant="destructive">
+        <Alert variant="destructive" className="bg-red-500/10 border-red-500/20">
           <AlertCircle className="h-4 w-4" />
-          <AlertDescription>
+          <AlertDescription className="text-red-400">
             {submitMessage}
           </AlertDescription>
         </Alert>
@@ -258,12 +258,13 @@ export function RegistrationForm({ eventId, event, accessInfo }: RegistrationFor
                 name="firstName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>First Name</FormLabel>
+                    <FormLabel className="text-white/70">First Name</FormLabel>
                     <FormControl>
                       <Input 
                         placeholder="First name" 
                         {...field} 
                         disabled={isSubmitting}
+                        className="bg-white/[0.02] border-white/[0.08] text-white placeholder:text-white/40"
                       />
                     </FormControl>
                     <FormMessage />
@@ -275,12 +276,13 @@ export function RegistrationForm({ eventId, event, accessInfo }: RegistrationFor
                 name="lastName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Last Name</FormLabel>
+                    <FormLabel className="text-white/70">Last Name</FormLabel>
                     <FormControl>
                       <Input 
                         placeholder="Last name" 
                         {...field} 
                         disabled={isSubmitting}
+                        className="bg-white/[0.02] border-white/[0.08] text-white placeholder:text-white/40"
                       />
                     </FormControl>
                     <FormMessage />
@@ -288,19 +290,20 @@ export function RegistrationForm({ eventId, event, accessInfo }: RegistrationFor
                 )}
               />
             </div>
+            
             <FormField
               control={privateForm.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email Address</FormLabel>
+                  <FormLabel className="text-white/70">Email Address</FormLabel>
                   <FormControl>
                     <Input 
                       type="email" 
                       placeholder="Your email address" 
                       {...field} 
                       disabled={true} // Always disabled for private events since it's pre-populated
-                      className="bg-gray-50"
+                      className="bg-white/[0.05] border-white/[0.08] text-white/50 placeholder:text-white/40"
                     />
                   </FormControl>
                   <FormMessage />
@@ -310,7 +313,7 @@ export function RegistrationForm({ eventId, event, accessInfo }: RegistrationFor
             
             <Button 
               type="submit" 
-              className="w-full" 
+              className="w-full bg-white text-black hover:bg-white/90" 
               disabled={isSubmitting}
             >
               {isSubmitting ? (
@@ -333,12 +336,13 @@ export function RegistrationForm({ eventId, event, accessInfo }: RegistrationFor
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Full Name</FormLabel>
+                  <FormLabel className="text-white/70">Full Name</FormLabel>
                   <FormControl>
                     <Input 
                       placeholder="Enter your full name" 
                       {...field} 
                       disabled={isSubmitting}
+                      className="bg-white/[0.02] border-white/[0.08] text-white placeholder:text-white/40"
                     />
                   </FormControl>
                   <FormMessage />
@@ -350,13 +354,14 @@ export function RegistrationForm({ eventId, event, accessInfo }: RegistrationFor
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email Address</FormLabel>
+                  <FormLabel className="text-white/70">Email Address</FormLabel>
                   <FormControl>
                     <Input 
                       type="email" 
                       placeholder="Enter your email address" 
                       {...field} 
                       disabled={isSubmitting}
+                      className="bg-white/[0.02] border-white/[0.08] text-white placeholder:text-white/40"
                     />
                   </FormControl>
                   <FormMessage />
@@ -366,7 +371,7 @@ export function RegistrationForm({ eventId, event, accessInfo }: RegistrationFor
             
             <Button 
               type="submit" 
-              className="w-full" 
+              className="w-full bg-white text-black hover:bg-white/90" 
               disabled={isSubmitting}
             >
               {isSubmitting ? (

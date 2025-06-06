@@ -3,7 +3,7 @@
 import { EventForm } from '@/components/event-form';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Sparkles, Calendar, Users, Ticket } from 'lucide-react';
+import { ArrowLeft, Sparkles, Calendar, Users, Ticket, Zap } from 'lucide-react';
 import Link from 'next/link';
 import { UserButton, useUser } from '@clerk/nextjs';
 import { EventFormData } from '@/types/forms';
@@ -108,13 +108,13 @@ export default function CreateEventPage() {
   // Authentication Loading State
   if (!isLoaded) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center">
           <div className="relative">
-            <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-200 border-t-blue-600 mx-auto mb-6"></div>
-            <div className="absolute inset-0 rounded-full h-16 w-16 border-4 border-purple-200 border-t-purple-600 mx-auto animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}></div>
+            <div className="animate-spin rounded-full h-16 w-16 border-2 border-zinc-800 border-t-white mx-auto mb-6"></div>
+            <div className="absolute inset-0 rounded-full h-16 w-16 border-2 border-zinc-700 border-t-zinc-400 mx-auto animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}></div>
           </div>
-          <p className="text-gray-600 font-medium">Loading your workspace...</p>
+          <p className="text-zinc-400 font-medium">Loading your workspace...</p>
         </div>
       </div>
     );
@@ -123,19 +123,19 @@ export default function CreateEventPage() {
   // Not authenticated
   if (!isSignedIn) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center max-w-md mx-auto p-8">
-          <div className="w-20 h-20 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Sparkles className="h-10 w-10 text-white" />
+          <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6">
+            <Sparkles className="h-10 w-10 text-black" />
           </div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-4">
+          <h1 className="text-3xl font-bold text-white mb-4">
             Authentication Required
           </h1>
-          <p className="text-gray-600 mb-8 leading-relaxed">
+          <p className="text-zinc-400 mb-8 leading-relaxed">
             Please sign in to start creating amazing events that will captivate your audience.
           </p>
           <Link href="/sign-in">
-            <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl">
+            <Button className="bg-white hover:bg-zinc-100 text-black px-8 py-3 rounded-lg font-medium transition-all duration-200">
               Sign In to Continue
             </Button>
           </Link>
@@ -145,31 +145,31 @@ export default function CreateEventPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+    <div className="min-h-screen bg-black">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-lg border-b border-gray-200/50 sticky top-0 z-50">
+      <header className="border-b border-zinc-800 sticky top-0 z-50 bg-black/95 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Link href="/dashboard">
-                <Button variant="ghost" size="sm" className="hover:bg-gray-100/80 transition-colors">
+                <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-white hover:bg-zinc-900 transition-colors">
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Back to Dashboard
                 </Button>
               </Link>
-              <div className="h-6 w-px bg-gray-300/60" />
+              <div className="h-6 w-px bg-zinc-800" />
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                  <Sparkles className="h-4 w-4 text-white" />
+                <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+                  <Zap className="h-4 w-4 text-black" />
                 </div>
-                <h1 className="text-xl font-semibold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-                  Create New Event
+                <h1 className="text-xl font-semibold text-white">
+                  Create Event
                 </h1>
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-600 hidden sm:block">
-                Welcome back, {user?.firstName || 'Organizer'}
+              <span className="text-sm text-zinc-500 hidden sm:block">
+                {user?.firstName || 'Organizer'}
               </span>
               <UserButton afterSignOutUrl="/" />
             </div>
@@ -178,35 +178,34 @@ export default function CreateEventPage() {
       </header>
 
       {/* Hero Section */}
-      <section className="py-12 px-4">
+      <section className="py-16 px-4">
         <div className="container mx-auto max-w-4xl text-center">
-          <div className="inline-flex items-center gap-2 bg-white/60 backdrop-blur-sm rounded-full px-4 py-2 mb-6 border border-gray-200/50">
-            <Sparkles className="h-4 w-4 text-blue-600" />
-            <span className="text-sm font-medium text-gray-700">Event Creation</span>
+          <div className="inline-flex items-center gap-2 bg-zinc-900 rounded-full px-4 py-2 mb-8 border border-zinc-800">
+            <Sparkles className="h-4 w-4 text-white" />
+            <span className="text-sm font-medium text-zinc-300">Event Creation</span>
           </div>
           
-          <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 bg-clip-text text-transparent mb-4 leading-tight">
-            Bring Your Event to Life
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+            Create your event
           </h1>
           
-          <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
-            Create a stunning event page that captivates your audience and drives attendance. 
-            Fill out the details below and watch your vision come to reality.
+          <p className="text-lg text-zinc-400 mb-12 max-w-2xl mx-auto leading-relaxed">
+            Everything you need to launch, manage, and grow your event.
           </p>
 
           {/* Feature Pills */}
-          <div className="flex flex-wrap justify-center gap-3 mb-12">
-            <div className="flex items-center gap-2 bg-white/70 backdrop-blur-sm rounded-full px-4 py-2 border border-gray-200/50">
-              <Calendar className="h-4 w-4 text-blue-600" />
-              <span className="text-sm font-medium text-gray-700">Easy Scheduling</span>
+          <div className="flex flex-wrap justify-center gap-3">
+            <div className="flex items-center gap-2 bg-zinc-900 rounded-full px-4 py-2 border border-zinc-800 hover:border-zinc-700 transition-colors">
+              <Calendar className="h-4 w-4 text-zinc-400" />
+              <span className="text-sm font-medium text-zinc-300">Smart Scheduling</span>
             </div>
-            <div className="flex items-center gap-2 bg-white/70 backdrop-blur-sm rounded-full px-4 py-2 border border-gray-200/50">
-              <Users className="h-4 w-4 text-green-600" />
-              <span className="text-sm font-medium text-gray-700">Guest Management</span>
+            <div className="flex items-center gap-2 bg-zinc-900 rounded-full px-4 py-2 border border-zinc-800 hover:border-zinc-700 transition-colors">
+              <Users className="h-4 w-4 text-zinc-400" />
+              <span className="text-sm font-medium text-zinc-300">Guest Management</span>
             </div>
-            <div className="flex items-center gap-2 bg-white/70 backdrop-blur-sm rounded-full px-4 py-2 border border-gray-200/50">
-              <Ticket className="h-4 w-4 text-purple-600" />
-              <span className="text-sm font-medium text-gray-700">Ticketing System</span>
+            <div className="flex items-center gap-2 bg-zinc-900 rounded-full px-4 py-2 border border-zinc-800 hover:border-zinc-700 transition-colors">
+              <Ticket className="h-4 w-4 text-zinc-400" />
+              <span className="text-sm font-medium text-zinc-300">Ticketing System</span>
             </div>
           </div>
         </div>
@@ -216,7 +215,7 @@ export default function CreateEventPage() {
       <main className="container mx-auto px-4 pb-16">
         <div className="max-w-4xl mx-auto">
           {/* Form Container */}
-          <div className="bg-white/70 backdrop-blur-lg rounded-2xl shadow-xl border border-gray-200/50 overflow-hidden">
+          <div className="bg-zinc-950 rounded-lg border border-zinc-800 overflow-hidden">
             <div className="p-8 sm:p-12">
               <EventForm 
                 onSubmit={handleFormSubmit} 

@@ -27,6 +27,9 @@ model Event {
   hasTickets    Boolean  @default(false) // Whether this event has paid tickets
   requiresTickets Boolean @default(false) // Whether tickets are required to attend
   
+  // New: Q&A settings
+  qaEnabled     Boolean  @default(true) // Whether interactive Q&A is enabled for this event
+  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   registrations Registration[]
@@ -34,6 +37,7 @@ model Event {
   invitees    Invitee[] // For private events
   tickets     Ticket[]  // Available ticket types
   purchases   Purchase[] // All purchases for this event
+  questions   Question[] // Q&A questions for this event
 }
 
 model Registration {
@@ -121,6 +125,14 @@ model OrganizerProfile {
   
   // Default Event Settings
   defaultLocation String?  // Default location for new events
+  defaultLocationType String? @default("address") // address or virtual
+  defaultStreetAddress String? // Default street address
+  defaultCity     String?  // Default city
+  defaultState    String?  // Default state/province
+  defaultZipCode  String?  // Default ZIP/postal code
+  defaultCountry  String?  // Default country
+  defaultVirtualLink String? // Default virtual meeting link
+  defaultVirtualPlatform String? // Default virtual platform
   defaultAgenda   String?  // Template agenda for new events
   eventDisclaimer String?  // Standard disclaimer/terms for events
   
@@ -188,4 +200,62 @@ model Purchase {
   
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
+}
+
+// New model for Q&A functionality
+model Question {
+  id              String    @id @default(cuid())
+  eventId         String
+  event           Event     @relation(fields: [eventId], references: [id])
+  
+  // Question Details
+  content         String    // The question text
+  askerName       String    // Name of person asking
+  askerEmail      String    // Email of person asking
+  isPublic        Boolean   @default(true) // Whether question is visible to all attendees
+  isAnswered      Boolean   @default(false) // Whether organizer has answered
+  
+  // Moderation
+  isApproved      Boolean   @default(true) // For moderation (auto-approved by default)
+  isHidden        Boolean   @default(false) // Hidden by organizer
+  
+  // Interaction
+  upvotes         Int       @default(0) // Number of upvotes from attendees
+  
+  answers         Answer[]
+  upvotedBy       QuestionUpvote[]
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+// Model for organizer answers to questions
+model Answer {
+  id              String    @id @default(cuid())
+  questionId      String
+  question        Question  @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  
+  // Answer Details
+  content         String    // The answer text
+  answererName    String    // Name of organizer answering
+  answererEmail   String    // Email of organizer answering
+  isOfficial      Boolean   @default(true) // Whether this is an official organizer answer
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+// Model for tracking question upvotes to prevent duplicate voting
+model QuestionUpvote {
+  id              String    @id @default(cuid())
+  questionId      String
+  question        Question  @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  
+  // Voter Information
+  voterEmail      String    // Email of person who upvoted
+  voterName       String?   // Optional name
+  
+  createdAt       DateTime  @default(now())
+  
+  @@unique([questionId, voterEmail]) // Prevent duplicate votes per email per question
 }

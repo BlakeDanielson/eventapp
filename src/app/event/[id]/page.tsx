@@ -131,13 +131,13 @@ export default function EventPage({ params }: EventPageProps) {
 
   if (loading) {
     return (
-      <div className="bg-background text-foreground min-h-screen">
+      <div className="min-h-screen bg-black text-white">
         {/* Header with Back Button */}
-        <header className="bg-white border-b shadow-sm">
+        <header className="bg-black/40 border-b border-white/[0.08] backdrop-blur-xl">
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center gap-4">
               <Link href="/dashboard">
-                <Button variant="ghost" size="sm">
+                <Button variant="ghost" className="text-white hover:bg-white/[0.05]">
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Back to Dashboard
                 </Button>
@@ -148,8 +148,8 @@ export default function EventPage({ params }: EventPageProps) {
 
         <div className="flex items-center justify-center py-16">
           <div className="text-center">
-            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
-            <p>Loading event...</p>
+            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-white" />
+            <p className="text-white/50">Loading event...</p>
           </div>
         </div>
       </div>
@@ -158,13 +158,13 @@ export default function EventPage({ params }: EventPageProps) {
 
   if (error) {
     return (
-      <div className="bg-background text-foreground min-h-screen">
+      <div className="min-h-screen bg-black text-white">
         {/* Header with Back Button */}
-        <header className="bg-white border-b shadow-sm">
+        <header className="bg-black/40 border-b border-white/[0.08] backdrop-blur-xl">
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center gap-4">
               <Link href="/dashboard">
-                <Button variant="ghost" size="sm">
+                <Button variant="ghost" className="text-white hover:bg-white/[0.05]">
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Back to Dashboard
                 </Button>
@@ -175,9 +175,9 @@ export default function EventPage({ params }: EventPageProps) {
 
         <div className="flex items-center justify-center py-16">
           <div className="text-center space-y-4 max-w-md mx-auto p-6">
-            <Alert variant="destructive">
+            <Alert variant="destructive" className="bg-red-500/10 border-red-500/20 text-red-400">
               <AlertCircle className="h-4 w-4" />
-              <AlertDescription>{error}</AlertDescription>
+              <AlertDescription className="text-red-400">{error}</AlertDescription>
             </Alert>
           </div>
         </div>
@@ -189,7 +189,7 @@ export default function EventPage({ params }: EventPageProps) {
     return (
       <PrivateEventAccessGate
         eventId={eventId!}
-        eventTitle="Private Event" // We'll improve this by getting title from a basic info endpoint
+        eventTitle="Private Event"
         inviteToken={inviteToken || undefined}
         onAccessGranted={handleAccessGranted}
       />
@@ -211,13 +211,13 @@ export default function EventPage({ params }: EventPageProps) {
   const registrationCount = (event as { _count?: { registrations?: number } })?._count?.registrations || 0;
 
   return (
-    <div className="bg-background text-foreground min-h-screen">
+    <div className="min-h-screen bg-black text-white">
       {/* Header with Back Button */}
-      <header className="bg-white border-b shadow-sm">
+      <header className="bg-black/40 border-b border-white/[0.08] backdrop-blur-xl sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center gap-4">
             <Link href="/dashboard">
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" className="text-white hover:bg-white/[0.05]">
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to Dashboard
               </Button>
@@ -229,8 +229,8 @@ export default function EventPage({ params }: EventPageProps) {
       <div className="container mx-auto px-4 py-8">
         {/* Show access info for debugging/transparency */}
         {accessInfo.reason === 'shared_link' && accessInfo.sharedBy && (
-          <Alert className="mb-4 border-blue-200 bg-blue-50">
-            <AlertDescription className="text-blue-800">
+          <Alert className="mb-6 border-blue-500/20 bg-blue-500/10">
+            <AlertDescription className="text-blue-400">
               You&apos;re viewing this private event via an invite shared by {accessInfo.sharedBy}
             </AlertDescription>
           </Alert>
@@ -241,7 +241,7 @@ export default function EventPage({ params }: EventPageProps) {
           eventId={eventId!} 
           registrationCount={registrationCount} 
           formattedDate={formattedDate}
-          accessInfo={accessInfo} // Pass access info for registration tracking
+          accessInfo={accessInfo}
         />
       </div>
     </div>

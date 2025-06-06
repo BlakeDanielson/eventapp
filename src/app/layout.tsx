@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from '@clerk/nextjs';
+import { Toaster } from 'sonner';
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -29,6 +30,12 @@ export default function RootLayout({
           <div className="min-h-screen flex flex-col">
             {children}
           </div>
+          <Toaster 
+            theme="dark" 
+            position="top-right"
+            richColors
+            closeButton
+          />
         </body>
       </html>
     </ClerkProvider>
