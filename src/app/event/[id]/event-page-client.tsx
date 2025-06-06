@@ -13,7 +13,6 @@ import { Separator } from "@/components/ui/separator";
 import { RegistrationForm } from '@/components/registration-form';
 import { TicketPurchase } from '@/components/ticket-purchase';
 import { EventWithOrganizer } from '@/types/event';
-import { EnhancedLocationCard } from '@/components/enhanced-location-card';
 import dynamic from 'next/dynamic';
 
 const EventMap = dynamic(() => import('@/components/event-map').then(mod => ({ default: mod.EventMap })), {
@@ -249,33 +248,22 @@ export function EventPageClient({
               </CardContent>
             </Card>
 
-            {/* Enhanced Location Section with Weather */}
-            <div className="space-y-6">
-              <EnhancedLocationCard 
-                location={event.location}
-                eventTitle={event.title}
-                eventDate={formattedDate}
-                eventTime={event.time}
-                organizerName={event.organizerProfile?.displayName}
-              />
-              
-              {/* Interactive Map */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Interactive Map</CardTitle>
-                  <CardDescription>Explore the event location in detail</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <EventMap 
-                    location={event.location}
-                    eventTitle={event.title}
-                    eventDate={formattedDate}
-                    eventTime={event.time}
-                    organizerName={event.organizerProfile?.displayName}
-                  />
-                </CardContent>
-              </Card>
-            </div>
+            {/* Location Section */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Event Location</CardTitle>
+                <CardDescription>{event.location}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <EventMap 
+                  location={event.location}
+                  eventTitle={event.title}
+                  eventDate={formattedDate}
+                  eventTime={event.time}
+                  organizerName={event.organizerProfile?.displayName}
+                />
+              </CardContent>
+            </Card>
 
             {/* Q&A Section (if exists) */}
             {event.qa && (
