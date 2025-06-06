@@ -1,0 +1,43 @@
+# Task ID: 5
+# Title: Implement Free Ticket Support and Registration Confirmation
+# Status: done
+# Dependencies: 1, 4
+# Priority: high
+# Description: Support free tickets and send confirmation emails to attendees upon successful registration.
+# Details:
+Allow only free tickets for MVP. Upon successful registration, display confirmation and send an email using Resend. Store registration status in SQLite.
+
+# Test Strategy:
+Test registration flow, confirmation display, and email delivery. Verify only free tickets are supported.
+
+# Subtasks:
+## 1. Design and implement free ticket data model [done]
+### Dependencies: None
+### Description: Create the database schema for storing free ticket information in SQLite
+### Details:
+Define the ticket table structure with fields for ticket ID, event details, attendee information, and registration status. Ensure the model supports only free tickets for the MVP phase.
+
+## 2. Develop ticket registration interface [done]
+### Dependencies: 5.1
+### Description: Create the user interface for attendees to register for free tickets
+### Details:
+Design and implement a form that collects necessary attendee information, validates inputs, and submits registration requests. Include clear messaging that only free tickets are available.
+
+## 3. Implement registration confirmation display [done]
+### Dependencies: 5.2
+### Description: Create a confirmation page or modal to display after successful ticket registration
+### Details:
+Design and implement a user-friendly confirmation screen that appears immediately after successful registration, showing ticket details and next steps for the attendee.
+
+## 4. Set up email confirmation system using Resend [done]
+### Dependencies: 5.1
+### Description: Integrate with Resend API to send confirmation emails to attendees
+### Details:
+Configure Resend API integration, create email templates for registration confirmation, and implement the email sending functionality that triggers after successful ticket registration.
+
+## 5. Implement registration status tracking [done]
+### Dependencies: 5.1, 5.4
+### Description: Create functionality to store and update registration status in SQLite
+### Details:
+Develop the backend logic to update registration status in the database after each step of the process (submitted, confirmed, email sent). Include error handling and status checking capabilities.
+

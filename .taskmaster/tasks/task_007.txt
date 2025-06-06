@@ -1,0 +1,11 @@
+# Task ID: 7
+# Title: Implement 'Add to Google Calendar' Feature
+# Status: done
+# Dependencies: None
+# Priority: medium
+# Description: After a user successfully registers, provide a button or link on the confirmation screen that allows them to add the event to their Google Calendar. The link should pre-fill the calendar event with the correct details (Title, Date, Time, Location).
+# Details:
+
+
+# Test Strategy:
+

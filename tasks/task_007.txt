@@ -1,0 +1,37 @@
+# Task ID: 7
+# Title: Implement Referral Link Tracking
+# Status: pending
+# Dependencies: 1, 4, 5
+# Priority: medium
+# Description: Allow organizers to generate unique referral links and track which referrer was used for each registration.
+# Details:
+Enable organizers to generate unique referral links. When an attendee registers via a referral link, record the referrer in the database. Display referral source in attendee list.
+
+# Test Strategy:
+Test referral link generation, registration tracking, and data persistence. Verify referral source is recorded and displayed.
+
+# Subtasks:
+## 1. Design referral link generation system [pending]
+### Dependencies: None
+### Description: Create a system that allows organizers to generate unique referral links for their events
+### Details:
+Develop functionality for organizers to create and manage unique referral links through the dashboard. Include options to name referral sources (e.g., social media, email campaigns, partners) and generate corresponding unique URLs. Implement a database schema to store referral link information including creation date, source name, and organizer ID.
+
+## 2. Implement tracking script integration [pending]
+### Dependencies: 7.1
+### Description: Develop JavaScript tracking code to detect and capture referral parameters when users visit the registration page
+### Details:
+Create a JavaScript tracking script that detects referral parameters in URLs. The script should be automatically added to event registration pages and capture the referral source identifier. Implement cookie storage to maintain referral information across user sessions, ensuring the referral source is preserved even if users don't register immediately.
+
+## 3. Modify registration process to record referral data [pending]
+### Dependencies: 7.2
+### Description: Update the registration system to capture and store referral source information when attendees complete registration
+### Details:
+Modify the registration form submission process to include referral source data. Create database fields in the attendee records to store referral information. Ensure the referral data is properly associated with each registration and linked to the correct referral campaign in the database.
+
+## 4. Update attendee management interface [pending]
+### Dependencies: 7.3
+### Description: Enhance the attendee list view to display referral source information for each registration
+### Details:
+Add a 'Referral Source' column to the attendee list in the organizer dashboard. Implement filtering and sorting capabilities based on referral sources. Ensure the interface clearly displays which attendees came through which referral links, with appropriate labels matching the organizer's defined referral sources.
+

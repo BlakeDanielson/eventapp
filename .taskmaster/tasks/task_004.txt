@@ -1,0 +1,11 @@
+# Task ID: 4
+# Title: Create Frontend for Public Event Page Display
+# Status: done
+# Dependencies: None
+# Priority: medium
+# Description: Build the public-facing event page that is accessible via a unique, shareable link. This page will fetch and display all event details from the backend, including title, date, time, location, description, agenda, and Q&A. The page must be mobile-responsive.
+# Details:
+
+
+# Test Strategy:
+

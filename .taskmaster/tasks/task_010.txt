@@ -1,0 +1,11 @@
+# Task ID: 10
+# Title: Build Organizer Dashboard UI for Event Management
+# Status: done
+# Dependencies: None
+# Priority: medium
+# Description: Create the user interface for the organizer's dashboard. This includes a form for creating and editing events (Task 3), a view to see the list of registered attendees (Task 9), and a section to generate referral links (Task 8). This task focuses on the organizer-facing UI/UX.
+# Details:
+
+
+# Test Strategy:
+

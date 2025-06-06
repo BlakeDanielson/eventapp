@@ -1,0 +1,93 @@
+{
+  "meta": {
+    "generatedAt": "2025-06-06T01:00:13.877Z",
+    "tasksAnalyzed": 10,
+    "totalTasks": 10,
+    "analysisCount": 10,
+    "thresholdScore": 5,
+    "projectName": "Taskmaster",
+    "usedResearch": true
+  },
+  "complexityAnalysis": [
+    {
+      "taskId": 1,
+      "taskTitle": "Setup Project Repository and Initial Configuration",
+      "complexityScore": 4,
+      "recommendedSubtasks": 5,
+      "expansionPrompt": "Break down the setup process into subtasks such as: initializing the Next.js project, configuring TypeScript, installing and configuring Shadcn/ui, setting up Tailwind CSS, integrating Clerk authentication, and establishing the initial folder structure and linting/prettier configuration.",
+      "reasoning": "While foundational, this task involves multiple frameworks and tools (Next.js App Router, TypeScript, Shadcn/ui, Tailwind CSS, Clerk), each requiring specific configuration steps. The complexity is moderate due to the need for correct integration and initial project structure setup, but it is a common process for modern web projects.[1][2][5]"
+    },
+    {
+      "taskId": 2,
+      "taskTitle": "Design and Implement Event Page Creation UI",
+      "complexityScore": 6,
+      "recommendedSubtasks": 6,
+      "expansionPrompt": "Expand this task into subtasks such as: designing the event creation form layout, implementing each form field (title, date, time, location, bio, agenda, Q&A), adding image upload functionality, applying Shadcn/ui and Tailwind CSS styling, ensuring mobile responsiveness, and handling form validation and submission.",
+      "reasoning": "This task requires both UI/UX design and functional implementation, including form handling, image upload, and responsive design. The integration of multiple UI components and validation logic increases complexity."
+    },
+    {
+      "taskId": 3,
+      "taskTitle": "Implement Access Control and Unique Event Links",
+      "complexityScore": 7,
+      "recommendedSubtasks": 5,
+      "expansionPrompt": "Break down into subtasks: generating unique event IDs, creating shareable URLs, implementing access control logic, integrating with SQLite/Prisma for event data storage, and testing link-based access restrictions.",
+      "reasoning": "This task involves secure link generation, access control logic, and database integration. Ensuring only users with the correct link can access the event page adds security and persistence considerations, raising the complexity."
+    },
+    {
+      "taskId": 4,
+      "taskTitle": "Build Registration Form and Attendee Data Collection",
+      "complexityScore": 7,
+      "recommendedSubtasks": 6,
+      "expansionPrompt": "Expand into subtasks: designing the registration form UI, implementing standard fields (name, email), enabling custom question configuration, integrating with SQLite/Prisma for data storage, ensuring mobile responsiveness, and handling form validation and submission.",
+      "reasoning": "This task requires dynamic form generation (custom questions), robust data handling, and persistence. The need for configurability and mobile responsiveness increases the implementation effort."
+    },
+    {
+      "taskId": 5,
+      "taskTitle": "Implement Free Ticket Support and Registration Confirmation",
+      "complexityScore": 6,
+      "recommendedSubtasks": 5,
+      "expansionPrompt": "Break down into subtasks: implementing free ticket logic, displaying registration confirmation, integrating Resend for email delivery, updating registration status in SQLite, and testing the registration flow.",
+      "reasoning": "This task combines business logic (free tickets), user feedback (confirmation), and third-party integration (email delivery), requiring careful coordination and testing."
+    },
+    {
+      "taskId": 6,
+      "taskTitle": "Integrate Google Calendar Add-to-Calendar Feature",
+      "complexityScore": 4,
+      "recommendedSubtasks": 3,
+      "expansionPrompt": "Expand into subtasks: generating the Google Calendar link with pre-filled event details, displaying the add-to-calendar option post-registration, and testing the integration for accuracy.",
+      "reasoning": "This is a focused integration task with limited scope, mainly involving link generation and UI placement, making it less complex than core data or authentication features."
+    },
+    {
+      "taskId": 7,
+      "taskTitle": "Implement Referral Link Tracking",
+      "complexityScore": 6,
+      "recommendedSubtasks": 5,
+      "expansionPrompt": "Break down into subtasks: generating unique referral links, tracking registrations via referral, storing referral data in the database, displaying referral sources in the attendee list, and testing the tracking logic.",
+      "reasoning": "Referral tracking requires unique link generation, accurate data association, and UI updates, which introduces moderate complexity due to the need for reliable tracking and reporting."
+    },
+    {
+      "taskId": 8,
+      "taskTitle": "Develop Automated Email Communication",
+      "complexityScore": 7,
+      "recommendedSubtasks": 6,
+      "expansionPrompt": "Expand into subtasks: building customizable email template UI, implementing scheduling logic for reminders and thank yous, integrating with Resend for email delivery, storing templates and schedules in SQLite, and testing email customization and delivery.",
+      "reasoning": "Automated, customizable email workflows involve template management, scheduling, third-party integration, and persistence, all of which add significant complexity."
+    },
+    {
+      "taskId": 9,
+      "taskTitle": "Build Attendee List Export Functionality",
+      "complexityScore": 5,
+      "recommendedSubtasks": 4,
+      "expansionPrompt": "Break down into subtasks: implementing server-side export logic, formatting attendee data (including custom questions and referral source), generating CSV/Excel files, and adding the export button to the UI.",
+      "reasoning": "Exporting data is a well-defined backend task with some UI integration, but handling custom fields and ensuring correct formatting adds moderate complexity."
+    },
+    {
+      "taskId": 10,
+      "taskTitle": "Implement Mobile-Responsive Design and Final UX Polish",
+      "complexityScore": 6,
+      "recommendedSubtasks": 5,
+      "expansionPrompt": "Expand into subtasks: reviewing all UI components for responsiveness, refining layouts for mobile and desktop, testing on multiple devices, addressing usability issues, and performing final UX/UI polish.",
+      "reasoning": "Ensuring full responsiveness and a polished UX across all features requires comprehensive review and iterative refinement, involving both design and testing efforts."
+    }
+  ]
+}

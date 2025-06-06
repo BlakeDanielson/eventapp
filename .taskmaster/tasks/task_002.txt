@@ -1,0 +1,11 @@
+# Task ID: 2
+# Title: Implement Organizer Authentication using Clerk
+# Status: done
+# Dependencies: None
+# Priority: medium
+# Description: Integrate Clerk for user authentication. This will manage organizer sign-up, sign-in, and session management. Secure the event creation and management pages so only authenticated organizers can access them.
+# Details:
+
+
+# Test Strategy:
+

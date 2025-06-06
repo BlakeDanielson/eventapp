@@ -1,0 +1,377 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Setup Project Repository and Initial Configuration",
+      "description": "Initialize the project repository with Next.js (App Router), TypeScript, Shadcn/ui, Tailwind CSS, and Clerk for authentication. Configure basic project structure and dependencies.",
+      "details": "Create a new Next.js project using the App Router. Install and configure TypeScript, Shadcn/ui, Tailwind CSS, and Clerk for authentication. Set up initial folder structure and basic linting/prettier config. Example: `npx create-next-app@latest --typescript --app`; install dependencies via npm/yarn.",
+      "testStrategy": "Verify project builds and runs without errors. Check that all required dependencies are installed and configured.",
+      "priority": "high",
+      "dependencies": [],
+      "status": "pending",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Initialize Next.js project with TypeScript",
+          "description": "Create a new Next.js project with TypeScript support using create-next-app",
+          "dependencies": [],
+          "details": "Run 'npx create-next-app --typescript my-project' to create a new project with TypeScript configuration automatically set up. This will generate the necessary tsconfig.json file and install required dependencies.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Set up Tailwind CSS configuration",
+          "description": "Configure Tailwind CSS for styling the application",
+          "dependencies": [
+            1
+          ],
+          "details": "Install Tailwind CSS dependencies, create the tailwind.config.js and postcss.config.js files, and update the global CSS file to include Tailwind directives. Then configure the content paths in the Tailwind config to match your project structure.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Install and configure Shadcn/ui components",
+          "description": "Set up Shadcn/ui for reusable UI components",
+          "dependencies": [
+            2
+          ],
+          "details": "Install Shadcn/ui CLI, initialize it in your project with 'npx shadcn-ui@latest init', configure the component paths, and add the necessary UI components to your project as needed.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Integrate Clerk authentication",
+          "description": "Set up Clerk for user authentication and management",
+          "dependencies": [
+            1
+          ],
+          "details": "Install Clerk SDK, configure environment variables for Clerk API keys, set up authentication providers, create sign-in and sign-up components, and implement protected routes using Clerk's middleware.",
+          "status": "pending"
+        },
+        {
+          "id": 5,
+          "title": "Establish project structure and code quality tools",
+          "description": "Set up folder structure and configure linting/formatting tools",
+          "dependencies": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "details": "Create app directory structure following Next.js App Router conventions, set up ESLint configuration with appropriate rules, configure Prettier for code formatting, and create scripts in package.json for linting and formatting checks.",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Design and Implement Event Page Creation UI",
+      "description": "Build a clean, intuitive UI for organizers to create event pages with essential fields and basic customization.",
+      "details": "Implement a form for organizers to input event title, date, time, location (address or virtual link), bio/about, agenda, and Q&A. Allow upload of a header image/logo. Use Shadcn/ui components and Tailwind CSS for styling. Ensure the form is mobile-responsive.",
+      "testStrategy": "Test form submission and validation. Verify all fields are displayed and editable. Check mobile responsiveness.",
+      "priority": "high",
+      "dependencies": [
+        1
+      ],
+      "status": "pending",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Design Event Creation Form Layout",
+          "description": "Plan and structure the overall layout of the event creation form, grouping related fields and ensuring a logical flow for users.",
+          "dependencies": [],
+          "details": "Apply best practices such as grouping related fields (e.g., event details, agenda, Q&A), choosing between horizontal or vertical layouts based on device, and maintaining consistent label alignment.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Implement Form Fields",
+          "description": "Develop and integrate individual form fields for title, date, time, location, bio, agenda, and Q&A sections.",
+          "dependencies": [
+            1
+          ],
+          "details": "Ensure each field is clearly labeled, required fields are marked, and fields are grouped logically for usability.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Add Image Upload Functionality",
+          "description": "Integrate an image upload component to allow users to attach images to their event submissions.",
+          "dependencies": [
+            2
+          ],
+          "details": "Support image preview, file type validation, and error handling for unsupported formats or large files.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Apply Shadcn/ui and Tailwind CSS Styling",
+          "description": "Style the form and its components using Shadcn/ui and Tailwind CSS to ensure a modern and cohesive appearance.",
+          "dependencies": [
+            2,
+            3
+          ],
+          "details": "Use consistent spacing, colors, and typography. Ensure that all UI elements follow the chosen design system.",
+          "status": "pending"
+        },
+        {
+          "id": 5,
+          "title": "Ensure Mobile Responsiveness",
+          "description": "Adapt the form layout and components to display correctly and remain user-friendly on mobile devices.",
+          "dependencies": [
+            4
+          ],
+          "details": "Test on various screen sizes, adjust layouts (e.g., switch to vertical stacking), and optimize touch targets.",
+          "status": "pending"
+        },
+        {
+          "id": 6,
+          "title": "Handle Form Validation and Submission",
+          "description": "Implement client-side validation for all fields and manage form submission, including error feedback and success handling.",
+          "dependencies": [
+            2,
+            3,
+            4,
+            5
+          ],
+          "details": "Validate required fields, provide clear error messages, and ensure successful data submission with appropriate user feedback.",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Implement Access Control and Unique Event Links",
+      "description": "Enable private event pages accessible only via unique, shareable links.",
+      "details": "Generate unique event IDs and corresponding shareable URLs. Restrict access to event pages to only those with the correct link. Store event data in SQLite using Prisma.",
+      "testStrategy": "Test that only users with the correct link can access the event page. Verify unique link generation and persistence.",
+      "priority": "high",
+      "dependencies": [
+        1,
+        2
+      ],
+      "status": "pending",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Generate Unique Event IDs",
+          "description": "Design and implement a mechanism to generate unique event identifiers for each event created in the system.",
+          "dependencies": [],
+          "details": "Ensure that each event receives a cryptographically secure, non-guessable unique ID to prevent collisions and unauthorized access.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Create Shareable Event URLs",
+          "description": "Develop functionality to generate shareable URLs that incorporate the unique event IDs for user access.",
+          "dependencies": [
+            1
+          ],
+          "details": "The URLs should embed the unique event ID and be formatted for easy sharing while maintaining security.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Implement Access Control Logic",
+          "description": "Establish logic to restrict event page access to only users possessing the correct shareable URL.",
+          "dependencies": [
+            2
+          ],
+          "details": "Access control should validate the event ID from the URL and ensure only authorized users can view or interact with the event.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Integrate with SQLite/Prisma for Event Data Storage",
+          "description": "Set up database models and integrate with SQLite/Prisma to persist event data, including IDs and access metadata.",
+          "dependencies": [
+            1,
+            3
+          ],
+          "details": "Ensure event creation, retrieval, and access checks are efficiently handled via the database layer.",
+          "status": "pending"
+        },
+        {
+          "id": 5,
+          "title": "Test Link-Based Access Restrictions",
+          "description": "Develop and execute tests to verify that only users with valid shareable URLs can access event pages, ensuring access control is robust.",
+          "dependencies": [
+            3,
+            4
+          ],
+          "details": "Include both positive and negative test cases to confirm that unauthorized access is prevented and legitimate access is seamless.",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Build Registration Form and Attendee Data Collection",
+      "description": "Create a registration form for attendees to provide essential information and answer custom questions.",
+      "details": "Implement a form to collect name, email, and allow organizers to define custom questions (e.g., dietary preferences, referral source). Store responses in SQLite via Prisma. Ensure form is mobile-responsive.",
+      "testStrategy": "Test form submission, validation, and data persistence. Verify custom questions are configurable and responses are stored.",
+      "priority": "high",
+      "dependencies": [
+        1,
+        2,
+        3
+      ],
+      "status": "pending",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Design Registration Form UI",
+          "description": "Create a visually appealing and user-friendly registration form interface, focusing on layout, spacing, contrast, and feedback.",
+          "dependencies": [],
+          "details": "Apply best practices such as one-column layout, clear field instructions, appropriate use of whitespace, and visual feedback for user actions. Ensure the form is visually prominent and easy to navigate.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Implement Standard Fields (Name, Email)",
+          "description": "Add and configure standard input fields for user name and email address in the registration form.",
+          "dependencies": [
+            1
+          ],
+          "details": "Ensure fields are clearly labeled, use top-aligned labels for readability, and provide field-specific instructions to minimize user errors.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Enable Custom Question Configuration",
+          "description": "Develop functionality to allow administrators to add, remove, or modify custom questions in the registration form.",
+          "dependencies": [
+            2
+          ],
+          "details": "Support dynamic form generation so that the form adapts to different sets of questions, using design patterns for dynamic forms to enhance user experience.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Integrate with SQLite/Prisma for Data Storage",
+          "description": "Set up data models and connect the registration form to a SQLite database using Prisma ORM for persistent storage of user submissions.",
+          "dependencies": [
+            3
+          ],
+          "details": "Ensure all standard and custom field responses are stored reliably, and database schema supports dynamic fields.",
+          "status": "pending"
+        },
+        {
+          "id": 5,
+          "title": "Ensure Mobile Responsiveness",
+          "description": "Adapt the registration form UI to function seamlessly on mobile devices of various screen sizes.",
+          "dependencies": [
+            1
+          ],
+          "details": "Use responsive design techniques such as flexible layouts, scalable input fields, and touch-friendly controls to optimize usability on mobile.",
+          "status": "pending"
+        },
+        {
+          "id": 6,
+          "title": "Handle Form Validation and Submission",
+          "description": "Implement client-side and server-side validation for all fields, and manage form submission with appropriate user feedback.",
+          "dependencies": [
+            2,
+            3,
+            4
+          ],
+          "details": "Validate required fields, email format, and custom question constraints. Provide clear error messages and success confirmation. Ensure data is securely transmitted and stored.",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Implement Free Ticket Support and Registration Confirmation",
+      "description": "Support free tickets and send confirmation emails to attendees upon successful registration.",
+      "details": "Allow only free tickets for MVP. Upon successful registration, display confirmation and send an email using Resend. Store registration status in SQLite.",
+      "testStrategy": "Test registration flow, confirmation display, and email delivery. Verify only free tickets are supported.",
+      "priority": "high",
+      "dependencies": [
+        1,
+        4
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 6,
+      "title": "Integrate Google Calendar Add-to-Calendar Feature",
+      "description": "Provide attendees with an option to add the event to their Google Calendar after registration.",
+      "details": "After registration, display a button/link to add the event to Google Calendar. Pre-fill event details (title, date, time, location) in the Google Calendar event.",
+      "testStrategy": "Test that the Google Calendar link is generated and pre-fills correct event details. Verify the link is available after registration.",
+      "priority": "medium",
+      "dependencies": [
+        1,
+        5
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 7,
+      "title": "Implement Referral Link Tracking",
+      "description": "Allow organizers to generate unique referral links and track which referrer was used for each registration.",
+      "details": "Enable organizers to generate unique referral links. When an attendee registers via a referral link, record the referrer in the database. Display referral source in attendee list.",
+      "testStrategy": "Test referral link generation, registration tracking, and data persistence. Verify referral source is recorded and displayed.",
+      "priority": "medium",
+      "dependencies": [
+        1,
+        4,
+        5
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 8,
+      "title": "Develop Automated Email Communication",
+      "description": "Implement customizable email templates for pre-event reminders and post-event thank yous.",
+      "details": "Allow organizers to customize email content for reminders (sent a configurable time before the event) and thank yous (sent after the event). Use Resend for email delivery. Store email templates and send times in SQLite.",
+      "testStrategy": "Test email template customization, scheduling, and delivery. Verify emails are sent at the correct times.",
+      "priority": "medium",
+      "dependencies": [
+        1,
+        5
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 9,
+      "title": "Build Attendee List Export Functionality",
+      "description": "Enable organizers to download a list of registered attendees as CSV or Excel.",
+      "details": "Implement a button for organizers to export attendee data (including custom questions and referral source) as CSV or Excel. Use server-side logic to generate the file.",
+      "testStrategy": "Test export functionality. Verify all required data is included and the file is correctly formatted.",
+      "priority": "medium",
+      "dependencies": [
+        1,
+        4,
+        7
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 10,
+      "title": "Implement Mobile-Responsive Design and Final UX Polish",
+      "description": "Ensure all pages and forms are fully mobile-responsive and the UI is clean and intuitive.",
+      "details": "Review and refine all UI components for mobile and desktop. Ensure clarity, simplicity, and minimalism. Test on multiple devices and screen sizes.",
+      "testStrategy": "Test on various devices and screen sizes. Verify all features are accessible and the UI is intuitive.",
+      "priority": "medium",
+      "dependencies": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "status": "pending",
+      "subtasks": []
+    }
+  ]
+}

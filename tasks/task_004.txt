@@ -1,0 +1,43 @@
+# Task ID: 4
+# Title: Build Registration Form and Attendee Data Collection
+# Status: done
+# Dependencies: 1, 2, 3
+# Priority: high
+# Description: Create a registration form for attendees to provide essential information and answer custom questions.
+# Details:
+Implement a form to collect name, email, and allow organizers to define custom questions (e.g., dietary preferences, referral source). Store responses in SQLite via Prisma. Ensure form is mobile-responsive.
+
+# Test Strategy:
+Test form submission, validation, and data persistence. Verify custom questions are configurable and responses are stored.
+
+# Subtasks:
+## 1. Define Required and Custom Form Fields [done]
+### Dependencies: None
+### Description: Identify and specify the essential attendee information fields (name, email) and implement a system for organizers to define custom questions (e.g., dietary preferences, referral source).
+### Details:
+Consult with stakeholders to finalize required fields and provide an interface for organizers to add, edit, or remove custom questions.
+
+## 2. Design Mobile-Responsive Registration Form UI [done]
+### Dependencies: 4.1
+### Description: Create a user-friendly, mobile-responsive form interface that clearly presents all fields and instructions.
+### Details:
+Apply best practices for clarity, accessibility, and responsiveness, ensuring the form adapts to various screen sizes and devices.
+
+## 3. Implement Form Validation and User Guidance [done]
+### Dependencies: 4.2
+### Description: Add inline validation, clear error messaging, and tooltips for complex fields to guide users through the registration process.
+### Details:
+Use inline validation to provide immediate feedback, display concise error messages, and add tooltips or help icons for custom or complex questions.
+
+## 4. Integrate Form Submission with SQLite via Prisma [done]
+### Dependencies: 4.3
+### Description: Develop backend logic to store attendee responses, including custom question answers, in an SQLite database using Prisma ORM.
+### Details:
+Map form fields to database schema, handle dynamic custom questions, and ensure data integrity during submission.
+
+## 5. Conduct End-to-End Testing and Accessibility Review [done]
+### Dependencies: 4.4
+### Description: Perform comprehensive testing of the registration workflow, including accessibility checks and user experience validation.
+### Details:
+Test the complete process from form display to data storage, review for accessibility compliance, and gather user feedback for improvements.
+

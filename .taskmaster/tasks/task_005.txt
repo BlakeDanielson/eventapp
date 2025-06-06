@@ -1,0 +1,11 @@
+# Task ID: 5
+# Title: Build Registration Form and API Endpoint
+# Status: done
+# Dependencies: None
+# Priority: medium
+# Description: Implement the attendee registration system. This includes a frontend form to collect Name, Email, and answers to custom questions defined by the organizer. Create a backend API endpoint to process and save the registration data. Provide an on-screen confirmation message upon successful registration.
+# Details:
+
+
+# Test Strategy:
+

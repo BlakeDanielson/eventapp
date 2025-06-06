@@ -1,0 +1,191 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Event {
+  id        String   @id @default(cuid())
+  title     String
+  date      DateTime
+  time      String
+  location  String
+  bio       String
+  agenda    String
+  qa        String?
+  imageUrl  String?
+  userId    String   // Clerk user ID of the event creator
+  status    String   @default("public") // draft, public, private, cancelled
+  
+  // New: Ticketing settings
+  hasTickets    Boolean  @default(false) // Whether this event has paid tickets
+  requiresTickets Boolean @default(false) // Whether tickets are required to attend
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  registrations Registration[]
+  referrals   Referral[]
+  invitees    Invitee[] // For private events
+  tickets     Ticket[]  // Available ticket types
+  purchases   Purchase[] // All purchases for this event
+}
+
+model Registration {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  eventId   String
+  event     Event    @relation(fields: [eventId], references: [id])
+  customQuestions Json?
+  status    String   @default("registered")
+  
+  // Existing referral system
+  referralId String?
+  referral  Referral? @relation(fields: [referralId], references: [id])
+  
+  // New: Private event invite tracking
+  invitedByToken String? // Token of the invitee who shared the link
+  invitedBy     Invitee? @relation("InviteeReferrals", fields: [invitedByToken], references: [inviteToken])
+  
+  // New: Ticket purchase tracking
+  purchaseId String?
+  purchase  Purchase? @relation(fields: [purchaseId], references: [id])
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Referral {
+  id          String   @id @default(cuid())
+  name        String
+  eventId     String
+  event       Event    @relation(fields: [eventId], references: [id])
+  registrations Registration[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// New model for managing private event invitees
+model Invitee {
+  id          String   @id @default(cuid())
+  email       String
+  eventId     String
+  event       Event    @relation(fields: [eventId], references: [id])
+  
+  // Invite tracking fields
+  inviteToken String   @unique // Unique token for tracking shared links
+  hasAccessed Boolean  @default(false) // Track if they've viewed the event
+  accessedAt  DateTime? // When they first accessed the event
+  
+  // Referral tracking
+  referredRegistrations Registration[] @relation("InviteeReferrals") // People who registered via this invitee's link
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@unique([email, eventId]) // Prevent duplicate invitees per event
+}
+
+// Organizer Profile model for storing organizer/organization information
+model OrganizerProfile {
+  id              String   @id @default(cuid())
+  userId          String   @unique // Clerk user ID - one profile per user
+  
+  // Personal/Organization Information
+  displayName     String   // Name to display on events (person or org name)
+  organizationType String  @default("individual") // individual, company, nonprofit, etc.
+  bio             String?  // About the organizer/organization
+  
+  // Contact Information
+  email           String?  // Public contact email (can be different from Clerk email)
+  phone           String?  // Contact phone number
+  website         String?  // Organization website
+  location        String?  // City, State or full address
+  
+  // Social Media Links
+  linkedinUrl     String?
+  twitterUrl      String?
+  facebookUrl     String?
+  instagramUrl    String?
+  
+  // Branding & Customization
+  profileImageUrl String?  // Profile photo/logo
+  brandColor      String?  // Primary brand color (hex code)
+  defaultEventImageUrl String? // Default image for events
+  
+  // Default Event Settings
+  defaultLocation String?  // Default location for new events
+  defaultAgenda   String?  // Template agenda for new events
+  eventDisclaimer String?  // Standard disclaimer/terms for events
+  
+  // Settings
+  showContactInfo Boolean  @default(true) // Show contact info on event pages
+  showSocialLinks Boolean  @default(true) // Show social media links
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+// New model for ticket types and pricing
+model Ticket {
+  id            String    @id @default(cuid())
+  eventId       String
+  event         Event     @relation(fields: [eventId], references: [id])
+  
+  // Ticket Details
+  name          String    // e.g., "General Admission", "VIP", "Early Bird"
+  description   String?   // Optional description of what's included
+  price         Float     // Price in dollars (0 for free tickets)
+  currency      String    @default("USD")
+  
+  // Availability
+  maxQuantity   Int?      // Maximum tickets available (null = unlimited)
+  soldQuantity  Int       @default(0) // Tickets sold so far
+  
+  // Availability Dates
+  saleStartDate DateTime? // When ticket sales start (null = immediately)
+  saleEndDate   DateTime? // When ticket sales end (null = until event)
+  
+  // Settings
+  isActive      Boolean   @default(true) // Can be sold
+  allowMultiple Boolean   @default(true) // Allow multiple purchases per person
+  
+  purchases     Purchase[]
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+// New model for tracking ticket purchases (mocked for now)
+model Purchase {
+  id            String      @id @default(cuid())
+  eventId       String
+  event         Event       @relation(fields: [eventId], references: [id])
+  ticketId      String
+  ticket        Ticket      @relation(fields: [ticketId], references: [id])
+  
+  // Buyer Information
+  buyerName     String
+  buyerEmail    String
+  quantity      Int         @default(1)
+  totalAmount   Float       // Total paid (price * quantity)
+  
+  // Purchase Status
+  status        String      @default("pending") // pending, completed, failed, refunded
+  paymentMethod String      @default("mock") // mock, stripe, paypal, etc.
+  
+  // Mock payment data
+  transactionId String?     // For real payments later
+  paymentData   Json?       // Store mock payment details
+  
+  registrations Registration[]
+  
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}

@@ -1,0 +1,11 @@
+# Task ID: 1
+# Title: Project Setup and Technology Stack Initialization
+# Status: done
+# Dependencies: None
+# Priority: medium
+# Description: Initialize the Next.js (App Router) project with TypeScript. Configure Tailwind CSS for styling and set up Shadcn/ui for UI components. Install and configure Prisma as the ORM for the SQLite database. This task establishes the foundational technical stack for the project.
+# Details:
+
+
+# Test Strategy:
+

@@ -1,0 +1,671 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Setup Project Repository and Initial Configuration",
+      "description": "Initialize the project repository with Next.js (App Router), TypeScript, Shadcn/ui, Tailwind CSS, and Clerk for authentication. Configure basic project structure and dependencies.",
+      "details": "Create a new Next.js project using the App Router. Install and configure TypeScript, Shadcn/ui, Tailwind CSS, and Clerk for authentication. Set up initial folder structure and basic linting/prettier config. Example: `npx create-next-app@latest --typescript --app`; install dependencies via npm/yarn.",
+      "testStrategy": "Verify project builds and runs without errors. Check that all required dependencies are installed and configured.",
+      "priority": "high",
+      "dependencies": [],
+      "status": "done",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Initialize Next.js project with TypeScript and App Router",
+          "description": "Create a new Next.js project using create-next-app with TypeScript support and the App Router architecture",
+          "dependencies": [],
+          "details": "Run 'npx create-next-app@latest' in terminal and select TypeScript, App Router, ESLint, and Tailwind CSS options when prompted. This will create the base project structure with proper TypeScript configuration and the modern App Router architecture",
+          "status": "done",
+          "testStrategy": "Verify project creation by checking that tsconfig.json exists and app directory is present instead of pages directory"
+        },
+        {
+          "id": 2,
+          "title": "Install and configure Tailwind CSS",
+          "description": "Set up Tailwind CSS for styling the application with proper configuration",
+          "dependencies": [
+            1
+          ],
+          "details": "Tailwind CSS should be installed automatically during project creation. Verify tailwind.config.js and ensure content paths include all necessary directories. Update global.css to include Tailwind directives (@tailwind base, components, utilities)",
+          "status": "done",
+          "testStrategy": "Check that tailwind.config.js exists and contains proper configuration. Verify styles are applied by creating a simple component with Tailwind classes"
+        },
+        {
+          "id": 3,
+          "title": "Install and configure Shadcn/ui components",
+          "description": "Set up Shadcn/ui component library with proper configuration for the project",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "Install Shadcn/ui CLI with 'npm install @shadcn/ui', then initialize it with 'npx shadcn-ui init'. Configure component installation directory and styling preferences. Install core components like Button, Card, etc. with 'npx shadcn-ui add [component-name]'",
+          "status": "done",
+          "testStrategy": "Verify components.json exists with proper configuration and test rendering a basic Shadcn/ui component"
+        },
+        {
+          "id": 4,
+          "title": "Integrate Clerk authentication",
+          "description": "Install and configure Clerk for user authentication and session management",
+          "dependencies": [
+            1
+          ],
+          "details": "Install Clerk packages with 'npm install @clerk/nextjs'. Create Clerk account and obtain API keys. Configure environment variables (.env.local) with Clerk API keys. Set up ClerkProvider in app layout.tsx and create middleware.ts for protected routes",
+          "status": "done",
+          "testStrategy": "Test authentication flow by implementing SignIn and SignUp components and verifying they redirect properly"
+        },
+        {
+          "id": 5,
+          "title": "Set up linting, formatting and project structure",
+          "description": "Configure ESLint, Prettier, and establish the project folder structure",
+          "dependencies": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "details": "Install Prettier with 'npm install -D prettier eslint-config-prettier'. Create .prettierrc and .eslintrc.js files with project-specific rules. Set up folder structure with directories for components, lib, hooks, types, and api routes. Configure VSCode settings for consistent formatting",
+          "status": "done",
+          "testStrategy": "Run linting and formatting checks with 'npm run lint' and verify proper folder structure exists"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Design and Implement Event Page Creation UI",
+      "description": "Build a clean, intuitive UI for organizers to create event pages with essential fields and basic customization.",
+      "details": "Implement a form for organizers to input event title, date, time, location (address or virtual link), bio/about, agenda, and Q&A. Allow upload of a header image/logo. Use Shadcn/ui components and Tailwind CSS for styling. Ensure the form is mobile-responsive.",
+      "testStrategy": "Test form submission and validation. Verify all fields are displayed and editable. Check mobile responsiveness.",
+      "priority": "high",
+      "dependencies": [
+        1
+      ],
+      "status": "done",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Design responsive form layout with essential fields",
+          "description": "Create a mobile-responsive form layout that includes all required event information fields using Shadcn/ui components and Tailwind CSS",
+          "dependencies": [],
+          "details": "Design a clean form layout with fields for event title, date, time, location (address or virtual link), bio/about, agenda, and Q&A. Ensure proper spacing, grouping of related fields, and responsive behavior across device sizes. Implement using Shadcn/ui form components styled with Tailwind CSS.",
+          "status": "done",
+          "testStrategy": "Test form layout on multiple device sizes (mobile, tablet, desktop) to verify responsive behavior and proper field arrangement"
+        },
+        {
+          "id": 2,
+          "title": "Implement media upload functionality",
+          "description": "Create functionality for uploading and previewing header images and logos",
+          "dependencies": [
+            1
+          ],
+          "details": "Develop a media upload component that allows organizers to upload, preview, and replace header images and logos. Include drag-and-drop functionality, file size validation, and image preview capabilities. Ensure the component is visually consistent with the rest of the form.",
+          "status": "done",
+          "testStrategy": "Test with various image formats and sizes to ensure proper handling, preview rendering, and validation feedback"
+        },
+        {
+          "id": 3,
+          "title": "Build form validation and error handling",
+          "description": "Implement client-side validation for all form fields with clear error messages",
+          "dependencies": [
+            1
+          ],
+          "details": "Create validation rules for all required fields, including format validation for dates, times, and URLs. Implement real-time validation feedback with clear, user-friendly error messages. Ensure validation works across all form fields and prevents submission of invalid data.",
+          "status": "done",
+          "testStrategy": "Test form submission with valid and invalid data to verify proper validation behavior and error message display"
+        },
+        {
+          "id": 4,
+          "title": "Develop basic customization options",
+          "description": "Implement UI elements for basic event page customization including colors and layout options",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "Create a customization section that allows organizers to select color schemes, adjust layout preferences, and preview changes in real-time. Include a limited set of pre-defined themes and options to maintain design consistency while providing flexibility.",
+          "status": "done",
+          "testStrategy": "Test customization options to ensure they apply correctly to the preview and don't interfere with form functionality"
+        },
+        {
+          "id": 5,
+          "title": "Create preview functionality",
+          "description": "Implement a live preview feature that shows how the event page will appear to attendees",
+          "dependencies": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "details": "Develop a preview component that renders the event page based on the form data and customization options. Include toggle functionality to switch between form editing and preview modes. Ensure the preview accurately reflects how the page will appear when published, including responsive behavior.",
+          "status": "done",
+          "testStrategy": "Test preview rendering against actual published pages to verify accuracy and test preview mode on different devices to ensure responsive behavior is correctly displayed"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Implement Access Control and Unique Event Links",
+      "description": "Enable private event pages accessible only via unique, shareable links.",
+      "details": "Generate unique event IDs and corresponding shareable URLs. Restrict access to event pages to only those with the correct link. Store event data in SQLite using Prisma.",
+      "testStrategy": "Test that only users with the correct link can access the event page. Verify unique link generation and persistence.",
+      "priority": "high",
+      "dependencies": [
+        1,
+        2
+      ],
+      "status": "done",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Design and implement unique event ID generation system",
+          "description": "Create a mechanism to generate unique identifiers for each event that will be used in shareable URLs",
+          "dependencies": [],
+          "details": "Develop a function that generates cryptographically secure random strings or UUIDs for each event. Ensure IDs are collision-resistant and follow best practices for URL-safe characters. Update the Prisma schema to include this unique identifier field for events.",
+          "status": "done",
+          "testStrategy": "Verify uniqueness by generating multiple IDs in sequence and checking for duplicates. Test URL compatibility of generated IDs."
+        },
+        {
+          "id": 2,
+          "title": "Implement shareable URL generation and routing",
+          "description": "Create a system to generate shareable URLs based on event IDs and set up routing to handle these URLs",
+          "dependencies": [
+            1
+          ],
+          "details": "Develop URL generation functions that incorporate the unique event IDs. Implement route handlers that can parse incoming URLs to extract event IDs. Configure the application router to direct users to the appropriate event page based on the URL.",
+          "status": "done",
+          "testStrategy": "Test URL generation with various event IDs. Verify that routing correctly identifies and processes event IDs from URLs."
+        },
+        {
+          "id": 3,
+          "title": "Develop access control middleware",
+          "description": "Create middleware to verify access permissions before allowing users to view event pages",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "Implement middleware that intercepts requests to event pages and validates the event ID from the URL. Design the validation logic to query the database and confirm the event exists. Handle unauthorized access attempts with appropriate error responses or redirects.",
+          "status": "done",
+          "testStrategy": "Test middleware with valid and invalid event IDs. Verify proper handling of unauthorized access attempts."
+        },
+        {
+          "id": 4,
+          "title": "Update database schema and queries",
+          "description": "Modify the Prisma schema and database queries to support the access control system",
+          "dependencies": [
+            1
+          ],
+          "details": "Update the Prisma schema to include fields for access control, such as visibility settings and the unique event ID. Create database queries to retrieve events by their unique IDs. Implement data validation to ensure all events have the required access control fields.",
+          "status": "done",
+          "testStrategy": "Test database operations with the updated schema. Verify that events can be retrieved correctly using their unique IDs."
+        },
+        {
+          "id": 5,
+          "title": "Create user interface for sharing event links",
+          "description": "Develop UI components that allow event creators to view and share their unique event links",
+          "dependencies": [
+            2,
+            4
+          ],
+          "details": "Design and implement UI components that display the unique event link to event creators. Add copy-to-clipboard functionality for easy sharing. Include visual indicators of the event's private status and access restrictions. Provide clear instructions to users about how the private links work.",
+          "status": "done",
+          "testStrategy": "Test UI components across different devices and browsers. Verify that copy-to-clipboard functionality works correctly."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Build Registration Form and Attendee Data Collection",
+      "description": "Create a registration form for attendees to provide essential information and answer custom questions.",
+      "details": "Implement a form to collect name, email, and allow organizers to define custom questions (e.g., dietary preferences, referral source). Store responses in SQLite via Prisma. Ensure form is mobile-responsive.",
+      "testStrategy": "Test form submission, validation, and data persistence. Verify custom questions are configurable and responses are stored.",
+      "priority": "high",
+      "dependencies": [
+        1,
+        2,
+        3
+      ],
+      "status": "done",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Define Required and Custom Form Fields",
+          "description": "Identify and specify the essential attendee information fields (name, email) and implement a system for organizers to define custom questions (e.g., dietary preferences, referral source).",
+          "dependencies": [],
+          "details": "Consult with stakeholders to finalize required fields and provide an interface for organizers to add, edit, or remove custom questions.",
+          "status": "done",
+          "testStrategy": "Verify that both required and custom fields can be configured and displayed correctly in the form."
+        },
+        {
+          "id": 2,
+          "title": "Design Mobile-Responsive Registration Form UI",
+          "description": "Create a user-friendly, mobile-responsive form interface that clearly presents all fields and instructions.",
+          "dependencies": [
+            1
+          ],
+          "details": "Apply best practices for clarity, accessibility, and responsiveness, ensuring the form adapts to various screen sizes and devices.",
+          "status": "done",
+          "testStrategy": "Test the form layout and usability on multiple devices and screen sizes, ensuring all fields are accessible and readable."
+        },
+        {
+          "id": 3,
+          "title": "Implement Form Validation and User Guidance",
+          "description": "Add inline validation, clear error messaging, and tooltips for complex fields to guide users through the registration process.",
+          "dependencies": [
+            2
+          ],
+          "details": "Use inline validation to provide immediate feedback, display concise error messages, and add tooltips or help icons for custom or complex questions.",
+          "status": "done",
+          "testStrategy": "Submit forms with valid and invalid data to confirm validation works and guidance is clear and accessible."
+        },
+        {
+          "id": 4,
+          "title": "Integrate Form Submission with SQLite via Prisma",
+          "description": "Develop backend logic to store attendee responses, including custom question answers, in an SQLite database using Prisma ORM.",
+          "dependencies": [
+            3
+          ],
+          "details": "Map form fields to database schema, handle dynamic custom questions, and ensure data integrity during submission.",
+          "status": "done",
+          "testStrategy": "Submit test registrations and verify that all data, including custom responses, is accurately stored in the database."
+        },
+        {
+          "id": 5,
+          "title": "Conduct End-to-End Testing and Accessibility Review",
+          "description": "Perform comprehensive testing of the registration workflow, including accessibility checks and user experience validation.",
+          "dependencies": [
+            4
+          ],
+          "details": "Test the complete process from form display to data storage, review for accessibility compliance, and gather user feedback for improvements.",
+          "status": "done",
+          "testStrategy": "Use accessibility tools and manual testing to ensure compliance, and conduct user testing sessions to identify usability issues."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Implement Free Ticket Support and Registration Confirmation",
+      "description": "Support free tickets and send confirmation emails to attendees upon successful registration.",
+      "details": "Allow only free tickets for MVP. Upon successful registration, display confirmation and send an email using Resend. Store registration status in SQLite.",
+      "testStrategy": "Test registration flow, confirmation display, and email delivery. Verify only free tickets are supported.",
+      "priority": "high",
+      "dependencies": [
+        1,
+        4
+      ],
+      "status": "done",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Design and implement free ticket data model",
+          "description": "Create the database schema for storing free ticket information in SQLite",
+          "dependencies": [],
+          "details": "Define the ticket table structure with fields for ticket ID, event details, attendee information, and registration status. Ensure the model supports only free tickets for the MVP phase.",
+          "status": "done",
+          "testStrategy": "Verify database schema creation with test data insertion and retrieval"
+        },
+        {
+          "id": 2,
+          "title": "Develop ticket registration interface",
+          "description": "Create the user interface for attendees to register for free tickets",
+          "dependencies": [
+            1
+          ],
+          "details": "Design and implement a form that collects necessary attendee information, validates inputs, and submits registration requests. Include clear messaging that only free tickets are available.",
+          "status": "done",
+          "testStrategy": "Test form validation, submission process, and error handling with various input scenarios"
+        },
+        {
+          "id": 3,
+          "title": "Implement registration confirmation display",
+          "description": "Create a confirmation page or modal to display after successful ticket registration",
+          "dependencies": [
+            2
+          ],
+          "details": "Design and implement a user-friendly confirmation screen that appears immediately after successful registration, showing ticket details and next steps for the attendee.",
+          "status": "done",
+          "testStrategy": "Verify the confirmation display appears correctly with accurate information after registration submission"
+        },
+        {
+          "id": 4,
+          "title": "Set up email confirmation system using Resend",
+          "description": "Integrate with Resend API to send confirmation emails to attendees",
+          "dependencies": [
+            1
+          ],
+          "details": "Configure Resend API integration, create email templates for registration confirmation, and implement the email sending functionality that triggers after successful ticket registration.",
+          "status": "done",
+          "testStrategy": "Test email delivery with various test accounts and verify content formatting"
+        },
+        {
+          "id": 5,
+          "title": "Implement registration status tracking",
+          "description": "Create functionality to store and update registration status in SQLite",
+          "dependencies": [
+            1,
+            4
+          ],
+          "details": "Develop the backend logic to update registration status in the database after each step of the process (submitted, confirmed, email sent). Include error handling and status checking capabilities.",
+          "status": "done",
+          "testStrategy": "Test status updates through the complete registration flow and verify database records match expected states"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Integrate Google Calendar Add-to-Calendar Feature",
+      "description": "Provide attendees with an option to add the event to their Google Calendar after registration.",
+      "details": "After registration, display a button/link to add the event to Google Calendar. Pre-fill event details (title, date, time, location) in the Google Calendar event.",
+      "testStrategy": "Test that the Google Calendar link is generated and pre-fills correct event details. Verify the link is available after registration.",
+      "priority": "medium",
+      "dependencies": [
+        1,
+        5
+      ],
+      "status": "pending",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Define Event Data Structure",
+          "description": "Identify and structure the event details (title, date, time, location) to be pre-filled in the Google Calendar event.",
+          "dependencies": [],
+          "details": "Determine which event fields are required and optional for Google Calendar, ensuring all necessary information is available after registration.",
+          "status": "done",
+          "testStrategy": "Verify that all required event fields are captured and formatted correctly for Google Calendar."
+        },
+        {
+          "id": 2,
+          "title": "Generate Google Calendar Add-to-Calendar Link",
+          "description": "Create a Google Calendar event link or use the API to generate an event with pre-filled details.",
+          "dependencies": [
+            1
+          ],
+          "details": "Use the Google Calendar API or URL parameters to generate a link that pre-fills the event details for the attendee.",
+          "status": "done",
+          "testStrategy": "Test the generated link to ensure it opens Google Calendar with all event details correctly populated."
+        },
+        {
+          "id": 3,
+          "title": "Integrate Add-to-Calendar Button in Registration Flow",
+          "description": "Display a button or link to add the event to Google Calendar after successful registration.",
+          "dependencies": [
+            2
+          ],
+          "details": "Update the registration confirmation page or email to include the Add-to-Calendar option, ensuring it is visible and accessible.",
+          "status": "done",
+          "testStrategy": "Register as a user and confirm the Add-to-Calendar button appears and functions as intended."
+        },
+        {
+          "id": 5,
+          "title": "Validate and Test End-to-End Integration",
+          "description": "Perform comprehensive testing of the entire Add-to-Calendar feature from registration to event creation in Google Calendar.",
+          "dependencies": [
+            3
+          ],
+          "details": "Test various scenarios, including different browsers and devices, to ensure reliability and a seamless user experience.",
+          "status": "pending",
+          "testStrategy": "Conduct user acceptance testing and verify that events are correctly added to Google Calendar for all supported use cases."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Implement Referral Link Tracking",
+      "description": "Allow organizers to generate unique referral links and track which referrer was used for each registration.",
+      "details": "Enable organizers to generate unique referral links. When an attendee registers via a referral link, record the referrer in the database. Display referral source in attendee list.",
+      "testStrategy": "Test referral link generation, registration tracking, and data persistence. Verify referral source is recorded and displayed.",
+      "priority": "medium",
+      "dependencies": [
+        1,
+        4,
+        5
+      ],
+      "status": "pending",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Design referral link generation system",
+          "description": "Create a system that allows organizers to generate unique referral links for their events",
+          "dependencies": [],
+          "details": "Develop functionality for organizers to create and manage unique referral links through the dashboard. Include options to name referral sources (e.g., social media, email campaigns, partners) and generate corresponding unique URLs. Implement a database schema to store referral link information including creation date, source name, and organizer ID.",
+          "status": "pending",
+          "testStrategy": "Verify that unique links are generated correctly and that organizers can create, view, and manage multiple referral links through the interface."
+        },
+        {
+          "id": 2,
+          "title": "Implement tracking script integration",
+          "description": "Develop JavaScript tracking code to detect and capture referral parameters when users visit the registration page",
+          "dependencies": [
+            1
+          ],
+          "details": "Create a JavaScript tracking script that detects referral parameters in URLs. The script should be automatically added to event registration pages and capture the referral source identifier. Implement cookie storage to maintain referral information across user sessions, ensuring the referral source is preserved even if users don't register immediately.",
+          "status": "pending",
+          "testStrategy": "Test script functionality across different browsers and devices. Verify that referral data persists in cookies and is properly maintained throughout the registration flow."
+        },
+        {
+          "id": 3,
+          "title": "Modify registration process to record referral data",
+          "description": "Update the registration system to capture and store referral source information when attendees complete registration",
+          "dependencies": [
+            2
+          ],
+          "details": "Modify the registration form submission process to include referral source data. Create database fields in the attendee records to store referral information. Ensure the referral data is properly associated with each registration and linked to the correct referral campaign in the database.",
+          "status": "pending",
+          "testStrategy": "Test the complete registration flow with various referral links to ensure data is correctly captured and stored in the database."
+        },
+        {
+          "id": 4,
+          "title": "Update attendee management interface",
+          "description": "Enhance the attendee list view to display referral source information for each registration",
+          "dependencies": [
+            3
+          ],
+          "details": "Add a 'Referral Source' column to the attendee list in the organizer dashboard. Implement filtering and sorting capabilities based on referral sources. Ensure the interface clearly displays which attendees came through which referral links, with appropriate labels matching the organizer's defined referral sources.",
+          "status": "pending",
+          "testStrategy": "Verify that referral information displays correctly in the attendee list and that filtering/sorting functions work as expected."
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Develop Automated Email Communication",
+      "description": "Implement customizable email templates for pre-event reminders and post-event thank yous.",
+      "details": "Allow organizers to customize email content for reminders (sent a configurable time before the event) and thank yous (sent after the event). Use Resend for email delivery. Store email templates and send times in SQLite.",
+      "testStrategy": "Test email template customization, scheduling, and delivery. Verify emails are sent at the correct times.",
+      "priority": "medium",
+      "dependencies": [
+        1,
+        5
+      ],
+      "status": "pending",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Design Email Template Database Schema",
+          "description": "Create SQLite database schema to store email templates and configuration settings for pre-event reminders and post-event thank yous.",
+          "dependencies": [],
+          "details": "Design tables for storing template content, customizable fields, send times configuration, and event associations. Include fields for template type (reminder/thank you), subject line, body content, configurable time settings, and organizer customizations.",
+          "status": "pending",
+          "testStrategy": "Validate schema with sample data insertion and retrieval tests to ensure all required fields are properly stored and retrieved."
+        },
+        {
+          "id": 2,
+          "title": "Implement Template Customization Interface",
+          "description": "Create UI components for organizers to customize email content, subject lines, and timing configurations.",
+          "dependencies": [
+            1
+          ],
+          "details": "Develop form components for editing template content with rich text support, configurable timing options (X days/hours before/after event), and preview functionality. Include ability to save templates as drafts and set defaults.\n<info added on 2025-06-06T01:10:53.964Z>\n<think>\nOkay, let's tackle this. The user wants to update the subtask description for creating UI components that allow organizers to select predefined email templates and edit details like event name and date. \n\nFirst, I need to look at the current subtask details. The existing description mentions developing form components with rich text support, timing options, previews, saving drafts, and setting defaults. The user's request adds selecting from predefined templates and editing key details.\n\nThe search results mention UI elements like buttons, CTAs, and responsive design. Result [1] talks about making emails adaptable across devices, which might relate to the UI components needing responsiveness. Also, [5] discusses a dialog for picking email templates, which is directly relevant. The user wants organizers to select templates, so incorporating a template picker UI is essential. \n\nIn the ServiceNow community post [5], they created a dialog window for selecting templates, which could inspire the UI component here. The new description should include a template selection interface, maybe a modal or dropdown, allowing users to choose from existing templates. Then, after selection, they need to edit event-specific fields like name and date. \n\nThe current subtask already has rich text and preview features, so the update should integrate the new elements without duplicating existing info. Also, considering responsive design from [1], the UI should work well on different devices. \n\nI need to ensure the new text only includes the additions from the user's request. The existing details about rich text, timing options, etc., stay unless the user specifies changes. The focus is on adding template selection and editable fields. \n\nSo, the updated description should mention creating UI components for template selection (like a dialog or dropdown), editing event details, validation for required fields, and ensuring the UI is responsive. It should also allow saving as drafts and setting defaults, which are already in the current details but might need to be mentioned in context.\n</think>\n\nCreate UI components enabling organizers to browse and select from predefined email templates through a searchable grid or dropdown interface. Implement editable form fields for dynamically updating event-specific details (name, dates, locations) with real-time previews of merged content. Include validation rules for required fields and template compatibility checks. Design template selection workflow with a two-step modal interface: template category filtering followed by visual previews of layout options.\n</info added on 2025-06-06T01:10:53.964Z>",
+          "status": "pending",
+          "testStrategy": "Test UI components with various input combinations and verify proper state management and data validation."
+        },
+        {
+          "id": 3,
+          "title": "Set Up Resend Integration",
+          "description": "Integrate with Resend API for reliable email delivery of automated messages.",
+          "dependencies": [
+            1
+          ],
+          "details": "Implement API client for Resend, configure authentication, create email sending service with error handling and retry logic. Include tracking capabilities for email delivery status and open rates.",
+          "status": "pending",
+          "testStrategy": "Test API integration with mock responses and verify proper handling of success/failure scenarios."
+        },
+        {
+          "id": 4,
+          "title": "Develop Email Scheduling System",
+          "description": "Create a scheduling system to trigger emails at configured times relative to events.",
+          "dependencies": [
+            1,
+            3
+          ],
+          "details": "Implement a job scheduler that calculates send times based on event dates and configured offsets. Build queue management for pending emails with status tracking. Include handling for timezone differences and event updates/cancellations.",
+          "status": "pending",
+          "testStrategy": "Test with various timing configurations and verify emails are scheduled correctly relative to event times."
+        },
+        {
+          "id": 5,
+          "title": "Create Email Template Rendering Engine",
+          "description": "Develop a system to dynamically render email templates with event-specific data and organizer customizations.",
+          "dependencies": [
+            2,
+            3,
+            4
+          ],
+          "details": "Build template engine that combines base templates with custom content, event details, and recipient information. Include support for personalization tokens, conditional content blocks, and responsive design. Ensure proper HTML/plain text rendering for maximum compatibility.",
+          "status": "pending",
+          "testStrategy": "Test rendering with various template configurations and verify correct substitution of dynamic content and proper formatting across email clients."
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "Build Attendee List Export Functionality",
+      "description": "Enable organizers to download a list of registered attendees as CSV or Excel.",
+      "details": "Implement a button for organizers to export attendee data (including custom questions and referral source) as CSV or Excel. Use server-side logic to generate the file.",
+      "testStrategy": "Test export functionality. Verify all required data is included and the file is correctly formatted.",
+      "priority": "medium",
+      "dependencies": [
+        1,
+        4,
+        7
+      ],
+      "status": "pending",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Create Export Button UI Component",
+          "description": "Design and implement the export button in the organizer interface",
+          "dependencies": [],
+          "details": "Develop a clearly visible 'Export Attendees' button on the attendee list page. The button should be positioned on the right side of the grid for easy access. Include dropdown options for CSV and Excel formats.",
+          "status": "pending",
+          "testStrategy": "Verify button visibility, proper positioning, and dropdown functionality across different screen sizes"
+        },
+        {
+          "id": 2,
+          "title": "Implement Data Collection Logic",
+          "description": "Create server-side logic to gather all attendee information",
+          "dependencies": [
+            1
+          ],
+          "details": "Develop backend functionality to collect comprehensive attendee data including personal information, custom field responses, and referral sources. Ensure the data collection is optimized for large attendee lists.",
+          "status": "pending",
+          "testStrategy": "Test with various event sizes to ensure all attendee data is correctly collected, including edge cases with custom fields"
+        },
+        {
+          "id": 3,
+          "title": "Build File Generation Service",
+          "description": "Create service to convert attendee data into CSV/Excel formats",
+          "dependencies": [
+            2
+          ],
+          "details": "Implement server-side logic to transform the collected attendee data into properly formatted CSV and Excel files. Ensure proper handling of special characters and formatting of dates and times.",
+          "status": "pending",
+          "testStrategy": "Validate file structure, encoding, and compatibility with common spreadsheet applications"
+        },
+        {
+          "id": 4,
+          "title": "Implement Download Mechanism",
+          "description": "Create secure file download functionality for organizers",
+          "dependencies": [
+            3
+          ],
+          "details": "Develop the mechanism to securely deliver the generated file to the organizer's browser. Include proper HTTP headers for file downloads and implement security measures to ensure only authorized organizers can access attendee data.",
+          "status": "pending",
+          "testStrategy": "Test download functionality across different browsers and verify security restrictions"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "title": "Implement Mobile-Responsive Design and Final UX Polish",
+      "description": "Ensure all pages and forms are fully mobile-responsive and the UI is clean and intuitive.",
+      "details": "Review and refine all UI components for mobile and desktop. Ensure clarity, simplicity, and minimalism. Test on multiple devices and screen sizes.",
+      "testStrategy": "Test on various devices and screen sizes. Verify all features are accessible and the UI is intuitive.",
+      "priority": "medium",
+      "dependencies": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "status": "pending",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Conduct Content Inventory and Prioritization",
+          "description": "List all UI components, forms, and content elements across the application. Prioritize them based on importance and user needs for mobile and desktop experiences.",
+          "dependencies": [],
+          "details": "Create a comprehensive inventory of all interface elements and establish a clear visual hierarchy to guide responsive layout decisions.",
+          "status": "pending",
+          "testStrategy": "Review inventory completeness and validate prioritization with stakeholders."
+        },
+        {
+          "id": 2,
+          "title": "Define Responsive Breakpoints and Layout Structure",
+          "description": "Establish key breakpoints for mobile, tablet, and desktop views. Plan the fluid grid system and layout adjustments for each breakpoint.",
+          "dependencies": [
+            1
+          ],
+          "details": "Analyze user data to determine the most relevant device sizes. Set up CSS breakpoints (e.g., 320px, 768px, 1024px) and outline layout changes for each.",
+          "status": "pending",
+          "testStrategy": "Verify breakpoint coverage using browser developer tools and device simulators."
+        },
+        {
+          "id": 3,
+          "title": "Implement Mobile-First Responsive UI Components",
+          "description": "Develop and refine UI components starting from the smallest (mobile) breakpoint, scaling up to tablet and desktop.",
+          "dependencies": [
+            2
+          ],
+          "details": "Use a mobile-first approach to ensure all components are optimized for small screens, then progressively enhance layouts for larger screens.",
+          "status": "pending",
+          "testStrategy": "Manually inspect UI components at each breakpoint and ensure consistency and usability."
+        },
+        {
+          "id": 4,
+          "title": "Optimize Visual Clarity, Simplicity, and Minimalism",
+          "description": "Polish the UI to ensure clarity, simplicity, and minimalism across all devices. Remove unnecessary elements and streamline interactions.",
+          "dependencies": [
+            3
+          ],
+          "details": "Refine typography, spacing, and color usage. Ensure that navigation and forms are intuitive and accessible.",
+          "status": "pending",
+          "testStrategy": "Conduct heuristic evaluation and gather user feedback on clarity and ease of use."
+        },
+        {
+          "id": 5,
+          "title": "Test Responsiveness and Usability Across Devices",
+          "description": "Perform comprehensive testing of all pages and forms on multiple devices and screen sizes to ensure full responsiveness and optimal UX.",
+          "dependencies": [
+            4
+          ],
+          "details": "Use real devices and emulators to test for layout issues, image scaling, and interactive element usability. Address any inconsistencies found.",
+          "status": "pending",
+          "testStrategy": "Execute cross-device and cross-browser testing, document issues, and verify fixes before final sign-off."
+        }
+      ]
+    }
+  ]
+}

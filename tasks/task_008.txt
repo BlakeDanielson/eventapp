@@ -1,0 +1,62 @@
+# Task ID: 8
+# Title: Develop Automated Email Communication
+# Status: pending
+# Dependencies: 1, 5
+# Priority: medium
+# Description: Implement customizable email templates for pre-event reminders and post-event thank yous.
+# Details:
+Allow organizers to customize email content for reminders (sent a configurable time before the event) and thank yous (sent after the event). Use Resend for email delivery. Store email templates and send times in SQLite.
+
+# Test Strategy:
+Test email template customization, scheduling, and delivery. Verify emails are sent at the correct times.
+
+# Subtasks:
+## 1. Design Email Template Database Schema [pending]
+### Dependencies: None
+### Description: Create SQLite database schema to store email templates and configuration settings for pre-event reminders and post-event thank yous.
+### Details:
+Design tables for storing template content, customizable fields, send times configuration, and event associations. Include fields for template type (reminder/thank you), subject line, body content, configurable time settings, and organizer customizations.
+
+## 2. Implement Template Customization Interface [pending]
+### Dependencies: 8.1
+### Description: Create UI components for organizers to customize email content, subject lines, and timing configurations.
+### Details:
+Develop form components for editing template content with rich text support, configurable timing options (X days/hours before/after event), and preview functionality. Include ability to save templates as drafts and set defaults.
+<info added on 2025-06-06T01:10:53.964Z>
+<think>
+Okay, let's tackle this. The user wants to update the subtask description for creating UI components that allow organizers to select predefined email templates and edit details like event name and date. 
+
+First, I need to look at the current subtask details. The existing description mentions developing form components with rich text support, timing options, previews, saving drafts, and setting defaults. The user's request adds selecting from predefined templates and editing key details.
+
+The search results mention UI elements like buttons, CTAs, and responsive design. Result [1] talks about making emails adaptable across devices, which might relate to the UI components needing responsiveness. Also, [5] discusses a dialog for picking email templates, which is directly relevant. The user wants organizers to select templates, so incorporating a template picker UI is essential. 
+
+In the ServiceNow community post [5], they created a dialog window for selecting templates, which could inspire the UI component here. The new description should include a template selection interface, maybe a modal or dropdown, allowing users to choose from existing templates. Then, after selection, they need to edit event-specific fields like name and date. 
+
+The current subtask already has rich text and preview features, so the update should integrate the new elements without duplicating existing info. Also, considering responsive design from [1], the UI should work well on different devices. 
+
+I need to ensure the new text only includes the additions from the user's request. The existing details about rich text, timing options, etc., stay unless the user specifies changes. The focus is on adding template selection and editable fields. 
+
+So, the updated description should mention creating UI components for template selection (like a dialog or dropdown), editing event details, validation for required fields, and ensuring the UI is responsive. It should also allow saving as drafts and setting defaults, which are already in the current details but might need to be mentioned in context.
+</think>
+
+Create UI components enabling organizers to browse and select from predefined email templates through a searchable grid or dropdown interface. Implement editable form fields for dynamically updating event-specific details (name, dates, locations) with real-time previews of merged content. Include validation rules for required fields and template compatibility checks. Design template selection workflow with a two-step modal interface: template category filtering followed by visual previews of layout options.
+</info added on 2025-06-06T01:10:53.964Z>
+
+## 3. Set Up Resend Integration [pending]
+### Dependencies: 8.1
+### Description: Integrate with Resend API for reliable email delivery of automated messages.
+### Details:
+Implement API client for Resend, configure authentication, create email sending service with error handling and retry logic. Include tracking capabilities for email delivery status and open rates.
+
+## 4. Develop Email Scheduling System [pending]
+### Dependencies: 8.1, 8.3
+### Description: Create a scheduling system to trigger emails at configured times relative to events.
+### Details:
+Implement a job scheduler that calculates send times based on event dates and configured offsets. Build queue management for pending emails with status tracking. Include handling for timezone differences and event updates/cancellations.
+
+## 5. Create Email Template Rendering Engine [pending]
+### Dependencies: 8.2, 8.3, 8.4
+### Description: Develop a system to dynamically render email templates with event-specific data and organizer customizations.
+### Details:
+Build template engine that combines base templates with custom content, event details, and recipient information. Include support for personalization tokens, conditional content blocks, and responsive design. Ensure proper HTML/plain text rendering for maximum compatibility.
+

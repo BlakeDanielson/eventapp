@@ -1,0 +1,43 @@
+# Task ID: 2
+# Title: Design and Implement Event Page Creation UI
+# Status: done
+# Dependencies: 1
+# Priority: high
+# Description: Build a clean, intuitive UI for organizers to create event pages with essential fields and basic customization.
+# Details:
+Implement a form for organizers to input event title, date, time, location (address or virtual link), bio/about, agenda, and Q&A. Allow upload of a header image/logo. Use Shadcn/ui components and Tailwind CSS for styling. Ensure the form is mobile-responsive.
+
+# Test Strategy:
+Test form submission and validation. Verify all fields are displayed and editable. Check mobile responsiveness.
+
+# Subtasks:
+## 1. Design responsive form layout with essential fields [done]
+### Dependencies: None
+### Description: Create a mobile-responsive form layout that includes all required event information fields using Shadcn/ui components and Tailwind CSS
+### Details:
+Design a clean form layout with fields for event title, date, time, location (address or virtual link), bio/about, agenda, and Q&A. Ensure proper spacing, grouping of related fields, and responsive behavior across device sizes. Implement using Shadcn/ui form components styled with Tailwind CSS.
+
+## 2. Implement media upload functionality [done]
+### Dependencies: 2.1
+### Description: Create functionality for uploading and previewing header images and logos
+### Details:
+Develop a media upload component that allows organizers to upload, preview, and replace header images and logos. Include drag-and-drop functionality, file size validation, and image preview capabilities. Ensure the component is visually consistent with the rest of the form.
+
+## 3. Build form validation and error handling [done]
+### Dependencies: 2.1
+### Description: Implement client-side validation for all form fields with clear error messages
+### Details:
+Create validation rules for all required fields, including format validation for dates, times, and URLs. Implement real-time validation feedback with clear, user-friendly error messages. Ensure validation works across all form fields and prevents submission of invalid data.
+
+## 4. Develop basic customization options [done]
+### Dependencies: 2.1, 2.2
+### Description: Implement UI elements for basic event page customization including colors and layout options
+### Details:
+Create a customization section that allows organizers to select color schemes, adjust layout preferences, and preview changes in real-time. Include a limited set of pre-defined themes and options to maintain design consistency while providing flexibility.
+
+## 5. Create preview functionality [done]
+### Dependencies: 2.1, 2.2, 2.3, 2.4
+### Description: Implement a live preview feature that shows how the event page will appear to attendees
+### Details:
+Develop a preview component that renders the event page based on the form data and customization options. Include toggle functionality to switch between form editing and preview modes. Ensure the preview accurately reflects how the page will appear when published, including responsive behavior.
+

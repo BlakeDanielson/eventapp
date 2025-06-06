@@ -1,0 +1,11 @@
+# Task ID: 6
+# Title: Set Up Automated Email Communication via Resend
+# Status: done
+# Dependencies: None
+# Priority: medium
+# Description: Integrate the Resend service for sending transactional emails. Configure and trigger three automated emails: an immediate registration confirmation, a pre-event reminder (e.g., 24 hours before), and a post-event thank you message. Allow organizers to customize the content of these emails.
+# Details:
+
+
+# Test Strategy:
+

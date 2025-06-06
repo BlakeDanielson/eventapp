@@ -1,0 +1,11 @@
+# Task ID: 3
+# Title: Develop Backend for Event Creation and Management
+# Status: done
+# Dependencies: None
+# Priority: medium
+# Description: Using Prisma, define the database schema for Events, Registrations, and Referrers. Create the necessary API endpoints for an authenticated organizer to create, update, and view their events. This includes handling data for all event content sections (Title, Date, Location, Bio, etc.).
+# Details:
+
+
+# Test Strategy:
+

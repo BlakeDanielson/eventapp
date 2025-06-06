@@ -1,0 +1,11 @@
+# Task ID: 8
+# Title: Develop Simplified Referral Link Tracking
+# Status: done
+# Dependencies: None
+# Priority: medium
+# Description: Create a feature for organizers to generate unique, trackable referral links for the event page. When an attendee registers using one of these links, the system must record which referrer's link was used and associate it with the attendee's registration data.
+# Details:
+
+
+# Test Strategy:
+

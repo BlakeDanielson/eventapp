@@ -1,0 +1,43 @@
+# Task ID: 1
+# Title: Setup Project Repository and Initial Configuration
+# Status: done
+# Dependencies: None
+# Priority: high
+# Description: Initialize the project repository with Next.js (App Router), TypeScript, Shadcn/ui, Tailwind CSS, and Clerk for authentication. Configure basic project structure and dependencies.
+# Details:
+Create a new Next.js project using the App Router. Install and configure TypeScript, Shadcn/ui, Tailwind CSS, and Clerk for authentication. Set up initial folder structure and basic linting/prettier config. Example: `npx create-next-app@latest --typescript --app`; install dependencies via npm/yarn.
+
+# Test Strategy:
+Verify project builds and runs without errors. Check that all required dependencies are installed and configured.
+
+# Subtasks:
+## 1. Initialize Next.js project with TypeScript and App Router [done]
+### Dependencies: None
+### Description: Create a new Next.js project using create-next-app with TypeScript support and the App Router architecture
+### Details:
+Run 'npx create-next-app@latest' in terminal and select TypeScript, App Router, ESLint, and Tailwind CSS options when prompted. This will create the base project structure with proper TypeScript configuration and the modern App Router architecture
+
+## 2. Install and configure Tailwind CSS [done]
+### Dependencies: 1.1
+### Description: Set up Tailwind CSS for styling the application with proper configuration
+### Details:
+Tailwind CSS should be installed automatically during project creation. Verify tailwind.config.js and ensure content paths include all necessary directories. Update global.css to include Tailwind directives (@tailwind base, components, utilities)
+
+## 3. Install and configure Shadcn/ui components [done]
+### Dependencies: 1.1, 1.2
+### Description: Set up Shadcn/ui component library with proper configuration for the project
+### Details:
+Install Shadcn/ui CLI with 'npm install @shadcn/ui', then initialize it with 'npx shadcn-ui init'. Configure component installation directory and styling preferences. Install core components like Button, Card, etc. with 'npx shadcn-ui add [component-name]'
+
+## 4. Integrate Clerk authentication [done]
+### Dependencies: 1.1
+### Description: Install and configure Clerk for user authentication and session management
+### Details:
+Install Clerk packages with 'npm install @clerk/nextjs'. Create Clerk account and obtain API keys. Configure environment variables (.env.local) with Clerk API keys. Set up ClerkProvider in app layout.tsx and create middleware.ts for protected routes
+
+## 5. Set up linting, formatting and project structure [done]
+### Dependencies: 1.1, 1.2, 1.3, 1.4
+### Description: Configure ESLint, Prettier, and establish the project folder structure
+### Details:
+Install Prettier with 'npm install -D prettier eslint-config-prettier'. Create .prettierrc and .eslintrc.js files with project-specific rules. Set up folder structure with directories for components, lib, hooks, types, and api routes. Configure VSCode settings for consistent formatting
+

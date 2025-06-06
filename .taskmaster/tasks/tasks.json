@@ -1,0 +1,114 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Project Setup and Technology Stack Initialization",
+      "description": "Initialize the Next.js (App Router) project with TypeScript. Configure Tailwind CSS for styling and set up Shadcn/ui for UI components. Install and configure Prisma as the ORM for the SQLite database. This task establishes the foundational technical stack for the project.",
+      "details": "",
+      "testStrategy": "",
+      "priority": "medium",
+      "dependencies": [],
+      "status": "done",
+      "subtasks": []
+    },
+    {
+      "id": 2,
+      "title": "Implement Organizer Authentication using Clerk",
+      "description": "Integrate Clerk for user authentication. This will manage organizer sign-up, sign-in, and session management. Secure the event creation and management pages so only authenticated organizers can access them.",
+      "details": "",
+      "testStrategy": "",
+      "priority": "medium",
+      "dependencies": [],
+      "status": "done",
+      "subtasks": []
+    },
+    {
+      "id": 3,
+      "title": "Develop Backend for Event Creation and Management",
+      "description": "Using Prisma, define the database schema for Events, Registrations, and Referrers. Create the necessary API endpoints for an authenticated organizer to create, update, and view their events. This includes handling data for all event content sections (Title, Date, Location, Bio, etc.).",
+      "details": "",
+      "testStrategy": "",
+      "priority": "medium",
+      "dependencies": [],
+      "status": "done",
+      "subtasks": []
+    },
+    {
+      "id": 4,
+      "title": "Create Frontend for Public Event Page Display",
+      "description": "Build the public-facing event page that is accessible via a unique, shareable link. This page will fetch and display all event details from the backend, including title, date, time, location, description, agenda, and Q&A. The page must be mobile-responsive.",
+      "details": "",
+      "testStrategy": "",
+      "priority": "medium",
+      "dependencies": [],
+      "status": "done",
+      "subtasks": []
+    },
+    {
+      "id": 5,
+      "title": "Build Registration Form and API Endpoint",
+      "description": "Implement the attendee registration system. This includes a frontend form to collect Name, Email, and answers to custom questions defined by the organizer. Create a backend API endpoint to process and save the registration data. Provide an on-screen confirmation message upon successful registration.",
+      "details": "",
+      "testStrategy": "",
+      "priority": "medium",
+      "dependencies": [],
+      "status": "done",
+      "subtasks": []
+    },
+    {
+      "id": 6,
+      "title": "Set Up Automated Email Communication via Resend",
+      "description": "Integrate the Resend service for sending transactional emails. Configure and trigger three automated emails: an immediate registration confirmation, a pre-event reminder (e.g., 24 hours before), and a post-event thank you message. Allow organizers to customize the content of these emails.",
+      "details": "",
+      "testStrategy": "",
+      "priority": "medium",
+      "dependencies": [],
+      "status": "done",
+      "subtasks": []
+    },
+    {
+      "id": 7,
+      "title": "Implement 'Add to Google Calendar' Feature",
+      "description": "After a user successfully registers, provide a button or link on the confirmation screen that allows them to add the event to their Google Calendar. The link should pre-fill the calendar event with the correct details (Title, Date, Time, Location).",
+      "details": "",
+      "testStrategy": "",
+      "priority": "medium",
+      "dependencies": [],
+      "status": "done",
+      "subtasks": []
+    },
+    {
+      "id": 8,
+      "title": "Develop Simplified Referral Link Tracking",
+      "description": "Create a feature for organizers to generate unique, trackable referral links for the event page. When an attendee registers using one of these links, the system must record which referrer's link was used and associate it with the attendee's registration data.",
+      "details": "",
+      "testStrategy": "",
+      "priority": "medium",
+      "dependencies": [],
+      "status": "done",
+      "subtasks": []
+    },
+    {
+      "id": 9,
+      "title": "Implement Attendee List Export to CSV",
+      "description": "Develop a secure API endpoint that allows an authenticated organizer to download the list of registered attendees for one of their events. The downloaded file should be in CSV format and include all collected information: Name, Email, custom question answers, and the referral source.",
+      "details": "",
+      "testStrategy": "",
+      "priority": "medium",
+      "dependencies": [],
+      "status": "done",
+      "subtasks": []
+    },
+    {
+      "id": 10,
+      "title": "Build Organizer Dashboard UI for Event Management",
+      "description": "Create the user interface for the organizer's dashboard. This includes a form for creating and editing events (Task 3), a view to see the list of registered attendees (Task 9), and a section to generate referral links (Task 8). This task focuses on the organizer-facing UI/UX.",
+      "details": "",
+      "testStrategy": "",
+      "priority": "medium",
+      "dependencies": [],
+      "status": "done",
+      "subtasks": []
+    }
+  ]
+}
