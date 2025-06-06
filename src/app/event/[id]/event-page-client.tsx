@@ -14,6 +14,7 @@ import { RegistrationForm } from '@/components/registration-form';
 import { TicketPurchase } from '@/components/ticket-purchase';
 import { EventWithOrganizer } from '@/types/event';
 import { EventMap } from '@/components/event-map';
+import { EnhancedLocationCard } from '@/components/enhanced-location-card';
 
 const EventGallery = ({ imageUrl, title }: { imageUrl?: string; title: string }) => {
   const defaultImage = "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80";
@@ -236,22 +237,33 @@ export function EventPageClient({
               </CardContent>
             </Card>
 
-            {/* Location Section */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Event Location</CardTitle>
-                <CardDescription>{event.location}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <EventMap 
-                  location={event.location}
-                  eventTitle={event.title}
-                  eventDate={formattedDate}
-                  eventTime={event.time}
-                  organizerName={event.organizerProfile?.displayName}
-                />
-              </CardContent>
-            </Card>
+            {/* Enhanced Location Section with Weather */}
+            <div className="space-y-6">
+              <EnhancedLocationCard 
+                location={event.location}
+                eventTitle={event.title}
+                eventDate={formattedDate}
+                eventTime={event.time}
+                organizerName={event.organizerProfile?.displayName}
+              />
+              
+              {/* Interactive Map */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Interactive Map</CardTitle>
+                  <CardDescription>Explore the event location in detail</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <EventMap 
+                    location={event.location}
+                    eventTitle={event.title}
+                    eventDate={formattedDate}
+                    eventTime={event.time}
+                    organizerName={event.organizerProfile?.displayName}
+                  />
+                </CardContent>
+              </Card>
+            </div>
 
             {/* Q&A Section (if exists) */}
             {event.qa && (

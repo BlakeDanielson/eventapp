@@ -17,7 +17,10 @@ import {
   TrendingUp,
   Users,
   Share2,
-  ArrowUpRight
+  ArrowUpRight,
+  BarChart3,
+  Eye,
+  Settings
 } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useEventOperations } from '@/hooks/useEventOperations';
@@ -28,85 +31,92 @@ import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { DashboardComparison } from '@/components/dashboard-comparison';
 
-// Animated Gradient Component
-interface AnimatedGradientProps {
-  colors: string[];
-  blur?: "light" | "medium" | "heavy";
-}
-
-function AnimatedGradient({ colors, blur = "medium" }: AnimatedGradientProps) {
-  const blurClass = blur === "light" ? "blur-2xl" : blur === "medium" ? "blur-3xl" : "blur-[100px]";
-  
-  return (
-    <div className="absolute inset-0 overflow-hidden">
-      <div className={cn(`absolute inset-0`, blurClass)}>
-        {colors.map((color: string, index: number) => (
-          <div
-            key={index}
-            className="absolute animate-background-gradient opacity-30 dark:opacity-[0.15]"
-            style={{
-              top: `${Math.random() * 50}%`,
-              left: `${Math.random() * 50}%`,
-              width: '80%',
-              height: '80%',
-              borderRadius: '50%',
-              backgroundColor: color,
-            }}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// Stat Card Component
-interface StatCardProps {
+// Resend-inspired minimal stat card
+interface ResendStatCardProps {
   title: string;
   value: number;
   icon: React.ReactNode;
-  colors: string[];
+  trend?: {
+    value: number;
+    isPositive: boolean;
+  };
 }
 
-function StatCard({ title, value, icon, colors }: StatCardProps) {
+function ResendStatCard({ title, value, icon, trend }: ResendStatCardProps) {
   return (
-    <Card className="relative overflow-hidden border-0 bg-background/50 backdrop-blur-sm">
-      <AnimatedGradient colors={colors} />
-      <CardContent className="relative z-10 p-6">
-        <div className="flex items-center justify-between mb-3">
-          <div className="w-10 h-10 rounded-full flex items-center justify-center bg-white/10 backdrop-blur-sm">
+    <motion.div
+      whileHover={{ y: -1 }}
+      transition={{ duration: 0.2 }}
+      className="group relative overflow-hidden rounded-xl border border-white/[0.08] bg-black/40 backdrop-blur-sm p-6 hover:border-white/[0.12] transition-all duration-300"
+    >
+      {/* Subtle gradient overlay on hover */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      
+      <div className="relative z-10">
+        <div className="flex items-center justify-between mb-4">
+          <div className="p-2 rounded-lg bg-white/[0.05] border border-white/[0.08] group-hover:bg-white/[0.08] transition-colors duration-300">
             {icon}
           </div>
+          {trend && (
+            <div className={cn(
+              "flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium",
+              trend.isPositive 
+                ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" 
+                : "bg-red-500/10 text-red-400 border border-red-500/20"
+            )}>
+              <TrendingUp className={cn("h-3 w-3", !trend.isPositive && "rotate-180")} />
+              {Math.abs(trend.value)}%
+            </div>
+          )}
         </div>
         <div className="space-y-1">
-          <p className="text-sm font-medium text-muted-foreground">{title}</p>
-          <p className="text-3xl font-bold">{value}</p>
+          <p className="text-sm font-medium text-white/60">{title}</p>
+          <p className="text-2xl font-semibold text-white">{value.toLocaleString()}</p>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </motion.div>
   );
 }
 
-// Button with gradient effect
-interface GradientButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+// Resend-inspired button
+interface ResendButtonProps {
   children: React.ReactNode;
+  variant?: "primary" | "secondary" | "ghost";
+  size?: "sm" | "md" | "lg";
   className?: string;
-  size?: "default" | "sm" | "lg" | "icon";
+  onClick?: () => void;
+  disabled?: boolean;
+  type?: "button" | "submit" | "reset";
 }
 
-function GradientButton({ children, className, ...props }: GradientButtonProps) {
+function ResendButton({ children, variant = "primary", size = "md", className, onClick, disabled, type = "button" }: ResendButtonProps) {
+  const baseClasses = "relative overflow-hidden font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/20 focus:ring-offset-2 focus:ring-offset-black";
+  
+  const variants = {
+    primary: "bg-white text-black hover:bg-white/90 border border-transparent",
+    secondary: "bg-transparent text-white border border-white/20 hover:border-white/40 hover:bg-white/[0.05]",
+    ghost: "bg-transparent text-white/70 hover:text-white hover:bg-white/[0.05] border border-transparent"
+  };
+  
+  const sizes = {
+    sm: "px-3 py-1.5 text-sm rounded-lg",
+    md: "px-4 py-2 text-sm rounded-lg",
+    lg: "px-6 py-3 text-base rounded-xl"
+  };
+
   return (
-    <Button
-      className={cn(
-        "relative overflow-hidden group",
-        className
-      )}
-      {...props}
+    <motion.button
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      className={cn(baseClasses, variants[variant], sizes[size], className)}
+      onClick={onClick}
+      disabled={disabled}
+      type={type}
     >
-      <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 opacity-40 group-hover:opacity-80 blur transition-opacity duration-500" />
-      <div className="relative flex items-center justify-center gap-2">
+      <span className="relative z-10 flex items-center justify-center gap-2">
         {children}
-      </div>
-    </Button>
+      </span>
+    </motion.button>
   );
 }
 
@@ -204,10 +214,14 @@ function DashboardContent() {
   // Authentication Loading State
   if (!isLoaded) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading...</p>
+          <div className="relative">
+            <div className="w-12 h-12 border-2 border-white/20 rounded-full animate-spin">
+              <div className="absolute top-0 left-0 w-3 h-3 bg-white rounded-full"></div>
+            </div>
+          </div>
+          <p className="text-white/60 mt-4 text-sm">Loading...</p>
         </div>
       </div>
     );
@@ -216,12 +230,14 @@ function DashboardContent() {
   // Not authenticated - this shouldn't happen with middleware, but good fallback
   if (!isSignedIn) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-foreground mb-4">Authentication Required</h1>
-          <p className="text-muted-foreground mb-6">Please sign in to access your dashboard.</p>
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto px-6">
+          <h1 className="text-2xl font-semibold text-white mb-3">Authentication Required</h1>
+          <p className="text-white/60 mb-8 text-sm leading-relaxed">Please sign in to access your dashboard.</p>
           <Link href="/sign-in">
-            <Button>Sign In</Button>
+            <ResendButton variant="primary" size="lg">
+              Sign In
+            </ResendButton>
           </Link>
         </div>
       </div>
@@ -231,41 +247,32 @@ function DashboardContent() {
   // Enhanced Loading State
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
-        <header className="bg-background/80 backdrop-blur-sm border-b border-border/40 sticky top-0 z-10">
-          <div className="container mx-auto px-4 py-4">
+      <div className="min-h-screen bg-black">
+        {/* Header */}
+        <header className="border-b border-white/[0.08] bg-black/50 backdrop-blur-xl sticky top-0 z-50">
+          <div className="max-w-7xl mx-auto px-6 py-4">
             <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-bold">Dashboard</h1>
-              <UserButton afterSignOutUrl="/" />
+              <div className="flex items-center gap-4">
+                <div className="w-32 h-6 bg-white/10 rounded animate-pulse"></div>
+              </div>
+              <div className="w-8 h-8 bg-white/10 rounded-full animate-pulse"></div>
             </div>
           </div>
         </header>
         
-        <main className="container mx-auto px-4 py-8">
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <div className="h-8 bg-muted rounded w-48 mb-2 animate-pulse"></div>
-              <div className="h-4 bg-muted rounded w-64 animate-pulse"></div>
+        <main className="max-w-7xl mx-auto px-6 py-12">
+          {/* Loading skeleton */}
+          <div className="space-y-8">
+            <div className="space-y-3">
+              <div className="w-48 h-8 bg-white/10 rounded animate-pulse"></div>
+              <div className="w-64 h-4 bg-white/10 rounded animate-pulse"></div>
             </div>
-            <div className="h-10 bg-muted rounded w-32 animate-pulse"></div>
-          </div>
-          
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {[1, 2, 3].map((i) => (
-              <Card key={i} className="animate-pulse">
-                <CardHeader>
-                  <div className="h-6 bg-muted rounded w-3/4 mb-2"></div>
-                  <div className="h-4 bg-muted rounded w-16"></div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="h-4 bg-muted rounded w-full"></div>
-                    <div className="h-4 bg-muted rounded w-2/3"></div>
-                    <div className="h-4 bg-muted rounded w-1/2"></div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+            
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="h-32 bg-white/[0.03] border border-white/[0.08] rounded-xl animate-pulse"></div>
+              ))}
+            </div>
           </div>
         </main>
       </div>
@@ -273,22 +280,25 @@ function DashboardContent() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="bg-background/80 backdrop-blur-sm border-b border-border/40 sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4">
+    <div className="min-h-screen bg-black">
+      {/* Resend-inspired header */}
+      <header className="border-b border-white/[0.08] bg-black/50 backdrop-blur-xl sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
-              <p className="text-sm text-muted-foreground mt-1">
-                Welcome back, {user?.firstName || 'Organizer'}! Manage your events and track registrations
-              </p>
+            <div className="flex items-center gap-6">
+              <div>
+                <h1 className="text-lg font-semibold text-white">Dashboard</h1>
+                <p className="text-sm text-white/50 mt-0.5">
+                  Welcome back, {user?.firstName || 'Organizer'}
+                </p>
+              </div>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               <Link href="/organizer-profile">
-                <Button variant="outline" size="sm" className="gap-2">
+                <ResendButton variant="ghost" size="sm">
                   <User className="h-4 w-4" />
                   Profile
-                </Button>
+                </ResendButton>
               </Link>
               <UserButton afterSignOutUrl="/" />
             </div>
@@ -296,38 +306,37 @@ function DashboardContent() {
         </div>
       </header>
       
-      <main className="container mx-auto px-4 py-8">
-        {/* Stats Cards */}
+      <main className="max-w-7xl mx-auto px-6 py-12">
+        {/* Stats Cards - Resend style */}
         {events.length > 0 && (
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8"
+            transition={{ duration: 0.6 }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16"
           >
-            <StatCard 
+            <ResendStatCard 
               title="Total Events" 
               value={eventStats.totalEvents} 
-              icon={<Calendar className="h-5 w-5 text-blue-500" />}
-              colors={["#3B82F6", "#60A5FA", "#93C5FD"]}
+              icon={<Calendar className="h-5 w-5 text-white/70" />}
+              trend={{ value: 12, isPositive: true }}
             />
-            <StatCard 
-              title="Total Registrations" 
+            <ResendStatCard 
+              title="Registrations" 
               value={eventStats.totalRegistrations} 
-              icon={<Users className="h-5 w-5 text-emerald-500" />}
-              colors={["#10B981", "#34D399", "#6EE7B7"]}
+              icon={<Users className="h-5 w-5 text-white/70" />}
+              trend={{ value: 8, isPositive: true }}
             />
-            <StatCard 
-              title="Total Referrals" 
+            <ResendStatCard 
+              title="Referrals" 
               value={eventStats.totalReferrals} 
-              icon={<Share2 className="h-5 w-5 text-purple-500" />}
-              colors={["#8B5CF6", "#A78BFA", "#C4B5FD"]}
+              icon={<Share2 className="h-5 w-5 text-white/70" />}
+              trend={{ value: 24, isPositive: true }}
             />
-            <StatCard 
-              title="Upcoming Events" 
+            <ResendStatCard 
+              title="Upcoming" 
               value={eventStats.upcomingEvents} 
-              icon={<TrendingUp className="h-5 w-5 text-orange-500" />}
-              colors={["#F59E0B", "#FBBF24", "#FCD34D"]}
+              icon={<TrendingUp className="h-5 w-5 text-white/70" />}
             />
           </motion.div>
         )}
@@ -339,46 +348,48 @@ function DashboardContent() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
+            className="mb-8"
           >
-            <Alert className="mb-6 border-green-200 bg-green-50 dark:bg-green-900/20 dark:border-green-900/30">
-              <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
-              <AlertDescription className="text-green-700 dark:text-green-400">
-                {successMessage}
-              </AlertDescription>
-            </Alert>
+            <div className="p-4 rounded-xl border border-emerald-500/20 bg-emerald-500/10">
+              <div className="flex items-center gap-3">
+                <CheckCircle className="h-5 w-5 text-emerald-400 flex-shrink-0" />
+                <p className="text-emerald-400 font-medium">{successMessage}</p>
+              </div>
+            </div>
           </motion.div>
         )}
 
-        {/* Header with Create Event button */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
+        {/* Header with Create Event button - Resend style */}
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-12 gap-6">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
           >
-            <h2 className="text-3xl font-bold text-foreground">My Events</h2>
-            <p className="text-muted-foreground mt-1">
+            <h2 className="text-3xl font-semibold text-white mb-2">Events</h2>
+            <p className="text-white/50">
               {filteredEvents.length !== events.length 
                 ? `Showing ${filteredEvents.length} of ${events.length} events`
                 : events.length > 0 
-                  ? `Manage your ${events.length} event${events.length !== 1 ? 's' : ''}`
+                  ? `${events.length} event${events.length !== 1 ? 's' : ''} total`
                   : 'Create your first event to get started'
               }
             </p>
           </motion.div>
+          
           <motion.div 
-            className="flex items-center gap-3"
+            className="flex items-center gap-4"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
           >
-            {/* Status Filter */}
+            {/* Status Filter - Resend style */}
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-40 bg-background/50 backdrop-blur-sm border-border/50">
-                <Filter className="h-4 w-4 mr-2 text-muted-foreground" />
+              <SelectTrigger className="w-40 bg-black/40 border-white/[0.08] text-white hover:border-white/[0.12] focus:border-white/20 focus:ring-white/10">
+                <Filter className="h-4 w-4 mr-2 text-white/50" />
                 <SelectValue placeholder="Filter events" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-black border-white/[0.08]">
                 <SelectItem value="all">All Events</SelectItem>
                 <SelectItem value="public">Public</SelectItem>
                 <SelectItem value="draft">Draft</SelectItem>
@@ -390,32 +401,32 @@ function DashboardContent() {
             </Select>
             
             <Link href="/create-event">
-              <GradientButton size="lg" className="flex items-center gap-2">
+              <ResendButton variant="primary" size="lg">
                 <Plus className="h-4 w-4" />
                 Create Event
-                <ArrowUpRight className="h-3.5 w-3.5 ml-1 opacity-70" />
-              </GradientButton>
+              </ResendButton>
             </Link>
           </motion.div>
         </div>
 
         {/* Error State */}
         {error && (
-          <Alert variant="destructive" className="mb-6">
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription className="flex items-center justify-between">
-              <span>{error ? getUserFriendlyMessage(error) : 'An error occurred'}</span>
-              <Button 
-                variant="outline" 
+          <div className="mb-8 p-4 rounded-xl border border-red-500/20 bg-red-500/10">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <AlertCircle className="h-5 w-5 text-red-400" />
+                <span className="text-red-400">{error ? getUserFriendlyMessage(error) : 'An error occurred'}</span>
+              </div>
+              <ResendButton 
+                variant="secondary" 
                 size="sm" 
                 onClick={fetchEvents}
-                className="ml-4"
               >
                 <RefreshCw className="h-4 w-4 mr-2" />
                 Retry
-              </Button>
-            </AlertDescription>
-          </Alert>
+              </ResendButton>
+            </div>
+          </div>
         )}
 
         {/* Events Grid */}
@@ -423,32 +434,30 @@ function DashboardContent() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.6 }}
           >
-            <Card className="border-2 border-dashed border-border/70 bg-background/50 backdrop-blur-sm">
-              <CardContent className="flex flex-col items-center justify-center py-16">
-                <div className="bg-primary/10 rounded-full p-4 mb-4">
-                  <Calendar className="h-12 w-12 text-primary/70" />
-                </div>
-                <h3 className="text-xl font-semibold text-foreground mb-2">No events yet</h3>
-                <p className="text-muted-foreground mb-6 text-center max-w-md">
-                  Get started by creating your first event. You can invite attendees, track registrations, and manage everything from here.
-                </p>
-                <Link href="/create-event">
-                  <GradientButton size="lg" className="flex items-center gap-2">
-                    <Plus className="h-4 w-4" />
-                    Create Your First Event
-                  </GradientButton>
-                </Link>
-              </CardContent>
-            </Card>
+            <div className="text-center py-24 px-6">
+              <div className="inline-flex p-4 rounded-2xl border border-white/[0.08] bg-white/[0.02] mb-6">
+                <Calendar className="h-12 w-12 text-white/40" />
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-3">No events yet</h3>
+              <p className="text-white/50 mb-8 max-w-md mx-auto leading-relaxed">
+                Get started by creating your first event. You can invite attendees, track registrations, and manage everything from here.
+              </p>
+              <Link href="/create-event">
+                <ResendButton variant="primary" size="lg">
+                  <Plus className="h-4 w-4" />
+                  Create Your First Event
+                </ResendButton>
+              </Link>
+            </div>
           </motion.div>
         ) : (
           <motion.div 
             className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.6 }}
           >
             {filteredEvents.map((event, index) => (
               <motion.div
@@ -476,10 +485,14 @@ function DashboardContent() {
 export default function DashboardPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading dashboard...</p>
+          <div className="relative">
+            <div className="w-12 h-12 border-2 border-white/20 rounded-full animate-spin">
+              <div className="absolute top-0 left-0 w-3 h-3 bg-white rounded-full"></div>
+            </div>
+          </div>
+          <p className="text-white/60 mt-4 text-sm">Loading dashboard...</p>
         </div>
       </div>
     }>
