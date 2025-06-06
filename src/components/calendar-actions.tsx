@@ -15,28 +15,51 @@ interface CalendarActionsProps {
 export function CalendarActions({ event, className }: CalendarActionsProps) {
   // Convert Event to CalendarEvent format
   const calendarEvent = useMemo(() => {
-    const { start, end } = CalendarUtils.parseEventDateTime(event.date, event.time);
+    // Ensure we have valid event data
+    if (!event) {
+      console.error('No event provided to CalendarActions');
+      return null;
+    }
     
-    return {
-      id: event.id,
-      title: event.title,
-      description: event.bio,
-      location: event.location,
-      start,
-      end
-    };
+    try {
+      const { start, end } = CalendarUtils.parseEventDateTime(event.date, event.time);
+      
+      return {
+        id: event.id || 'unknown',
+        title: event.title || 'Untitled Event',
+        description: event.bio || 'No description available',
+        location: event.location || 'Location TBD',
+        start,
+        end
+      };
+    } catch (error) {
+      console.error('Error creating calendar event:', error);
+      return null;
+    }
   }, [event]);
 
   // Generate calendar URLs
-  const urls = useMemo(() => ({
-    google: CalendarUtils.getGoogleCalendarUrl(calendarEvent),
-    outlook: CalendarUtils.getOutlookWebUrl(calendarEvent),
-    yahoo: CalendarUtils.getYahooCalendarUrl(calendarEvent)
-  }), [calendarEvent]);
+  const urls = useMemo(() => {
+    if (!calendarEvent) {
+      return { google: '', outlook: '', yahoo: '' };
+    }
+    return {
+      google: CalendarUtils.getGoogleCalendarUrl(calendarEvent),
+      outlook: CalendarUtils.getOutlookWebUrl(calendarEvent),
+      yahoo: CalendarUtils.getYahooCalendarUrl(calendarEvent)
+    };
+  }, [calendarEvent]);
 
   const handleDownloadICS = () => {
-    CalendarUtils.downloadICS(calendarEvent);
+    if (calendarEvent) {
+      CalendarUtils.downloadICS(calendarEvent);
+    }
   };
+
+  // Don't render if we don't have valid event data
+  if (!calendarEvent) {
+    return null;
+  }
 
   return (
     <DropdownMenu>
