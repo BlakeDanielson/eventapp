@@ -226,7 +226,7 @@ export default function EditEventPage() {
               <EventForm 
                 onSubmit={handleFormSubmit} 
                 mode="edit"
-                initialData={eventToFormData(event)}
+                initialData={eventToFormData(event as unknown as Record<string, unknown>)}
               />
             </div>
           </div>
