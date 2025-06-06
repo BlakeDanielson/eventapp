@@ -37,7 +37,7 @@ export function EventForm({
     resolver: zodResolver(eventFormSchema),
     defaultValues: {
       ...getFormDefaults(),
-      ...eventToFormData(initialData),
+      ...eventToFormData(initialData || {}),
     },
   });
 
