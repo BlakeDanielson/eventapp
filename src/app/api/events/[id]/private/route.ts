@@ -53,6 +53,14 @@ export async function GET(
       },
     });
 
+    // Get organizer profile
+    let organizerProfile = null;
+    if (event) {
+      organizerProfile = await prisma.organizerProfile.findUnique({
+        where: { userId: event.userId },
+      });
+    }
+
     if (!event) {
       return NextResponse.json(
         { error: 'Private event not found' },
@@ -76,6 +84,7 @@ export async function GET(
       requiresTickets: event.requiresTickets,
       createdAt: event.createdAt,
       _count: event._count,
+      organizerProfile,
     };
 
     return NextResponse.json(privateEvent);

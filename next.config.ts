@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  env: {
+    NEXT_PUBLIC_MAPBOX_TOKEN: process.env.MAPBOX_API_KEY,
+  },
   images: {
     remotePatterns: [
       {

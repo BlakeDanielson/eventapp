@@ -26,6 +26,7 @@ import { EventCard } from '@/components/event-card';
 import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { DashboardComparison } from '@/components/dashboard-comparison';
 
 // Animated Gradient Component
 interface AnimatedGradientProps {
@@ -466,6 +467,7 @@ function DashboardContent() {
           </motion.div>
         )}
       </main>
+      <DashboardComparison />
     </div>
   );
 }

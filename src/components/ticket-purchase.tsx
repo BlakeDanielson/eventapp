@@ -46,6 +46,7 @@ export function TicketPurchase({ event, eventId }: TicketPurchaseProps) {
   const { user, isSignedIn } = useUser();
   const [tickets, setTickets] = useState<TicketType[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [buyerName, setBuyerName] = useState('');
   const [loading, setLoading] = useState(true);
   const [purchasing, setPurchasing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -147,6 +148,11 @@ export function TicketPurchase({ event, eventId }: TicketPurchaseProps) {
       return;
     }
 
+    if (!buyerName.trim()) {
+      setError('Please enter your name');
+      return;
+    }
+
     try {
       setPurchasing(true);
       setError(null);
@@ -157,6 +163,7 @@ export function TicketPurchase({ event, eventId }: TicketPurchaseProps) {
           quantity: item.quantity
         })),
         buyerEmail: user?.emailAddresses[0]?.emailAddress,
+        buyerName: buyerName.trim(),
         totalAmount
       };
 
@@ -356,6 +363,27 @@ export function TicketPurchase({ event, eventId }: TicketPurchaseProps) {
         {cart.length > 0 && (
           <>
             <Separator />
+            
+            {/* Buyer Information */}
+            <div className="space-y-3">
+              <h4 className="font-medium">Your Information</h4>
+              <div>
+                <label htmlFor="buyerName" className="block text-sm font-medium mb-2">
+                  Full Name *
+                </label>
+                <Input
+                  id="buyerName"
+                  type="text"
+                  placeholder="Enter your full name"
+                  value={buyerName}
+                  onChange={(e) => setBuyerName(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+            
+            <Separator />
+            
             <div className="space-y-3">
               <h4 className="font-medium flex items-center">
                 <Users className="h-4 w-4 mr-2" />

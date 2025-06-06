@@ -3,11 +3,16 @@ import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 
 // Validation schema for purchasing tickets
-const purchaseSchema = z.object({
+const ticketItemSchema = z.object({
   ticketId: z.string().min(1, 'Ticket ID is required'),
   quantity: z.number().min(1, 'Quantity must be at least 1'),
-  buyerName: z.string().min(2, 'Name must be at least 2 characters'),
+});
+
+const purchaseSchema = z.object({
+  tickets: z.array(ticketItemSchema).min(1, 'At least one ticket must be selected'),
   buyerEmail: z.string().email('Please enter a valid email address'),
+  buyerName: z.string().min(2, 'Name must be at least 2 characters'),
+  totalAmount: z.number().min(0, 'Total amount must be non-negative'),
   paymentMethod: z.enum(['mock-credit-card', 'mock-paypal', 'mock-apple-pay']).default('mock-credit-card'),
   cardNumber: z.string().optional(),
   expiryDate: z.string().optional(),
@@ -26,47 +31,51 @@ export async function POST(
     // Validate the request body
     const validatedData = purchaseSchema.parse(body);
 
-    // Get the ticket and check availability
-    const ticket = await prisma.ticket.findFirst({
+    // Validate all tickets exist and are available
+    const ticketIds = validatedData.tickets.map(t => t.ticketId);
+    const tickets = await prisma.ticket.findMany({
       where: {
-        id: validatedData.ticketId,
+        id: { in: ticketIds },
         eventId,
         isActive: true,
       },
     });
 
-    if (!ticket) {
+    if (tickets.length !== ticketIds.length) {
       return NextResponse.json(
-        { error: 'Ticket not found or not available for purchase' },
+        { error: 'One or more tickets not found or not available for purchase' },
         { status: 404 }
       );
     }
 
-    // Check ticket availability
-    if (ticket.maxQuantity && ticket.soldQuantity + validatedData.quantity > ticket.maxQuantity) {
-      return NextResponse.json(
-        { error: 'Not enough tickets available' },
-        { status: 400 }
-      );
-    }
+    // Check availability for each ticket
+    for (const ticketItem of validatedData.tickets) {
+      const ticket = tickets.find(t => t.id === ticketItem.ticketId);
+      if (!ticket) continue;
 
-    // Check sale dates
-    const now = new Date();
-    if (ticket.saleStartDate && now < ticket.saleStartDate) {
-      return NextResponse.json(
-        { error: 'Ticket sales have not started yet' },
-        { status: 400 }
-      );
-    }
-    if (ticket.saleEndDate && now > ticket.saleEndDate) {
-      return NextResponse.json(
-        { error: 'Ticket sales have ended' },
-        { status: 400 }
-      );
-    }
+      // Check ticket availability
+      if (ticket.maxQuantity && ticket.soldQuantity + ticketItem.quantity > ticket.maxQuantity) {
+        return NextResponse.json(
+          { error: `Not enough tickets available for ${ticket.name}` },
+          { status: 400 }
+        );
+      }
 
-    // Calculate total amount
-    const totalAmount = ticket.price * validatedData.quantity;
+      // Check sale dates
+      const now = new Date();
+      if (ticket.saleStartDate && now < ticket.saleStartDate) {
+        return NextResponse.json(
+          { error: `Ticket sales for ${ticket.name} have not started yet` },
+          { status: 400 }
+        );
+      }
+      if (ticket.saleEndDate && now > ticket.saleEndDate) {
+        return NextResponse.json(
+          { error: `Ticket sales for ${ticket.name} have ended` },
+          { status: 400 }
+        );
+      }
+    }
 
     // Create mock payment data
     const mockPaymentData = {
@@ -77,47 +86,59 @@ export async function POST(
       status: 'mock_success',
     };
 
-    // Create the purchase record
-    const purchase = await prisma.purchase.create({
-      data: {
-        eventId,
-        ticketId: validatedData.ticketId,
-        buyerName: validatedData.buyerName,
-        buyerEmail: validatedData.buyerEmail,
-        quantity: validatedData.quantity,
-        totalAmount,
-        status: 'completed',
-        paymentMethod: validatedData.paymentMethod,
-        transactionId: mockPaymentData.mockTransactionId,
-        paymentData: mockPaymentData,
-      },
-    });
+    // Create purchase records for each ticket type
+    const purchases = await Promise.all(
+      validatedData.tickets.map(async (ticketItem) => {
+        const ticket = tickets.find(t => t.id === ticketItem.ticketId)!;
+        const amount = ticket.price * ticketItem.quantity;
 
-    // Update ticket sold quantity
-    await prisma.ticket.update({
-      where: { id: validatedData.ticketId },
-      data: {
-        soldQuantity: {
-          increment: validatedData.quantity,
-        },
-      },
-    });
+        const purchase = await prisma.purchase.create({
+          data: {
+            eventId,
+            ticketId: ticketItem.ticketId,
+            buyerName: validatedData.buyerName,
+            buyerEmail: validatedData.buyerEmail,
+            quantity: ticketItem.quantity,
+            totalAmount: amount,
+            status: 'completed',
+            paymentMethod: validatedData.paymentMethod,
+            transactionId: mockPaymentData.mockTransactionId,
+            paymentData: mockPaymentData,
+          },
+        });
 
-    // Return purchase confirmation with mock data
-    return NextResponse.json(
-      {
-        success: true,
-        purchase: {
+        // Update ticket sold quantity
+        await prisma.ticket.update({
+          where: { id: ticketItem.ticketId },
+          data: {
+            soldQuantity: {
+              increment: ticketItem.quantity,
+            },
+          },
+        });
+
+        return {
           id: purchase.id,
           ticketName: ticket.name,
           quantity: purchase.quantity,
           totalAmount: purchase.totalAmount,
           currency: ticket.currency,
-          buyerName: purchase.buyerName,
-          buyerEmail: purchase.buyerEmail,
-          transactionId: purchase.transactionId,
-          status: purchase.status,
-          createdAt: purchase.createdAt,
+        };
+      })
+    );
+
+    // Return purchase confirmation with mock data
+    return NextResponse.json(
+      {
+        success: true,
+        purchases,
+        summary: {
+          totalTickets: validatedData.tickets.reduce((sum, t) => sum + t.quantity, 0),
+          totalAmount: validatedData.totalAmount,
+          buyerName: validatedData.buyerName,
+          buyerEmail: validatedData.buyerEmail,
+          transactionId: mockPaymentData.mockTransactionId,
+          status: 'completed',
         },
         message: 'Mock payment processed successfully! This is a demo transaction.',
       },

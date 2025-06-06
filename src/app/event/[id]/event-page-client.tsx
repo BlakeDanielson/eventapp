@@ -7,35 +7,13 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { RegistrationForm } from '@/components/registration-form';
 import { TicketPurchase } from '@/components/ticket-purchase';
-import { Event } from '@/types/event';
-
-const EventMap = ({ location }: { location: string }) => {
-  return (
-    <div className="relative w-full h-[400px] rounded-lg overflow-hidden border border-border">
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center">
-        <div className="text-center space-y-3">
-          <MapPin className="h-12 w-12 mx-auto text-primary" />
-          <div className="text-muted-foreground">
-            <p className="font-medium">Map Integration Ready</p>
-            <p className="text-sm">{location}</p>
-            <p className="text-xs mt-2">Google Maps or Mapbox will be loaded here</p>
-          </div>
-        </div>
-      </div>
-      <div className="absolute bottom-4 right-4">
-        <Button size="sm" variant="secondary">
-          <MapPin className="h-4 w-4 mr-2" />
-          Get Directions
-        </Button>
-      </div>
-    </div>
-  );
-};
+import { EventWithOrganizer } from '@/types/event';
+import { EventMap } from '@/components/event-map';
 
 const EventGallery = ({ imageUrl, title }: { imageUrl?: string; title: string }) => {
   const defaultImage = "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80";
@@ -108,7 +86,7 @@ export function EventPageClient({
   formattedDate,
   accessInfo 
 }: { 
-  event: Event; 
+  event: EventWithOrganizer; 
   eventId: string; 
   registrationCount: number; 
   formattedDate: string;
@@ -185,114 +163,110 @@ export function EventPageClient({
       {/* Main Content */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
-          <Tabs defaultValue="about" className="mb-8">
-            <TabsList className="mb-4">
-              <TabsTrigger value="about">About</TabsTrigger>
-              <TabsTrigger value="schedule">Schedule</TabsTrigger>
-              <TabsTrigger value="location">Location</TabsTrigger>
-              {event.qa && <TabsTrigger value="qa">Q&A</TabsTrigger>}
-            </TabsList>
+          <div className="space-y-6 mb-8">
+            {/* About Section */}
+            <Card>
+              <CardHeader>
+                <CardTitle>About This Event</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="prose dark:prose-invert max-w-none">
+                  <p className="whitespace-pre-wrap">{event.bio}</p>
+                </div>
+              </CardContent>
+            </Card>
             
-            <TabsContent value="about" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>About This Event</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="prose dark:prose-invert max-w-none">
-                    <p className="whitespace-pre-wrap">{event.bio}</p>
-                  </div>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardHeader>
-                  <CardTitle>What to Expect</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="flex items-start">
-                      <div className="bg-primary/10 p-2 rounded-full mr-3">
-                        <Star className="h-5 w-5 text-primary" />
-                      </div>
-                      <div>
-                        <h4 className="font-medium">Premium Experience</h4>
-                        <p className="text-sm text-muted-foreground">Carefully curated content and experiences</p>
-                      </div>
+            {/* What to Expect Section */}
+            <Card>
+              <CardHeader>
+                <CardTitle>What to Expect</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="flex items-start">
+                    <div className="bg-primary/10 p-2 rounded-full mr-3">
+                      <Star className="h-5 w-5 text-primary" />
                     </div>
-                    <div className="flex items-start">
-                      <div className="bg-primary/10 p-2 rounded-full mr-3">
-                        <Users className="h-5 w-5 text-primary" />
-                      </div>
-                      <div>
-                        <h4 className="font-medium">Networking</h4>
-                        <p className="text-sm text-muted-foreground">Connect with like-minded individuals</p>
-                      </div>
-                    </div>
-                    <div className="flex items-start">
-                      <div className="bg-primary/10 p-2 rounded-full mr-3">
-                        <Info className="h-5 w-5 text-primary" />
-                      </div>
-                      <div>
-                        <h4 className="font-medium">Insights</h4>
-                        <p className="text-sm text-muted-foreground">Gain valuable knowledge and perspectives</p>
-                      </div>
-                    </div>
-                    <div className="flex items-start">
-                      <div className="bg-primary/10 p-2 rounded-full mr-3">
-                        <Calendar className="h-5 w-5 text-primary" />
-                      </div>
-                      <div>
-                        <h4 className="font-medium">Structured Agenda</h4>
-                        <p className="text-sm text-muted-foreground">Well-planned schedule to maximize value</p>
-                      </div>
+                    <div>
+                      <h4 className="font-medium">Premium Experience</h4>
+                      <p className="text-sm text-muted-foreground">Carefully curated content and experiences</p>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            
-            <TabsContent value="schedule">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Event Schedule</CardTitle>
-                  <CardDescription>Detailed timeline of activities</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="prose dark:prose-invert max-w-none">
-                    <div className="whitespace-pre-wrap">{event.agenda}</div>
+                  <div className="flex items-start">
+                    <div className="bg-primary/10 p-2 rounded-full mr-3">
+                      <Users className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <h4 className="font-medium">Networking</h4>
+                      <p className="text-sm text-muted-foreground">Connect with like-minded individuals</p>
+                    </div>
                   </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            
-            <TabsContent value="location">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Event Location</CardTitle>
-                  <CardDescription>{event.location}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <EventMap location={event.location} />
-                </CardContent>
-              </Card>
-            </TabsContent>
-            
+                  <div className="flex items-start">
+                    <div className="bg-primary/10 p-2 rounded-full mr-3">
+                      <Info className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <h4 className="font-medium">Insights</h4>
+                      <p className="text-sm text-muted-foreground">Gain valuable knowledge and perspectives</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start">
+                    <div className="bg-primary/10 p-2 rounded-full mr-3">
+                      <Calendar className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <h4 className="font-medium">Structured Agenda</h4>
+                      <p className="text-sm text-muted-foreground">Well-planned schedule to maximize value</p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Schedule Section */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Event Schedule</CardTitle>
+                <CardDescription>Detailed timeline of activities</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="prose dark:prose-invert max-w-none">
+                  <div className="whitespace-pre-wrap">{event.agenda}</div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Location Section */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Event Location</CardTitle>
+                <CardDescription>{event.location}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <EventMap 
+                  location={event.location}
+                  eventTitle={event.title}
+                  eventDate={formattedDate}
+                  eventTime={event.time}
+                  organizerName={event.organizerProfile?.displayName}
+                />
+              </CardContent>
+            </Card>
+
+            {/* Q&A Section (if exists) */}
             {event.qa && (
-              <TabsContent value="qa">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Questions & Answers</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="prose dark:prose-invert max-w-none">
-                      <div className="whitespace-pre-wrap">{event.qa}</div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Questions & Answers</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="prose dark:prose-invert max-w-none">
+                    <div className="whitespace-pre-wrap">{event.qa}</div>
+                  </div>
+                </CardContent>
+              </Card>
             )}
-          </Tabs>
+          </div>
         </div>
         
         <div className="space-y-6">
@@ -336,16 +310,130 @@ export function EventPageClient({
             <CardContent className="space-y-4">
               <div className="flex items-center gap-3">
                 <Avatar className="h-12 w-12">
-                  <AvatarFallback>EA</AvatarFallback>
+                  {event.organizerProfile?.profileImageUrl ? (
+                    <AvatarImage 
+                      src={event.organizerProfile.profileImageUrl} 
+                      alt={event.organizerProfile.displayName || 'Organizer'} 
+                    />
+                  ) : null}
+                  <AvatarFallback>
+                    {event.organizerProfile?.displayName 
+                      ? event.organizerProfile.displayName.split(' ').map((n: string) => n[0]).join('').toUpperCase()
+                      : 'EA'
+                    }
+                  </AvatarFallback>
                 </Avatar>
                 <div>
-                  <h3 className="font-medium">EventApp</h3>
-                  <p className="text-sm text-muted-foreground">Event Platform</p>
+                  <h3 className="font-medium">
+                    {event.organizerProfile?.displayName || 'EventApp'}
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    {event.organizerProfile?.organizationType === 'individual' ? 'Event Organizer' :
+                     event.organizerProfile?.organizationType === 'company' ? 'Company' :
+                     event.organizerProfile?.organizationType === 'nonprofit' ? 'Non-Profit Organization' :
+                     event.organizerProfile?.organizationType === 'government' ? 'Government Agency' :
+                     event.organizerProfile?.organizationType === 'education' ? 'Educational Institution' :
+                     event.organizerProfile?.organizationType || 'Event Platform'}
+                  </p>
                 </div>
               </div>
-              <p className="text-sm text-muted-foreground">
-                Creating memorable experiences and bringing people together through thoughtfully organized events.
-              </p>
+              {event.organizerProfile?.bio && (
+                <p className="text-sm text-muted-foreground">
+                  {event.organizerProfile.bio}
+                </p>
+              )}
+              {!event.organizerProfile?.bio && (
+                <p className="text-sm text-muted-foreground">
+                  Creating memorable experiences and bringing people together through thoughtfully organized events.
+                </p>
+              )}
+              
+              {/* Contact Information */}
+              {event.organizerProfile?.showContactInfo && (
+                <div className="space-y-2">
+                  {event.organizerProfile?.email && (
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <span>📧</span>
+                      <a href={`mailto:${event.organizerProfile.email}`} className="hover:text-foreground">
+                        {event.organizerProfile.email}
+                      </a>
+                    </div>
+                  )}
+                  {event.organizerProfile?.phone && (
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <span>📞</span>
+                      <a href={`tel:${event.organizerProfile.phone}`} className="hover:text-foreground">
+                        {event.organizerProfile.phone}
+                      </a>
+                    </div>
+                  )}
+                  {event.organizerProfile?.website && (
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <span>🌐</span>
+                      <a 
+                        href={event.organizerProfile.website.startsWith('http') ? event.organizerProfile.website : `https://${event.organizerProfile.website}`} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="hover:text-foreground"
+                      >
+                        {event.organizerProfile.website}
+                      </a>
+                    </div>
+                  )}
+                  {event.organizerProfile?.location && (
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <MapPin className="h-3 w-3" />
+                      <span>{event.organizerProfile.location}</span>
+                    </div>
+                  )}
+                </div>
+              )}
+              
+              {/* Social Media Links */}
+              {event.organizerProfile?.showSocialLinks && (
+                <div className="flex gap-2 flex-wrap">
+                  {event.organizerProfile?.linkedinUrl && (
+                    <a 
+                      href={event.organizerProfile.linkedinUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 text-sm"
+                    >
+                      LinkedIn
+                    </a>
+                  )}
+                  {event.organizerProfile?.twitterUrl && (
+                    <a 
+                      href={event.organizerProfile.twitterUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-blue-400 hover:text-blue-600 text-sm"
+                    >
+                      Twitter
+                    </a>
+                  )}
+                  {event.organizerProfile?.facebookUrl && (
+                    <a 
+                      href={event.organizerProfile.facebookUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-blue-700 hover:text-blue-900 text-sm"
+                    >
+                      Facebook
+                    </a>
+                  )}
+                  {event.organizerProfile?.instagramUrl && (
+                    <a 
+                      href={event.organizerProfile.instagramUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-pink-600 hover:text-pink-800 text-sm"
+                    >
+                      Instagram
+                    </a>
+                  )}
+                </div>
+              )}
             </CardContent>
             <CardFooter>
               <Button variant="outline" className="w-full" size="sm">

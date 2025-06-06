@@ -63,6 +63,14 @@ export async function GET(
       },
     });
 
+    // Get organizer profile
+    let organizerProfile = null;
+    if (event) {
+      organizerProfile = await prisma.organizerProfile.findUnique({
+        where: { userId: event.userId },
+      });
+    }
+
     if (!event) {
       return NextResponse.json(
         { error: 'Event not found' },
@@ -70,7 +78,7 @@ export async function GET(
       );
     }
 
-    return NextResponse.json(event);
+    return NextResponse.json({ ...event, organizerProfile });
   } catch (error) {
     console.error('Event fetch error:', error);
     return NextResponse.json(

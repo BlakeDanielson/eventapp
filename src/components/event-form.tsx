@@ -68,7 +68,7 @@ export function EventForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-12">
         <EventBasicInfoFields control={form.control} />
         <EventDetailsFields control={form.control} />
         <EventVisualFields control={form.control} />
