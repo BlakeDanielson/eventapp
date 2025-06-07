@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
+    "postinstall": "prisma generate",
     "test": "node tests/test-core-functionality.js",
     "test:quick": "node tests/quick-test.js",
     "test:dashboard": "node tests/test-dashboard.js",
