@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Search, Filter, Mail, Download, Send, Loader2 } from 'lucide-react';
 import { Attendee, Invitee } from '@/types/attendee';
+import { formatDate } from '@/lib/date-utils';
 
 interface AttendeeControlsProps {
   searchTerm: string;
@@ -102,14 +103,14 @@ export function AttendeeControls({
               (item as Attendee).name,
               (item as Attendee).email,
               (item as Attendee).status,
-              (item as Attendee).createdAt.toLocaleDateString(),
+              formatDate((item as Attendee).createdAt),
               (item as Attendee).referral?.name || 'None'
             ]
           : [
               (item as Invitee).email,
               (item as Invitee).hasAccessed ? 'Accessed' : 'Pending',
               (item as Invitee).inviteToken,
-              (item as Invitee).accessedAt ? (item as Invitee).accessedAt!.toLocaleDateString() : 'N/A',
+              formatDate((item as Invitee).accessedAt),
               (item as Invitee).referredCount.toString()
             ]
       )

@@ -7,6 +7,7 @@ import { Loader2, Copy, CheckCircle, ExternalLink } from 'lucide-react';
 import { EventWithDetails } from '@/types/event';
 import { StatusBadge } from './StatusBadge';
 import { Attendee, Invitee } from '@/types/attendee';
+import { formatDate } from '@/lib/date-utils';
 
 interface AttendeesTabsProps {
   activeTab: string;
@@ -136,7 +137,7 @@ export function AttendeesTabs({
                       <StatusBadge status={attendee.status} />
                     </TableCell>
                     <TableCell className="text-white/70">
-                      {attendee.createdAt.toLocaleDateString()}
+                      {formatDate(attendee.createdAt)}
                     </TableCell>
                     <TableCell className="text-white/70">
                       {attendee.referral?.name || 'Direct'}
@@ -224,7 +225,7 @@ export function AttendeesTabs({
                           {invitee.accessedAt ? (
                             <div className="flex items-center gap-2">
                               <CheckCircle className="h-4 w-4 text-emerald-400" />
-                              {invitee.accessedAt.toLocaleDateString()}
+                              {formatDate(invitee.accessedAt)}
                             </div>
                           ) : (
                             <span className="text-white/50">Not accessed</span>

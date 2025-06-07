@@ -14,6 +14,7 @@ import { EventInfo } from './components/EventInfo';
 import { AttendeeControls } from './components/AttendeeControls';
 import { AttendeesTabs } from './components/AttendeesTabs';
 import { Attendee } from '@/types/attendee';
+import { transformAttendeeData, transformInviteeData } from '@/lib/date-utils';
 
 interface Invitee {
   id: string;
@@ -66,6 +67,12 @@ export default function AttendeeManagementPage() {
       }
       
       const eventData = await response.json();
+      
+      // Convert date strings to Date objects for consistent handling
+      if (eventData?.registrations) {
+        eventData.registrations = eventData.registrations.map(transformAttendeeData);
+      }
+      
       setEvent(eventData);
     } catch (error) {
       console.error('Error fetching event:', error);
@@ -90,7 +97,11 @@ export default function AttendeeManagementPage() {
       }
       
       const data = await response.json();
-      setInvitees(data.invitees || []);
+      
+      // Convert date strings to Date objects for consistent handling
+      const transformedInvitees = (data.invitees || []).map(transformInviteeData);
+      
+      setInvitees(transformedInvitees);
     } catch (error) {
       console.error('Error fetching invitees:', error);
       setInvitees([]);
