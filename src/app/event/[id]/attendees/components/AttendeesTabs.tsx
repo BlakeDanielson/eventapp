@@ -6,28 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Loader2, Copy, CheckCircle, ExternalLink } from 'lucide-react';
 import { EventWithDetails } from '@/types/event';
 import { StatusBadge } from './StatusBadge';
-
-// Define proper types for attendees and invitees
-interface Attendee {
-  id: string;
-  name: string;
-  email: string;
-  status: string;
-  createdAt: string;
-  referral?: {
-    name: string;
-  };
-}
-
-interface Invitee {
-  id: string;
-  email: string;
-  hasAccessed: boolean;
-  inviteToken: string;
-  accessedAt?: string;
-  referredCount: number;
-  inviteLink: string;
-}
+import { Attendee, Invitee } from '@/types/attendee';
 
 interface AttendeesTabsProps {
   activeTab: string;
@@ -157,7 +136,7 @@ export function AttendeesTabs({
                       <StatusBadge status={attendee.status} />
                     </TableCell>
                     <TableCell className="text-white/70">
-                      {new Date(attendee.createdAt).toLocaleDateString()}
+                      {attendee.createdAt.toLocaleDateString()}
                     </TableCell>
                     <TableCell className="text-white/70">
                       {attendee.referral?.name || 'Direct'}
@@ -245,7 +224,7 @@ export function AttendeesTabs({
                           {invitee.accessedAt ? (
                             <div className="flex items-center gap-2">
                               <CheckCircle className="h-4 w-4 text-emerald-400" />
-                              {new Date(invitee.accessedAt).toLocaleDateString()}
+                              {invitee.accessedAt.toLocaleDateString()}
                             </div>
                           ) : (
                             <span className="text-white/50">Not accessed</span>

@@ -6,28 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Search, Filter, Mail, Download, Send, Loader2 } from 'lucide-react';
-
-// Define proper types for attendees and invitees
-interface Attendee {
-  id: string;
-  name: string;
-  email: string;
-  status: string;
-  createdAt: string;
-  referral?: {
-    name: string;
-  };
-}
-
-interface Invitee {
-  id: string;
-  email: string;
-  hasAccessed: boolean;
-  inviteToken: string;
-  accessedAt?: string;
-  referredCount: number;
-  inviteLink: string;
-}
+import { Attendee, Invitee } from '@/types/attendee';
 
 interface AttendeeControlsProps {
   searchTerm: string;
@@ -123,14 +102,14 @@ export function AttendeeControls({
               (item as Attendee).name,
               (item as Attendee).email,
               (item as Attendee).status,
-              new Date((item as Attendee).createdAt).toLocaleDateString(),
+              (item as Attendee).createdAt.toLocaleDateString(),
               (item as Attendee).referral?.name || 'None'
             ]
           : [
               (item as Invitee).email,
               (item as Invitee).hasAccessed ? 'Accessed' : 'Pending',
               (item as Invitee).inviteToken,
-              (item as Invitee).accessedAt ? new Date((item as Invitee).accessedAt!).toLocaleDateString() : 'N/A',
+              (item as Invitee).accessedAt ? (item as Invitee).accessedAt!.toLocaleDateString() : 'N/A',
               (item as Invitee).referredCount.toString()
             ]
       )

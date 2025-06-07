@@ -13,6 +13,7 @@ import { StatsCards } from './components/StatsCards';
 import { EventInfo } from './components/EventInfo';
 import { AttendeeControls } from './components/AttendeeControls';
 import { AttendeesTabs } from './components/AttendeesTabs';
+import { Attendee } from '@/types/attendee';
 
 interface Invitee {
   id: string;
@@ -165,7 +166,7 @@ export default function AttendeeManagementPage() {
         <div className="max-w-7xl mx-auto space-y-8">
           <StatsCards 
             event={event} 
-            filteredAttendees={filteredAttendees}
+            filteredAttendees={filteredAttendees as Attendee[]}
             invitees={invitees}
           />
 
@@ -179,7 +180,7 @@ export default function AttendeeManagementPage() {
             activeTab={activeTab}
             selectedAttendees={selectedAttendees}
             selectedInvitees={selectedInvitees}
-            filteredAttendees={filteredAttendees}
+            filteredAttendees={filteredAttendees as Attendee[]}
             filteredInvitees={filteredInvitees}
             eventId={params.id as string}
             onEmailSuccess={() => {
@@ -191,7 +192,7 @@ export default function AttendeeManagementPage() {
           <AttendeesTabs
             activeTab={activeTab}
             setActiveTab={setActiveTab}
-            filteredAttendees={filteredAttendees}
+            filteredAttendees={filteredAttendees as Attendee[]}
             filteredInvitees={filteredInvitees}
             inviteesLoading={inviteesLoading}
             selectedAttendees={selectedAttendees}

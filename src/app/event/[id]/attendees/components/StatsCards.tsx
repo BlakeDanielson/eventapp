@@ -2,28 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Users, Mail } from 'lucide-react';
 import { EventWithDetails } from '@/types/event';
-
-interface Attendee {
-  id: string;
-  name: string;
-  email: string;
-  status: string;
-  createdAt: string;
-  referral?: {
-    name: string;
-  };
-}
-
-interface Invitee {
-  id: string;
-  email: string;
-  inviteToken: string;
-  hasAccessed: boolean;
-  accessedAt: Date | null;
-  referredCount: number;
-  createdAt: Date;
-  inviteLink: string;
-}
+import { Attendee, Invitee } from '@/types/attendee';
 
 interface StatsCardsProps {
   event: EventWithDetails;

@@ -15,7 +15,7 @@ export const eventFormSchema = z.object({
     message: 'Time is required.',
   }),
   // Enhanced location fields
-  locationType: z.enum(['address', 'virtual']).default('address'),
+  locationType: z.enum(['address', 'virtual']),
   location: z.string().min(1, {
     message: 'Location is required.',
   }),
@@ -40,7 +40,7 @@ export const eventFormSchema = z.object({
   }),
   qa: z.string().optional(),
   // Q&A settings
-  qaEnabled: z.boolean().default(true),
+  qaEnabled: z.boolean(),
   status: z.enum(['draft', 'public', 'private', 'cancelled']),
   image: z.any().optional(),
 });
