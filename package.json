@@ -16,8 +16,9 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^6.21.0",
-    "@googlemaps/js-api-loader": "^1.16.8",
     "@hookform/resolvers": "^5.0.1",
+    "@mapbox/search-js-core": "^1.1.0",
+    "@mapbox/search-js-react": "^1.1.0",
     "@prisma/client": "^6.9.0",
     "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-checkbox": "^1.3.2",

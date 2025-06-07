@@ -17,7 +17,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { GoogleMapsAutocomplete } from '@/components/ui/google-maps-autocomplete';
+import { MapboxSearchInput } from '@/components/mapbox-search-input';
 import { Calendar, Clock, MapPin, Sparkles, Globe, Link as LinkIcon } from 'lucide-react';
 import { EventFormData } from '@/types/forms';
 
@@ -172,19 +172,22 @@ export function EventBasicInfoFields({ control }: EventBasicInfoFieldsProps) {
                       Street Address
                     </FormLabel>
                     <FormControl>
-                      <GoogleMapsAutocomplete
-                        value={field.value}
+                      <MapboxSearchInput
+                        value={field.value || ''}
                         onChange={field.onChange}
-                        onPlaceSelect={(place) => {
-                          // Auto-fill other address fields when a place is selected
-                          field.onChange(place.streetAddress);
-                          // You can also set other form fields here if needed
-                          // setValue('city', place.city);
-                          // setValue('state', place.state);
-                          // etc.
+                        onSelect={(suggestion) => {
+                          // Auto-fill the location field with the full place name
+                          field.onChange(suggestion.place_name);
+                          
+                          // You could also auto-fill other fields using setValue:
+                          // const components = suggestion.context || [];
+                          // const locality = components.find(c => c.id.includes('place'))?.text;
+                          // const region = components.find(c => c.id.includes('region'))?.text;
+                          // const postcode = components.find(c => c.id.includes('postcode'))?.text;
+                          // const country = components.find(c => c.id.includes('country'))?.text;
                         }}
                         placeholder="Start typing an address..."
-                        className="h-12 bg-zinc-900 border-zinc-800 focus:border-white focus:ring-white/10 rounded-lg text-white placeholder:text-zinc-500"
+                        className="h-12"
                       />
                     </FormControl>
                     <FormDescription className="text-sm text-zinc-500">

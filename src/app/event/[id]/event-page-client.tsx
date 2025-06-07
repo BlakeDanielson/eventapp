@@ -16,7 +16,7 @@ import { CalendarActions } from '@/components/calendar-actions';
 import { EventWithOrganizer } from '@/types/event';
 import dynamic from 'next/dynamic';
 
-const EventMap = dynamic(() => import('@/components/event-map').then(mod => ({ default: mod.EventMap })), {
+const EventMap = dynamic(() => import('@/components/mapbox-event-map').then(mod => ({ default: mod.MapboxEventMap })), {
   ssr: false,
   loading: () => (
     <div className="h-96 bg-black/40 rounded-lg flex items-center justify-center border border-white/[0.08]">
